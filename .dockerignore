@@ -1,0 +1,13 @@
+.git
+.github
+.idea
+.vscode
+coverage
+dist
+node_modules
+npm-debug.log*
+*.md
+!README.md
+Dockerfile*
+compose*.yaml
+compose*.yml
