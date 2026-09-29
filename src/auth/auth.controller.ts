@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseUUIDPipe,
   Post,
   Req,
   Res,
@@ -41,6 +42,15 @@ export class AuthController {
     @Body() input: InvitationDto,
   ) {
     return this.auth.invite(user, input);
+  }
+  @Get('users/invitations') listInvitations(@CurrentUser() user: SessionUser) {
+    return this.auth.listInvitations(user);
+  }
+  @Post('users/invitations/:id/link') refreshInvitationLink(
+    @CurrentUser() user: SessionUser,
+    @Param('id', ParseUUIDPipe) invitationId: string,
+  ) {
+    return this.auth.refreshInvitationLink(user, invitationId);
   }
   @Public()
   @Post('users/invitations/:token/accept')

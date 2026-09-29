@@ -12,6 +12,7 @@ services:
       NODE_ENV: production
       PORT: 3000
       FRONTEND_ORIGIN: ${FRONTEND_ORIGIN:-http://localhost:4201}
+      FRONTEND_PUBLIC_URL: ${FRONTEND_PUBLIC_URL:-http://localhost:4201}
       DATABASE_URL: postgresql://${POSTGRES_USER:-musica_app}:${POSTGRES_PASSWORD:-change-me}@postgres:5432/${POSTGRES_DB:-musica_da_gloria}
       DATABASE_HOST: postgres
       DATABASE_PORT: 5432
@@ -35,8 +36,6 @@ services:
       migrate:
         condition: service_completed_successfully
       postgres:
-        condition: service_healthy
-      redis:
         condition: service_healthy
     networks: [application, data]
     restart: unless-stopped

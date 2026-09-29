@@ -58,7 +58,13 @@ Quando front e API estiverem em sites diferentes, como `workers.dev` e
 ```env
 SESSION_COOKIE_SECURE=true
 SESSION_COOKIE_SAME_SITE=none
+FRONTEND_PUBLIC_URL=https://musica-da-gloria.egcastro96.workers.dev
 ```
+
+Enquanto o envio de e-mail estiver desabilitado, o `SUPER_ADMIN` copia o link
+devolvido ao criar o convite. Convites pendentes podem ter o link gerado novamente;
+essa operação invalida o link anterior e o banco continua armazenando somente o
+hash do token. Redis não é necessário para esse fluxo manual.
 
 No ambiente Docker local HTTP, mantenha `SESSION_COOKIE_SECURE=false` e
 `SESSION_COOKIE_SAME_SITE=lax`.

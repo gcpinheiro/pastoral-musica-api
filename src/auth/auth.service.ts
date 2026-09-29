@@ -7,7 +7,6 @@ import { DatabaseService } from '../database/database.service';
 import { ProblemException } from '../common/problem.exception';
 import { SessionUser } from '../common/auth.types';
 import { AcceptInvitationDto, InvitationDto, LoginDto } from './auth.dto';
-import { EmailQueueService } from '../email/email-queue.service';
 
 interface UserRow {
   id: string;
@@ -28,6 +27,18 @@ interface InvitationRow {
   role: 'LEADER' | 'MEMBER';
   status: string;
   expires_at: Date;
+  created_at: Date;
+}
+
+export interface InvitationView extends Record<string, unknown> {
+  id: string;
+  parishId: string;
+  memberId: string | null;
+  name: string;
+  email: string;
+  role: 'LEADER' | 'MEMBER';
+  status: string;
+  expiresAt: Date;
 }
 
 @Injectable()
@@ -35,10 +46,17 @@ export class AuthService {
   constructor(
     private readonly db: DatabaseService,
     private readonly config: ConfigService,
-    private readonly emails: EmailQueueService,
   ) {}
   private hash(token: string): string {
     return createHash('sha256').update(token).digest('hex');
+  }
+  private invitationUrl(token: string): string {
+    const configuredUrl = this.config.get<string>(
+      'FRONTEND_PUBLIC_URL',
+      this.config.get<string>('FRONTEND_ORIGIN', 'http://localhost:4201'),
+    );
+    const publicUrl = configuredUrl.split(',')[0].trim().replace(/\/$/, '');
+    return `${publicUrl}/convites/${encodeURIComponent(token)}`;
   }
   private sessionCookieOptions(): CookieOptions {
     const secure =
@@ -167,20 +185,112 @@ export class AuthService {
         );
     }
     const token = randomBytes(32).toString('base64url');
-    const result = await this.db.query<InvitationRow>(
-      `INSERT INTO user_invitations(parish_id,member_id,name,email,role,token_hash,expires_at,created_by) VALUES($1,$2,$3,lower($4),$5,$6,now()+interval '48 hours',$7) RETURNING *`,
-      [
-        parishId,
-        input.memberId ?? null,
-        name,
-        input.email,
-        input.role,
-        this.hash(token),
-        actor.id,
-      ],
-    );
-    await this.emails.enqueueInvitation({ to: input.email, name, token });
-    return this.presentInvitation(result.rows[0]);
+    const invitation = await this.db.transaction(async (client) => {
+      const created = await client.query<InvitationRow>(
+        `INSERT INTO user_invitations(parish_id,member_id,name,email,role,token_hash,expires_at,created_by) VALUES($1,$2,$3,lower($4),$5,$6,now()+interval '48 hours',$7) RETURNING *`,
+        [
+          parishId,
+          input.memberId ?? null,
+          name,
+          input.email,
+          input.role,
+          this.hash(token),
+          actor.id,
+        ],
+      );
+      await client.query(
+        `INSERT INTO audit_logs(parish_id,actor_user_id,action,entity_type,entity_id,details)
+         VALUES($1,$2,'CREATE_INVITATION','USER_INVITATION',$3,$4)`,
+        [
+          parishId,
+          actor.id,
+          created.rows[0].id,
+          JSON.stringify({
+            role: input.role,
+            email: input.email.toLowerCase(),
+          }),
+        ],
+      );
+      return created.rows[0];
+    });
+    return {
+      ...this.presentInvitation(invitation),
+      acceptanceUrl: this.invitationUrl(token),
+    };
+  }
+  async listInvitations(actor: SessionUser): Promise<InvitationView[]> {
+    if (actor.role === 'MEMBER')
+      throw new ProblemException(
+        HttpStatus.FORBIDDEN,
+        'FORBIDDEN',
+        'Papel não autorizado para consultar convites.',
+      );
+
+    const result =
+      actor.role === 'SUPER_ADMIN'
+        ? await this.db.query<InvitationRow>(
+            `SELECT * FROM user_invitations
+             WHERE role='LEADER' AND status='PENDING' AND expires_at>now()
+             ORDER BY created_at DESC`,
+          )
+        : await this.db.query<InvitationRow>(
+            `SELECT * FROM user_invitations
+             WHERE parish_id=$1 AND role='MEMBER' AND status='PENDING' AND expires_at>now()
+             ORDER BY created_at DESC`,
+            [actor.parishId],
+          );
+    return result.rows.map((row) => this.presentInvitation(row));
+  }
+  async refreshInvitationLink(
+    actor: SessionUser,
+    invitationId: string,
+  ): Promise<InvitationView & { acceptanceUrl: string }> {
+    if (actor.role === 'MEMBER')
+      throw new ProblemException(
+        HttpStatus.FORBIDDEN,
+        'FORBIDDEN',
+        'Papel não autorizado para obter links de convite.',
+      );
+
+    const token = randomBytes(32).toString('base64url');
+    const updated = await this.db.transaction(async (client) => {
+      const result =
+        actor.role === 'SUPER_ADMIN'
+          ? await client.query<InvitationRow>(
+              `UPDATE user_invitations SET token_hash=$1
+               WHERE id=$2 AND role='LEADER' AND status='PENDING' AND expires_at>now()
+               RETURNING *`,
+              [this.hash(token), invitationId],
+            )
+          : await client.query<InvitationRow>(
+              `UPDATE user_invitations SET token_hash=$1
+               WHERE id=$2 AND parish_id=$3 AND role='MEMBER' AND status='PENDING' AND expires_at>now()
+               RETURNING *`,
+              [this.hash(token), invitationId, actor.parishId],
+            );
+      const invitation = result.rows[0];
+      if (!invitation)
+        throw new ProblemException(
+          HttpStatus.NOT_FOUND,
+          'INVITATION_NOT_FOUND',
+          'Convite pendente e válido não encontrado.',
+        );
+      await client.query(
+        `INSERT INTO audit_logs(parish_id,actor_user_id,action,entity_type,entity_id,details)
+         VALUES($1,$2,'ROTATE_INVITATION_TOKEN','USER_INVITATION',$3,$4)`,
+        [
+          invitation.parish_id,
+          actor.id,
+          invitation.id,
+          JSON.stringify({ role: invitation.role }),
+        ],
+      );
+      return invitation;
+    });
+    return {
+      ...this.presentInvitation(updated),
+      acceptanceUrl: this.invitationUrl(token),
+    };
   }
   async accept(
     token: string,
@@ -242,7 +352,7 @@ export class AuthService {
     });
     return this.createSession(created, response);
   }
-  presentInvitation(row: InvitationRow): Record<string, unknown> {
+  presentInvitation(row: InvitationRow): InvitationView {
     return {
       id: row.id,
       parishId: row.parish_id,
