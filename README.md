@@ -58,6 +58,7 @@ Quando front e API estiverem em sites diferentes, como `workers.dev` e
 ```env
 SESSION_COOKIE_SECURE=true
 SESSION_COOKIE_SAME_SITE=none
+SESSION_COOKIE_PARTITIONED=true
 FRONTEND_PUBLIC_URL=https://musica-da-gloria.egcastro96.workers.dev
 ```
 

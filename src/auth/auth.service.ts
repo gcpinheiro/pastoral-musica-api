@@ -70,16 +70,23 @@ export class AuthService {
     const sameSite = ['lax', 'strict', 'none'].includes(configuredSameSite)
       ? (configuredSameSite as 'lax' | 'strict' | 'none')
       : 'lax';
+    const partitioned =
+      this.config.get<string>('SESSION_COOKIE_PARTITIONED', 'false') === 'true';
 
     if (sameSite === 'none' && !secure)
       throw new Error(
         'SESSION_COOKIE_SECURE must be true when SESSION_COOKIE_SAME_SITE is none.',
+      );
+    if (partitioned && (!secure || sameSite !== 'none'))
+      throw new Error(
+        'SESSION_COOKIE_PARTITIONED requires SESSION_COOKIE_SECURE=true and SESSION_COOKIE_SAME_SITE=none.',
       );
 
     return {
       httpOnly: true,
       secure,
       sameSite,
+      partitioned,
       path: '/',
     };
   }
