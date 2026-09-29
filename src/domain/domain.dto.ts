@@ -34,7 +34,7 @@ export class AvailabilityDto {
 export class MemberDto {
   @IsString() @MinLength(3) name!: string;
   @IsEmail() email!: string;
-  @Matches(/^\+[1-9]\d{7,14}$/) phone!: string;
+  @IsOptional() @Matches(/^\+[1-9]\d{7,14}$/) phone?: string;
   @IsArray() talentIds!: string[];
   @IsArray()
   @ValidateNested({ each: true })

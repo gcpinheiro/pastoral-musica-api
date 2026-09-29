@@ -320,14 +320,14 @@ export class AuthService {
         throw new ConflictException(
           'Convite inválido, expirado ou já utilizado.',
         );
+      if (!input.whatsapp)
+        throw new ProblemException(
+          HttpStatus.UNPROCESSABLE_ENTITY,
+          'WHATSAPP_REQUIRED',
+          'WhatsApp é obrigatório para ativar a conta.',
+        );
       let memberId = invitation.member_id;
       if (invitation.role === 'LEADER') {
-        if (!input.whatsapp)
-          throw new ProblemException(
-            HttpStatus.UNPROCESSABLE_ENTITY,
-            'WHATSAPP_REQUIRED',
-            'WhatsApp é obrigatório para líder.',
-          );
         const member = await client.query<{ id: string }>(
           `INSERT INTO members(parish_id,name,email,phone) VALUES($1,$2,$3,$4) RETURNING id`,
           [
@@ -338,6 +338,17 @@ export class AuthService {
           ],
         );
         memberId = member.rows[0].id;
+      } else {
+        const member = await client.query<{ id: string }>(
+          `UPDATE members SET phone=$1,updated_at=now()
+           WHERE id=$2 AND parish_id=$3 AND status='ACTIVE'
+           RETURNING id`,
+          [input.whatsapp, memberId, invitation.parish_id],
+        );
+        if (!member.rows[0])
+          throw new ConflictException(
+            'O perfil de membro vinculado ao convite não está mais disponível.',
+          );
       }
       const passwordHash = await bcrypt.hash(input.password, 12);
       const createdUser = await client.query<UserRow>(

@@ -31,7 +31,7 @@ export class InvitationDto {
 export class AcceptInvitationDto {
   @IsString() @MinLength(8) password!: string;
   @IsString() @MinLength(8) passwordConfirmation!: string;
-  @IsOptional() @Matches(/^\+[1-9]\d{7,14}$/) whatsapp?: string;
+  @Matches(/^\+[1-9]\d{7,14}$/) whatsapp!: string;
 }
 export class LeadershipRequestDto {
   @IsIn(['ADD_LEADER', 'SUSPEND_LEADER', 'REMOVE_LEADER']) type!: string;

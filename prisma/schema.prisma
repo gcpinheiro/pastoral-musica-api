@@ -63,7 +63,7 @@ model members {
   parish_id          String               @db.Uuid
   name               String
   email              String
-  phone              String
+  phone              String?
   photo_url          String?
   talent_ids         Json                 @default("[]")
   availability       Json                 @default("[]")

@@ -188,7 +188,7 @@ export class DomainService {
           this.requireParish(user),
           input.name,
           input.email,
-          input.phone,
+          input.phone ?? null,
           JSON.stringify(input.talentIds),
           JSON.stringify(input.availability),
           input.notes ?? null,
@@ -215,7 +215,7 @@ export class DomainService {
         [
           input.name,
           input.email,
-          input.phone,
+          input.phone ?? null,
           JSON.stringify(input.talentIds),
           JSON.stringify(input.availability),
           input.notes ?? null,
