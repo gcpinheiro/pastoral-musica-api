@@ -2,7 +2,7 @@ import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { createHash, randomBytes } from 'node:crypto';
-import { Response } from 'express';
+import type { CookieOptions, Response } from 'express';
 import { DatabaseService } from '../database/database.service';
 import { ProblemException } from '../common/problem.exception';
 import { SessionUser } from '../common/auth.types';
@@ -40,6 +40,31 @@ export class AuthService {
   private hash(token: string): string {
     return createHash('sha256').update(token).digest('hex');
   }
+  private sessionCookieOptions(): CookieOptions {
+    const secure =
+      this.config.get<string>(
+        'SESSION_COOKIE_SECURE',
+        this.config.get('NODE_ENV') === 'production' ? 'true' : 'false',
+      ) === 'true';
+    const configuredSameSite = this.config
+      .get<string>('SESSION_COOKIE_SAME_SITE', 'lax')
+      .toLowerCase();
+    const sameSite = ['lax', 'strict', 'none'].includes(configuredSameSite)
+      ? (configuredSameSite as 'lax' | 'strict' | 'none')
+      : 'lax';
+
+    if (sameSite === 'none' && !secure)
+      throw new Error(
+        'SESSION_COOKIE_SECURE must be true when SESSION_COOKIE_SAME_SITE is none.',
+      );
+
+    return {
+      httpOnly: true,
+      secure,
+      sameSite,
+      path: '/',
+    };
+  }
   private present(row: UserRow): SessionUser {
     return {
       id: row.id,
@@ -67,15 +92,8 @@ export class AuthService {
       [user.id, this.hash(token), days],
     );
     response.cookie('mg_session', token, {
-      httpOnly: true,
-      secure:
-        this.config.get<string>(
-          'SESSION_COOKIE_SECURE',
-          this.config.get('NODE_ENV') === 'production' ? 'true' : 'false',
-        ) === 'true',
-      sameSite: 'lax',
+      ...this.sessionCookieOptions(),
       maxAge: days * 86400000,
-      path: '/',
     });
     return { user: this.present(user) };
   }
@@ -114,7 +132,7 @@ export class AuthService {
         'UPDATE sessions SET revoked_at=now() WHERE token_hash=$1',
         [this.hash(token)],
       );
-    response.clearCookie('mg_session', { path: '/' });
+    response.clearCookie('mg_session', this.sessionCookieOptions());
   }
   async invite(
     actor: SessionUser,

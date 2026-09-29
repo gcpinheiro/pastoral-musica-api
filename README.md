@@ -39,6 +39,36 @@ npm run prisma:studio
 
 Em containers, `prisma migrate deploy` roda em um serviço efêmero antes da API.
 
+## Executar com Docker
+
+Copie o arquivo de ambiente e inicie a API com suas dependências:
+
+```powershell
+Copy-Item .env.example .env
+docker compose up --build
+```
+
+A API estará em `http://localhost:3000/api/v1`, o Swagger em
+`http://localhost:3000/api/v1/docs` e o pgAdmin em `http://localhost:5050`.
+O CORS local aceita o front executado separadamente em `http://localhost:4201`.
+
+Quando front e API estiverem em sites diferentes, como `workers.dev` e
+`onrender.com`, configure no ambiente da API:
+
+```env
+SESSION_COOKIE_SECURE=true
+SESSION_COOKIE_SAME_SITE=none
+```
+
+No ambiente Docker local HTTP, mantenha `SESSION_COOKIE_SECURE=false` e
+`SESSION_COOKIE_SAME_SITE=lax`.
+
+Para desenvolvimento com hot reload:
+
+```powershell
+docker compose -f compose.dev.yaml up --build
+```
+
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
