@@ -21,6 +21,24 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
+## Persistência
+
+A API usa Prisma ORM 6.19.3 com PostgreSQL. O schema está em `prisma/schema.prisma` e o
+histórico em `prisma/migrations`.
+
+Com a API em execução, o Swagger fica disponível em
+`http://localhost:3000/api/v1/docs` e o documento JSON em
+`http://localhost:3000/api/v1/docs/openapi.json`.
+
+```powershell
+npm run prisma:generate
+npm run prisma:migrate -- --name descricao-da-mudanca
+npm run prisma:deploy
+npm run prisma:studio
+```
+
+Em containers, `prisma migrate deploy` roda em um serviço efêmero antes da API.
+
 ## Description
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.

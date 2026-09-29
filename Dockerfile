@@ -1,4 +1,4 @@
-FROM node:22.14.0-alpine AS dependencies
+FROM node:22.18.0-alpine AS dependencies
 
 WORKDIR /app
 
@@ -16,16 +16,22 @@ CMD ["npm", "run", "start:dev"]
 FROM dependencies AS build
 
 COPY . .
-RUN npm run build
+RUN npx prisma generate && npm run build
 
-FROM node:22.14.0-alpine AS production-dependencies
+FROM dependencies AS migrations
+
+COPY . .
+
+CMD ["npx", "prisma", "migrate", "deploy"]
+
+FROM node:22.18.0-alpine AS production-dependencies
 
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-RUN npm ci --omit=dev && npm cache clean --force
+RUN npm ci --omit=dev --omit=peer && npm cache clean --force
 
-FROM node:22.14.0-alpine AS runtime
+FROM node:22.18.0-alpine AS runtime
 
 ENV NODE_ENV=production
 ENV PORT=3000
@@ -33,6 +39,7 @@ ENV PORT=3000
 WORKDIR /app
 
 COPY --from=production-dependencies /app/node_modules ./node_modules
+COPY --from=build /app/node_modules/.prisma ./node_modules/.prisma
 COPY --from=build /app/dist ./dist
 COPY package.json ./
 

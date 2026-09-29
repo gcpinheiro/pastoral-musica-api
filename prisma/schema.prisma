@@ -1,0 +1,265 @@
+generator client {
+  provider        = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model audit_logs {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  parish_id     String?   @db.Uuid
+  actor_user_id String?   @db.Uuid
+  action        String
+  entity_type   String
+  entity_id     String?   @db.Uuid
+  details       Json      @default("{}")
+  created_at    DateTime  @default(now()) @db.Timestamptz(6)
+  users         users?    @relation(fields: [actor_user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parishes      parishes? @relation(fields: [parish_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model celebration_series {
+  id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  parish_id   String        @db.Uuid
+  ministry_id String        @db.Uuid
+  title       String
+  location    String
+  weekday     String
+  local_time  DateTime      @db.Time(6)
+  timezone    String
+  status      String        @default("ACTIVE")
+  created_at  DateTime      @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime      @default(now()) @db.Timestamptz(6)
+  ministries  ministries    @relation(fields: [ministry_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parishes    parishes      @relation(fields: [parish_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  occurrences occurrences[]
+}
+
+model leadership_requests {
+  id                                                    String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  parish_id                                             String    @db.Uuid
+  requested_by_user_id                                  String    @db.Uuid
+  type                                                  String
+  target_user_id                                        String?   @db.Uuid
+  candidate_name                                        String?
+  candidate_email                                       String?
+  reason                                                String
+  status                                                String    @default("PENDING")
+  decided_by_user_id                                    String?   @db.Uuid
+  decision_reason                                       String?
+  created_at                                            DateTime  @default(now()) @db.Timestamptz(6)
+  decided_at                                            DateTime? @db.Timestamptz(6)
+  users_leadership_requests_decided_by_user_idTousers   users?    @relation("leadership_requests_decided_by_user_idTousers", fields: [decided_by_user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parishes                                              parishes  @relation(fields: [parish_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_leadership_requests_requested_by_user_idTousers users     @relation("leadership_requests_requested_by_user_idTousers", fields: [requested_by_user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users_leadership_requests_target_user_idTousers       users?    @relation("leadership_requests_target_user_idTousers", fields: [target_user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model members {
+  id                 String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  parish_id          String               @db.Uuid
+  name               String
+  email              String
+  phone              String
+  photo_url          String?
+  talent_ids         Json                 @default("[]")
+  availability       Json                 @default("[]")
+  notes              String?
+  status             String               @default("ACTIVE")
+  created_at         DateTime             @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime             @default(now()) @db.Timestamptz(6)
+  parishes           parishes             @relation(fields: [parish_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  ministry_members   ministry_members[]
+  occurrence_members occurrence_members[]
+  user_invitations   user_invitations[]
+  users              users?
+
+  @@unique([parish_id, email])
+  @@index([parish_id], map: "members_parish_idx")
+}
+
+model ministries {
+  id                 String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  parish_id          String               @db.Uuid
+  name               String
+  status             String               @default("ACTIVE")
+  created_at         DateTime             @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime             @default(now()) @db.Timestamptz(6)
+  celebration_series celebration_series[]
+  parishes           parishes             @relation(fields: [parish_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  ministry_members   ministry_members[]
+  occurrences        occurrences[]
+}
+
+model ministry_members {
+  ministry_id String     @db.Uuid
+  member_id   String     @db.Uuid
+  role        String     @default("Integrante")
+  members     members    @relation(fields: [member_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  ministries  ministries @relation(fields: [ministry_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([ministry_id, member_id])
+}
+
+model news {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  parish_id      String    @db.Uuid
+  title          String
+  body           String
+  author_user_id String    @db.Uuid
+  published_at   DateTime  @default(now()) @db.Timestamptz(6)
+  archived_at    DateTime? @db.Timestamptz(6)
+  users          users     @relation(fields: [author_user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parishes       parishes  @relation(fields: [parish_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model occurrence_members {
+  occurrence_id          String      @db.Uuid
+  member_id              String      @db.Uuid
+  role                   String
+  confirmation           String      @default("PENDING")
+  conflict_override      Boolean     @default(false)
+  conflict_justification String?
+  members                members     @relation(fields: [member_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  occurrences            occurrences @relation(fields: [occurrence_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([occurrence_id, member_id])
+}
+
+model occurrences {
+  id                 String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  parish_id          String               @db.Uuid
+  series_id          String?              @db.Uuid
+  ministry_id        String               @db.Uuid
+  title              String
+  starts_at          DateTime             @db.Timestamptz(6)
+  timezone           String
+  location           String
+  liturgical_time    String?
+  notes              String?
+  status             String               @default("DRAFT")
+  version            Int                  @default(0)
+  local_date         DateTime             @db.Date
+  local_time         DateTime             @db.Time(6)
+  created_at         DateTime             @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime             @default(now()) @db.Timestamptz(6)
+  occurrence_members occurrence_members[]
+  ministries         ministries           @relation(fields: [ministry_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parishes           parishes             @relation(fields: [parish_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  celebration_series celebration_series?  @relation(fields: [series_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  setlist_items      setlist_items[]
+
+  @@unique([series_id, local_date, local_time], map: "occurrences_series_local_unique")
+  @@index([parish_id, starts_at], map: "occurrences_parish_starts_idx")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model parishes {
+  id                  String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                String
+  slug                String                @unique
+  city                String
+  state               String                @db.Char(2)
+  timezone            String                @default("America/Fortaleza")
+  status              String                @default("ACTIVE")
+  created_at          DateTime              @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime              @default(now()) @db.Timestamptz(6)
+  audit_logs          audit_logs[]
+  celebration_series  celebration_series[]
+  leadership_requests leadership_requests[]
+  members             members[]
+  ministries          ministries[]
+  news                news[]
+  occurrences         occurrences[]
+  songs               songs[]
+  user_invitations    user_invitations[]
+  users               users[]
+}
+
+model sessions {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id    String    @db.Uuid
+  token_hash String    @unique
+  expires_at DateTime  @db.Timestamptz(6)
+  revoked_at DateTime? @db.Timestamptz(6)
+  created_at DateTime  @default(now()) @db.Timestamptz(6)
+  users      users     @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model setlist_items {
+  id                String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  occurrence_id     String      @db.Uuid
+  song_id           String      @db.Uuid
+  position          Int
+  key               String
+  liturgical_moment String
+  notes             String?
+  occurrences       occurrences @relation(fields: [occurrence_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  songs             songs       @relation(fields: [song_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@unique([occurrence_id, position])
+}
+
+model songs {
+  id                 String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  parish_id          String          @db.Uuid
+  title              String
+  author             String
+  default_key        String
+  liturgical_moments Json            @default("[]")
+  lyrics             String
+  chords             String
+  status             String          @default("ACTIVE")
+  created_at         DateTime        @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime        @default(now()) @db.Timestamptz(6)
+  setlist_items      setlist_items[]
+  parishes           parishes        @relation(fields: [parish_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([parish_id], map: "songs_parish_idx")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model user_invitations {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  parish_id  String   @db.Uuid
+  member_id  String?  @db.Uuid
+  name       String
+  email      String
+  role       String
+  token_hash String   @unique
+  status     String   @default("PENDING")
+  expires_at DateTime @db.Timestamptz(6)
+  created_by String   @db.Uuid
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  users      users    @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  members    members? @relation(fields: [member_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parishes   parishes @relation(fields: [parish_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([email, status])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model users {
+  id                                                                  String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  parish_id                                                           String?               @db.Uuid
+  member_id                                                           String?               @unique @db.Uuid
+  name                                                                String
+  email                                                               String                @unique
+  password_hash                                                       String
+  role                                                                String
+  status                                                              String                @default("ACTIVE")
+  created_at                                                          DateTime              @default(now()) @db.Timestamptz(6)
+  updated_at                                                          DateTime              @default(now()) @db.Timestamptz(6)
+  audit_logs                                                          audit_logs[]
+  leadership_requests_leadership_requests_decided_by_user_idTousers   leadership_requests[] @relation("leadership_requests_decided_by_user_idTousers")
+  leadership_requests_leadership_requests_requested_by_user_idTousers leadership_requests[] @relation("leadership_requests_requested_by_user_idTousers")
+  leadership_requests_leadership_requests_target_user_idTousers       leadership_requests[] @relation("leadership_requests_target_user_idTousers")
+  news                                                                news[]
+  sessions                                                            sessions[]
+  user_invitations                                                    user_invitations[]
+  members                                                             members?              @relation(fields: [member_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parishes                                                            parishes?             @relation(fields: [parish_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
