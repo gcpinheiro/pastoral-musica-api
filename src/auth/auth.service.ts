@@ -116,10 +116,22 @@ export class AuthService {
       "INSERT INTO sessions(user_id, token_hash, expires_at) VALUES ($1, $2, now() + ($3 || ' days')::interval)",
       [user.id, this.hash(token), days],
     );
-    response.cookie('mg_session', token, {
-      ...this.sessionCookieOptions(),
-      maxAge: days * 86400000,
-    });
+    const cookieOptions = this.sessionCookieOptions();
+    if (cookieOptions.partitioned) {
+      response.clearCookie('mg_session', {
+        ...cookieOptions,
+        partitioned: false,
+      });
+      response.clearCookie('mg_session', cookieOptions);
+    }
+    response.cookie(
+      cookieOptions.partitioned ? 'mg_session_partitioned' : 'mg_session',
+      token,
+      {
+        ...cookieOptions,
+        maxAge: days * 86400000,
+      },
+    );
     return { user: this.present(user) };
   }
   async login(
@@ -151,13 +163,26 @@ export class AuthService {
     );
     return result.rows[0] ? this.present(result.rows[0]) : null;
   }
-  async logout(token: string | undefined, response: Response): Promise<void> {
-    if (token)
+  async logout(
+    tokens: readonly (string | undefined)[],
+    response: Response,
+  ): Promise<void> {
+    for (const token of new Set(
+      tokens.filter((value): value is string => Boolean(value)),
+    ))
       await this.db.query(
         'UPDATE sessions SET revoked_at=now() WHERE token_hash=$1',
         [this.hash(token)],
       );
-    response.clearCookie('mg_session', this.sessionCookieOptions());
+    const cookieOptions = this.sessionCookieOptions();
+    response.clearCookie('mg_session', {
+      ...cookieOptions,
+      partitioned: false,
+    });
+    if (cookieOptions.partitioned) {
+      response.clearCookie('mg_session', cookieOptions);
+      response.clearCookie('mg_session_partitioned', cookieOptions);
+    }
   }
   async invite(
     actor: SessionUser,

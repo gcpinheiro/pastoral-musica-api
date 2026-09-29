@@ -25,7 +25,9 @@ export class SessionGuard implements CanActivate {
     )
       return true;
     const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
-    const user = await this.auth.resolve(request.cookies?.mg_session);
+    const user = await this.auth.resolve(
+      request.cookies?.mg_session_partitioned ?? request.cookies?.mg_session,
+    );
     if (!user)
       throw new ProblemException(
         HttpStatus.UNAUTHORIZED,

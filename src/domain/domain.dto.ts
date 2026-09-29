@@ -36,6 +36,7 @@ export class MemberDto {
   @IsEmail() email!: string;
   @IsOptional() @Matches(/^\+[1-9]\d{7,14}$/) phone?: string;
   @IsArray() talentIds!: string[];
+  @IsArray() @IsUUID('4', { each: true }) ministryIds!: string[];
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => AvailabilityDto)

@@ -6,7 +6,7 @@ interface QueryResult<T> {
   rows: T[];
   rowCount: number;
 }
-interface TransactionClient {
+export interface TransactionClient {
   query<T extends object = Record<string, unknown>>(
     text: string,
     values?: readonly unknown[],

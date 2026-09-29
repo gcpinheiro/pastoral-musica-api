@@ -33,7 +33,7 @@ async function bootstrap() {
   app.use((request: Request, response: Response, next: NextFunction) => {
     if (
       ['GET', 'HEAD', 'OPTIONS'].includes(request.method) ||
-      !request.cookies?.mg_session
+      !(request.cookies?.mg_session_partitioned ?? request.cookies?.mg_session)
     )
       return next();
     const origin = request.get('origin');

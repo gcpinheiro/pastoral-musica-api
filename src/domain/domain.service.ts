@@ -1,5 +1,8 @@
 import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
-import { DatabaseService } from '../database/database.service';
+import {
+  DatabaseService,
+  TransactionClient,
+} from '../database/database.service';
 import { SessionUser } from '../common/auth.types';
 import { ProblemException } from '../common/problem.exception';
 import {
@@ -35,6 +38,30 @@ export class DomainService {
       .join('')
       .toUpperCase();
   }
+  private async replaceMemberMinistries(
+    client: TransactionClient,
+    memberId: string,
+    parishId: string,
+    ministryIds: readonly string[],
+  ): Promise<void> {
+    await client.query('DELETE FROM ministry_members WHERE member_id=$1', [
+      memberId,
+    ]);
+    for (const ministryId of ministryIds) {
+      const inserted = await client.query(
+        `INSERT INTO ministry_members(ministry_id,member_id)
+         SELECT id,$1 FROM ministries
+         WHERE id=$2 AND parish_id=$3 AND status='ACTIVE'`,
+        [memberId, ministryId, parishId],
+      );
+      if (inserted.rowCount !== 1)
+        throw new ProblemException(
+          404,
+          'NOT_FOUND',
+          'Ministério não encontrado.',
+        );
+    }
+  }
   private parish(row: Row) {
     return {
       id: row.id,
@@ -48,6 +75,9 @@ export class DomainService {
   }
   private member(row: Row) {
     const name = String(row.name);
+    const ministries = Array.isArray(row.ministries)
+      ? (row.ministries as { id: string; name: string }[])
+      : [];
     return {
       id: row.id,
       name,
@@ -55,6 +85,8 @@ export class DomainService {
       phone: row.phone,
       photoUrl: row.photo_url,
       talentIds: row.talent_ids,
+      ministryIds: ministries.map((ministry) => ministry.id),
+      ministries,
       availability: row.availability,
       notes: row.notes,
       initials: this.initials(name),
@@ -158,18 +190,22 @@ export class DomainService {
   ) {
     const parish = this.requireParish(user);
     const values: unknown[] = [parish, pageSize, (page - 1) * pageSize];
-    let where = 'parish_id=$1';
+    let where = 'm.parish_id=$1';
     if (query) {
       values.push(`%${query}%`);
-      where += ` AND (name ILIKE $${values.length} OR email ILIKE $${values.length})`;
+      where += ` AND (m.name ILIKE $${values.length} OR m.email ILIKE $${values.length})`;
     }
     if (status) {
       values.push(status);
-      where += ` AND status=$${values.length}`;
+      where += ` AND m.status=$${values.length}`;
     }
     const rows = (
       await this.db.query(
-        `SELECT *,count(*) OVER()::int total_count FROM members WHERE ${where} ORDER BY name LIMIT $2 OFFSET $3`,
+        `SELECT m.*,count(*) OVER()::int total_count,
+          COALESCE((SELECT jsonb_agg(jsonb_build_object('id',mi.id,'name',mi.name) ORDER BY mi.name)
+            FROM ministry_members mm JOIN ministries mi ON mi.id=mm.ministry_id
+            WHERE mm.member_id=m.id AND mi.status='ACTIVE'),'[]'::jsonb) ministries
+         FROM members m WHERE ${where} ORDER BY m.name LIMIT $2 OFFSET $3`,
         values,
       )
     ).rows;
@@ -181,26 +217,40 @@ export class DomainService {
     };
   }
   async createMember(user: SessionUser, input: MemberDto) {
-    const row = (
-      await this.db.query(
-        'INSERT INTO members(parish_id,name,email,phone,talent_ids,availability,notes) VALUES($1,$2,lower($3),$4,$5,$6,$7) RETURNING *',
-        [
-          this.requireParish(user),
-          input.name,
-          input.email,
-          input.phone ?? null,
-          JSON.stringify(input.talentIds),
-          JSON.stringify(input.availability),
-          input.notes ?? null,
-        ],
-      )
-    ).rows[0];
-    return this.member(row);
+    const parish = this.requireParish(user);
+    const id = await this.db.transaction(async (client) => {
+      const row = (
+        await client.query<{ id: string }>(
+          'INSERT INTO members(parish_id,name,email,phone,talent_ids,availability,notes) VALUES($1,$2,lower($3),$4,$5,$6,$7) RETURNING id',
+          [
+            parish,
+            input.name,
+            input.email,
+            input.phone ?? null,
+            JSON.stringify(input.talentIds),
+            JSON.stringify(input.availability),
+            input.notes ?? null,
+          ],
+        )
+      ).rows[0];
+      await this.replaceMemberMinistries(
+        client,
+        row.id,
+        parish,
+        input.ministryIds,
+      );
+      return row.id;
+    });
+    return this.getMember(user, id);
   }
   async getMember(user: SessionUser, id: string) {
     const row = (
       await this.db.query(
-        'SELECT * FROM members WHERE id=$1 AND parish_id=$2',
+        `SELECT m.*,
+          COALESCE((SELECT jsonb_agg(jsonb_build_object('id',mi.id,'name',mi.name) ORDER BY mi.name)
+            FROM ministry_members mm JOIN ministries mi ON mi.id=mm.ministry_id
+            WHERE mm.member_id=m.id AND mi.status='ACTIVE'),'[]'::jsonb) ministries
+         FROM members m WHERE m.id=$1 AND m.parish_id=$2`,
         [id, this.requireParish(user)],
       )
     ).rows[0];
@@ -209,9 +259,10 @@ export class DomainService {
     return this.member(row);
   }
   async updateMember(user: SessionUser, id: string, input: MemberDto) {
-    const row = (
-      await this.db.query(
-        'UPDATE members SET name=$1,email=lower($2),phone=$3,talent_ids=$4,availability=$5,notes=$6,updated_at=now() WHERE id=$7 AND parish_id=$8 RETURNING *',
+    const parish = this.requireParish(user);
+    await this.db.transaction(async (client) => {
+      const updated = await client.query(
+        'UPDATE members SET name=$1,email=lower($2),phone=$3,talent_ids=$4,availability=$5,notes=$6,updated_at=now() WHERE id=$7 AND parish_id=$8 RETURNING id',
         [
           input.name,
           input.email,
@@ -220,13 +271,14 @@ export class DomainService {
           JSON.stringify(input.availability),
           input.notes ?? null,
           id,
-          this.requireParish(user),
+          parish,
         ],
-      )
-    ).rows[0];
-    if (!row)
-      throw new ProblemException(404, 'NOT_FOUND', 'Membro não encontrado.');
-    return this.member(row);
+      );
+      if (!updated.rowCount)
+        throw new ProblemException(404, 'NOT_FOUND', 'Membro não encontrado.');
+      await this.replaceMemberMinistries(client, id, parish, input.ministryIds);
+    });
+    return this.getMember(user, id);
   }
   async archiveMember(user: SessionUser, id: string) {
     const result = await this.db.query(

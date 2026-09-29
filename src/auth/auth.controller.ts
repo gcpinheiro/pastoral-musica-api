@@ -33,7 +33,10 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
   ) {
     return this.auth.logout(
-      request.cookies?.mg_session as string | undefined,
+      [
+        request.cookies?.mg_session_partitioned as string | undefined,
+        request.cookies?.mg_session as string | undefined,
+      ],
       response,
     );
   }
