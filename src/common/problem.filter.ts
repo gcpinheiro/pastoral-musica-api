@@ -4,14 +4,20 @@ import {
   ExceptionFilter,
   HttpException,
   HttpStatus,
+  Logger,
 } from '@nestjs/common';
 import { randomUUID } from 'node:crypto';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 
 @Catch()
 export class ProblemFilter implements ExceptionFilter {
+  private readonly logger = new Logger(ProblemFilter.name);
+
   catch(exception: unknown, host: ArgumentsHost): void {
-    const response = host.switchToHttp().getResponse<Response>();
+    const http = host.switchToHttp();
+    const request = http.getRequest<Request>();
+    const response = http.getResponse<Response>();
+    const traceId = randomUUID();
     const status =
       exception instanceof HttpException
         ? exception.getStatus()
@@ -22,6 +28,14 @@ export class ProblemFilter implements ExceptionFilter {
       typeof source === 'object' && source !== null
         ? source
         : { detail: String(source ?? 'Erro interno') };
+    if (status >= 500) {
+      const details =
+        exception instanceof Error ? exception.stack : String(exception);
+      this.logger.error(
+        `[${traceId}] ${request.method} ${request.originalUrl}`,
+        details,
+      );
+    }
     response
       .status(status)
       .type('application/problem+json')
@@ -30,7 +44,7 @@ export class ProblemFilter implements ExceptionFilter {
         status,
         code: status === 500 ? 'INTERNAL_ERROR' : 'HTTP_ERROR',
         ...body,
-        traceId: randomUUID(),
+        traceId,
       });
   }
 }

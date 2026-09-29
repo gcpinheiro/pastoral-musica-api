@@ -486,7 +486,7 @@ export class DomainService {
     ).rows;
     const series = (
       await this.db.query(
-        'SELECT * FROM celebration_series WHERE ministry_id=$1 ORDER BY created_at',
+        'SELECT cs.*,cs.local_time::text local_time_text FROM celebration_series cs WHERE ministry_id=$1 ORDER BY created_at',
         [id],
       )
     ).rows;
@@ -507,7 +507,7 @@ export class DomainService {
         title: s.title,
         location: s.location,
         weekday: s.weekday,
-        localTime: String(s.local_time).slice(0, 5),
+        localTime: String(s.local_time_text).slice(0, 5),
         timezone: s.timezone,
       })),
     };
@@ -563,7 +563,7 @@ export class DomainService {
     const parish = this.requireParish(user);
     const series = (
       await this.db.query(
-        'SELECT * FROM celebration_series WHERE id=$1 AND parish_id=$2',
+        'SELECT cs.*,cs.local_time::text local_time_text FROM celebration_series cs WHERE id=$1 AND parish_id=$2',
         [seriesId, parish],
       )
     ).rows[0];
@@ -584,55 +584,55 @@ export class DomainService {
       'FRIDAY',
       'SATURDAY',
     ];
-    let createdCount = 0,
-      skippedCount = 0;
-    const occurrenceIds: string[] = [];
-    for (
-      let cursor = new Date(
-        Date.UTC(
-          today.getUTCFullYear(),
-          today.getUTCMonth(),
-          today.getUTCDate(),
-        ),
-      );
-      cursor <= through;
-      cursor.setUTCDate(cursor.getUTCDate() + 1)
-    ) {
-      if (weekdays[cursor.getUTCDay()] !== series.weekday) continue;
-      const date = cursor.toISOString().slice(0, 10);
-      const startsAt = `${date}T${String(series.local_time).slice(0, 8)}-03:00`;
-      const result = await this.db.transaction(async (client) => {
+    const localTime = String(series.local_time_text).slice(0, 8);
+    const generation = await this.db.transaction(async (client) => {
+      let createdCount = 0,
+        skippedCount = 0;
+      const occurrenceIds: string[] = [];
+      for (
+        let cursor = new Date(
+          Date.UTC(
+            today.getUTCFullYear(),
+            today.getUTCMonth(),
+            today.getUTCDate(),
+          ),
+        );
+        cursor <= through;
+        cursor.setUTCDate(cursor.getUTCDate() + 1)
+      ) {
+        if (weekdays[cursor.getUTCDay()] !== series.weekday) continue;
+        const date = cursor.toISOString().slice(0, 10);
         const inserted = await client.query<{ id: string }>(
-          `INSERT INTO occurrences(parish_id,series_id,ministry_id,title,starts_at,timezone,location,local_date,local_time) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) ON CONFLICT DO NOTHING RETURNING id`,
+          `INSERT INTO occurrences(parish_id,series_id,ministry_id,title,starts_at,timezone,location,local_date,local_time)
+           VALUES($1,$2,$3,$4,(($7::date + $8::time) AT TIME ZONE $5),$5,$6,$7,$8)
+           ON CONFLICT DO NOTHING RETURNING id`,
           [
             parish,
             series.id,
             series.ministry_id,
             series.title,
-            startsAt,
             series.timezone,
             series.location,
             date,
-            series.local_time,
+            localTime,
           ],
         );
-        if (!inserted.rows[0]) return null;
+        if (!inserted.rows[0]) {
+          skippedCount++;
+          continue;
+        }
         await client.query(
           `INSERT INTO occurrence_members(occurrence_id,member_id,role) SELECT $1,member_id,role FROM ministry_members WHERE ministry_id=$2`,
           [inserted.rows[0].id, series.ministry_id],
         );
-        return inserted.rows[0].id;
-      });
-      if (result) {
         createdCount++;
-        occurrenceIds.push(result);
-      } else skippedCount++;
-    }
+        occurrenceIds.push(inserted.rows[0].id);
+      }
+      return { createdCount, skippedCount, occurrenceIds };
+    });
     return {
-      createdCount,
-      skippedCount,
+      ...generation,
       generatedThrough: input.throughDate,
-      occurrenceIds,
     };
   }
 
