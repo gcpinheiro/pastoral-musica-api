@@ -103,6 +103,10 @@ export class DomainService {
       lyrics: row.lyrics,
       chords: row.chords,
       status: row.status,
+      rightsStatus: row.rights_status,
+      rightsType: row.rights_type,
+      sourceUrl: row.source_url,
+      attribution: row.attribution,
     };
   }
 

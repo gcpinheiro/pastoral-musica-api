@@ -213,12 +213,21 @@ model songs {
   lyrics             String
   chords             String
   status             String          @default("ACTIVE")
+  rights_status      String          @default("UNREVIEWED")
+  rights_type        String?
+  source_url         String?
+  proof_url          String?
+  attribution        String?
+  content_hash       String?
+  import_batch_id    String?
+  rights_reviewed_at DateTime?       @db.Timestamptz(6)
   created_at         DateTime        @default(now()) @db.Timestamptz(6)
   updated_at         DateTime        @default(now()) @db.Timestamptz(6)
   setlist_items      setlist_items[]
   parishes           parishes        @relation(fields: [parish_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([parish_id], map: "songs_parish_idx")
+  @@unique([parish_id, content_hash], map: "songs_parish_content_hash_key")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
