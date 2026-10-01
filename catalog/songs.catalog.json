@@ -1,5 +1,226 @@
 {
   "$schema": "./songs.catalog.schema.json",
   "catalogVersion": 1,
-  "items": []
+  "items": [
+    {
+      "externalId": "harpa-de-siao-008-noite-feliz",
+      "title": "Noite Feliz",
+      "author": "Joseph Mohr e Franz Xaver Gruber; versão portuguesa de Frei Pedro Sinzig",
+      "defaultKey": "G",
+      "liturgicalMoments": ["Natal", "Entrada", "Final"],
+      "lyrics": "[Estrofe 1]\nNoite feliz, noite feliz!\nÓ Senhor, Deus de amor,\nPobrezinho nasceu em Belém.\nEis na lapa Jesus, nosso bem.\nDorme em paz, ó Jesus!\nDorme em paz, ó Jesus!\n\n[Estrofe 2]\nNoite feliz, noite feliz!\nÓ Jesus, Deus da luz,\nQuão afável é teu coração,\nQue quiseste nascer nosso irmão\nE a nós todos salvar,\nE a nós todos salvar!\n\n[Estrofe 3]\nNoite feliz, noite feliz!\nEis que no ar vêm cantar\nAos pastores os anjos dos céus,\nAnunciando a chegada de Deus,\nDe Jesus Salvador,\nDe Jesus Salvador!",
+      "chords": "[Estrofe 1]\nG\nNoite feliz, noite feliz!\nD7                 G\nÓ Senhor, Deus de amor,\nC                    G\nPobrezinho nasceu em Belém.\nC                    G\nEis na lapa Jesus, nosso bem.\nD7                G\nDorme em paz, ó Jesus!\nG         D7       G\nDorme em paz, ó Jesus!\n\n[Estrofe 2]\nG\nNoite feliz, noite feliz!\nD7                G\nÓ Jesus, Deus da luz,\nC                       G\nQuão afável é teu coração,\nC                         G\nQue quiseste nascer nosso irmão\nD7                 G\nE a nós todos salvar,\nG         D7       G\nE a nós todos salvar!\n\n[Estrofe 3]\nG\nNoite feliz, noite feliz!\nD7                  G\nEis que no ar vêm cantar\nC                         G\nAos pastores os anjos dos céus,\nC                         G\nAnunciando a chegada de Deus,\nD7               G\nDe Jesus Salvador,\nG        D7       G\nDe Jesus Salvador!",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PUBLIC_DOMAIN",
+        "sourceUrl": "https://s9.imslp.org/files/imglnks/usimg/d/db/IMSLP338865-PMLP546491-Harpa_de_Si%C3%A3o_vozes.pdf",
+        "proofUrl": "https://imslp.org/wiki/Harpa_de_Si%C3%A3o_(Lehmann,_Jo%C3%A3o_Baptista)",
+        "attribution": "Harpa de Sião, nº 8. Joseph Mohr (1792-1848), Franz Xaver Gruber (1787-1863) e versão portuguesa de Frei Pedro Sinzig (1876-1952). Cifra funcional transcrita da edição histórica.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-09-30T00:00:00.000Z"
+      }
+    },
+    {
+      "externalId": "harpa-de-siao-017-perdao-meu-jesus",
+      "title": "Perdão, Meu Jesus",
+      "author": "Tradicional — Cânticos Sagrados",
+      "defaultKey": "C",
+      "liturgicalMoments": ["Ato penitencial", "Quaresma"],
+      "lyrics": "[Estrofe 1]\nPerdão, meu Jesus, perdão, indulgência!\nPerdão e clemência, perdão e piedade!\n\n[Estrofe 2]\nFui eu quem no rude madeiro inclemente\nVos pus, ó pendente, com vil impiedade.\n\n[Estrofe 3]\nPor mim vosso sangue na cruz derramastes\nE bênçãos deixastes de amor e humildade.\n\n[Estrofe 4]\nEm vez de pagar-vos o tanto que eu possa,\nMe esqueço da vossa infinita bondade.\n\n[Estrofe 5]\nJá muito sentido, vos busco chorando,\nMeu bom Pai, clamando: perdão e piedade!",
+      "chords": "[Estrofe 1]\nC              F       C\nPerdão, meu Jesus, perdão, indulgência!\nG7                         C\nPerdão e clemência, perdão e piedade!\n\n[Estrofe 2]\nC                         F          C\nFui eu quem no rude madeiro inclemente\nG7                              C\nVos pus, ó pendente, com vil impiedade.\n\n[Estrofe 3]\nC                            F        C\nPor mim vosso sangue na cruz derramastes\nG7                              C\nE bênçãos deixastes de amor e humildade.\n\n[Estrofe 4]\nC                              F       C\nEm vez de pagar-vos o tanto que eu possa,\nG7                              C\nMe esqueço da vossa infinita bondade.\n\n[Estrofe 5]\nC                         F       C\nJá muito sentido, vos busco chorando,\nG7                                  C\nMeu bom Pai, clamando: perdão e piedade!",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PUBLIC_DOMAIN",
+        "sourceUrl": "https://s9.imslp.org/files/imglnks/usimg/d/db/IMSLP338865-PMLP546491-Harpa_de_Si%C3%A3o_vozes.pdf",
+        "proofUrl": "https://imslp.org/wiki/Harpa_de_Si%C3%A3o_(Lehmann,_Jo%C3%A3o_Baptista)",
+        "attribution": "Harpa de Sião, nº 17, proveniente dos Cânticos Sagrados. Texto e cifra da versão histórica integral em cinco estrofes.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-09-30T00:00:00.000Z"
+      }
+    },
+    {
+      "externalId": "harpa-de-siao-019-a-morrer-crucificado",
+      "title": "A Morrer Crucificado",
+      "author": "Tradicional — Cânticos Espirituais F.T.D.",
+      "defaultKey": "Am",
+      "liturgicalMoments": ["Quaresma", "Via-sacra", "Adoração da Cruz"],
+      "lyrics": "[1ª estação]\nA morrer crucificado,\nTeu Jesus é condenado\nPor teus crimes, pecador.\nPor teus crimes, pecador.\n\n[Oração]\nPela Virgem dolorosa,\nVossa Mãe tão piedosa,\nPerdoai-me, meu Jesus!\nPerdoai-me, meu Jesus!\n\n[2ª estação]\nCom a cruz é carregado\nE do peso acabrunhado\nVai morrer por teu amor.\nVai morrer por teu amor.\n\n[3ª estação]\nPela cruz tão oprimido,\nCai Jesus desfalecido\nPela tua salvação.\nPela tua salvação.\n\n[4ª estação]\nDe Maria lacrimosa,\nNo encontro lastimosa,\nVê a imensa compaixão.\nVê a imensa compaixão.\n\n[5ª estação]\nNo caminho do Calvário,\nUm auxílio necessário\nNão lhe nega o Cireneu.\nNão lhe nega o Cireneu.\n\n[6ª estação]\nO seu rosto ensanguentado\nPor Verônica é enxugado;\nEis no pano apareceu.\nEis no pano apareceu.\n\n[7ª estação]\nOutra vez desfalecido,\nPelas dores abatido,\nCai por terra o Salvador.\nCai por terra o Salvador.\n\n[8ª estação]\nDas mulheres piedosas,\nDe Sião filhas chorosas,\nÉ Jesus consolador.\nÉ Jesus consolador.\n\n[9ª estação]\nCai terceira vez prostrado\nPelo peso redobrado\nDos pecados e da cruz.\nDos pecados e da cruz.\n\n[10ª estação]\nJá do algoz as mãos agrestes\nAs sangrentas pobres vestes\nVão tirar do bom Jesus.\nVão tirar do bom Jesus.\n\n[11ª estação]\nSois por mim na cruz pregado,\nInsultado e blasfemado\nCom cegueira e com furor.\nCom cegueira e com furor.\n\n[12ª estação]\nPor meus crimes padecestes,\nMeu Jesus, por mim morrestes.\nQuanta angústia, quanta dor!\nQuanta angústia, quanta dor!\n\n[13ª estação]\nDo madeiro vos tiraram\nE à Mãe vos entregaram.\nCom que dor e compaixão!\nCom que dor e compaixão!\n\n[14ª estação]\nNo sepulcro vos puseram,\nMas os homens tudo esperam\nDo mistério da Paixão.\nDo mistério da Paixão.\n\n[Conclusão]\nMeu Jesus, por vossos passos,\nRecebei em vossos braços\nA mim, pobre pecador.\nA mim, pobre pecador.",
+      "chords": "[1ª estação]\nAm                 C\nA morrer crucificado,\nDm                 Am\nTeu Jesus é condenado\n       Dm          Am\nPor teus crimes, pecador.\nF        Dm        Am\nPor teus crimes, pecador.\n\n[Oração]\nAm                 C\nPela Virgem dolorosa,\nDm                 Am\nVossa Mãe tão piedosa,\n       Dm          Am\nPerdoai-me, meu Jesus!\nF        Dm        Am\nPerdoai-me, meu Jesus!\n\n[2ª estação]\nAm                 C\nCom a cruz é carregado\nDm                 Am\nE do peso acabrunhado\n       Dm          Am\nVai morrer por teu amor.\nF        Dm        Am\nVai morrer por teu amor.\n\n[3ª estação]\nAm                 C\nPela cruz tão oprimido,\nDm                 Am\nCai Jesus desfalecido\n       Dm          Am\nPela tua salvação.\nF        Dm        Am\nPela tua salvação.\n\n[4ª estação]\nAm                 C\nDe Maria lacrimosa,\nDm                 Am\nNo encontro lastimosa,\n       Dm          Am\nVê a imensa compaixão.\nF        Dm        Am\nVê a imensa compaixão.\n\n[5ª estação]\nAm                 C\nNo caminho do Calvário,\nDm                 Am\nUm auxílio necessário\n       Dm          Am\nNão lhe nega o Cireneu.\nF        Dm        Am\nNão lhe nega o Cireneu.\n\n[6ª estação]\nAm                 C\nO seu rosto ensanguentado\nDm                 Am\nPor Verônica é enxugado;\n       Dm          Am\nEis no pano apareceu.\nF        Dm        Am\nEis no pano apareceu.\n\n[7ª estação]\nAm                 C\nOutra vez desfalecido,\nDm                 Am\nPelas dores abatido,\n       Dm          Am\nCai por terra o Salvador.\nF        Dm        Am\nCai por terra o Salvador.\n\n[8ª estação]\nAm                 C\nDas mulheres piedosas,\nDm                 Am\nDe Sião filhas chorosas,\n       Dm          Am\nÉ Jesus consolador.\nF        Dm        Am\nÉ Jesus consolador.\n\n[9ª estação]\nAm                 C\nCai terceira vez prostrado\nDm                 Am\nPelo peso redobrado\n       Dm          Am\nDos pecados e da cruz.\nF        Dm        Am\nDos pecados e da cruz.\n\n[10ª estação]\nAm                 C\nJá do algoz as mãos agrestes\nDm                 Am\nAs sangrentas pobres vestes\n       Dm          Am\nVão tirar do bom Jesus.\nF        Dm        Am\nVão tirar do bom Jesus.\n\n[11ª estação]\nAm                 C\nSois por mim na cruz pregado,\nDm                 Am\nInsultado e blasfemado\n       Dm          Am\nCom cegueira e com furor.\nF        Dm        Am\nCom cegueira e com furor.\n\n[12ª estação]\nAm                 C\nPor meus crimes padecestes,\nDm                 Am\nMeu Jesus, por mim morrestes.\n       Dm          Am\nQuanta angústia, quanta dor!\nF        Dm        Am\nQuanta angústia, quanta dor!\n\n[13ª estação]\nAm                 C\nDo madeiro vos tiraram\nDm                 Am\nE à Mãe vos entregaram.\n       Dm          Am\nCom que dor e compaixão!\nF        Dm        Am\nCom que dor e compaixão!\n\n[14ª estação]\nAm                 C\nNo sepulcro vos puseram,\nDm                 Am\nMas os homens tudo esperam\n       Dm          Am\nDo mistério da Paixão.\nF        Dm        Am\nDo mistério da Paixão.\n\n[Conclusão]\nAm                 C\nMeu Jesus, por vossos passos,\nDm                 Am\nRecebei em vossos braços\n       Dm          Am\nA mim, pobre pecador.\nF        Dm        Am\nA mim, pobre pecador.",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PUBLIC_DOMAIN",
+        "sourceUrl": "https://cifrascatolicas.com.br/paulo-roberto/a-morrer-crucificado",
+        "proofUrl": "https://imslp.org/wiki/Harpa_de_Si%C3%A3o_(Lehmann,_Jo%C3%A3o_Baptista)",
+        "attribution": "Canto tradicional da Via-sacra, Harpa de Sião nº 19, Cânticos Espirituais F.T.D. Cifra integral conferida com a página pública indicada.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-09-30T00:00:00.000Z"
+      }
+    },
+    {
+      "externalId": "harpa-de-siao-057-a-nos-descei-divina-luz",
+      "title": "A Nós Descei, Divina Luz",
+      "author": "Tradicional — Cânticos Espirituais C.M.",
+      "defaultKey": "D",
+      "liturgicalMoments": ["Pentecostes", "Entrada", "Invocação ao Espírito Santo"],
+      "lyrics": "A nós descei, divina luz!\nA nós descei, divina luz!\nEm nossa alma acendei\nO amor, o amor de Jesus!\nO amor, o amor de Jesus!",
+      "chords": "D           G      D\nA nós descei, divina luz!\nD                  A7   D  D7\nA nós descei, divina luz!\nG       Gm          D  Bm\nEm nossa alma acendei\nEm       A7          D  D7\nO amor, o amor de Jesus!\nG        Gm          D\nO amor, o amor de Jesus!",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PUBLIC_DOMAIN",
+        "sourceUrl": "https://s9.imslp.org/files/imglnks/usimg/d/db/IMSLP338865-PMLP546491-Harpa_de_Si%C3%A3o_vozes.pdf",
+        "proofUrl": "https://imslp.org/wiki/Harpa_de_Si%C3%A3o_(Lehmann,_Jo%C3%A3o_Baptista)",
+        "attribution": "Harpa de Sião, nº 57, Cânticos Espirituais C.M. Esta é a versão histórica completa, formada pelo refrão publicado na edição-base.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-09-30T00:00:00.000Z"
+      }
+    },
+    {
+      "externalId": "harpa-de-siao-089-bendito-louvado-seja",
+      "title": "Bendito, Louvado Seja",
+      "author": "Popular",
+      "defaultKey": "C",
+      "liturgicalMoments": ["Adoração", "Comunhão", "Ação de graças"],
+      "lyrics": "[Estrofe 1]\nBendito, louvado seja,\nBendito, louvado seja\nO Santíssimo Sacramento,\nO Santíssimo Sacramento.\n\n[Estrofe 2]\nOs anjos, todos os anjos,\nOs anjos, todos os anjos,\nLouvem a Deus para sempre. Amém!\nLouvem a Deus para sempre. Amém!",
+      "chords": "[Estrofe 1]\nC  G             C\nBendito, louvado seja,\n   G             C  C7\nBendito, louvado seja\n     F       G    C  C7\nO Santíssimo Sacramento,\n     F       G    C\nO Santíssimo Sacramento.\n\n[Estrofe 2]\n   G              C\nOs anjos, todos os anjos,\n   G              C  C7\nOs anjos, todos os anjos,\n         F         G        C  C7\nLouvem a Deus para sempre. Amém!\n         F         G        C\nLouvem a Deus para sempre. Amém!",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PUBLIC_DOMAIN",
+        "sourceUrl": "https://s9.imslp.org/files/imglnks/usimg/d/db/IMSLP338865-PMLP546491-Harpa_de_Si%C3%A3o_vozes.pdf",
+        "proofUrl": "https://imslp.org/wiki/Harpa_de_Si%C3%A3o_(Lehmann,_Jo%C3%A3o_Baptista)",
+        "attribution": "Canto popular, Harpa de Sião nº 89. Versão histórica integral em duas estrofes; cifra funcional transcrita da mesma melodia.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-09-30T00:00:00.000Z"
+      }
+    },
+    {
+      "externalId": "harpa-de-siao-146-hostia-santa-imaculada",
+      "title": "Hóstia Santa, Imaculada",
+      "author": "Pe. João Baptista Lehmann",
+      "defaultKey": "Gm",
+      "liturgicalMoments": ["Comunhão", "Adoração", "Ação de graças"],
+      "lyrics": "[Estrofe 1]\nHóstia santa, imaculada!\nPão dos anjos, pão da vida,\nÀ minh'alma esmorecida\nVem dar forças e ardor!\n\n[Refrão]\nVem! Te rogo, Jesus meu!\nMeu divino e eterno amor!\n\n[Estrofe 2]\nÓ Jesus! Se tu me faltas,\nFalta o sol à minha vida;\nAndo errante e sem guarida,\nDesfalece o meu vigor.\n\n[Estrofe 3]\nÓ Jesus! Escuta os rogos\nDe minh'alma que te implora:\nVem, Jesus, e sem demora!\nTe desejo com ardor.\n\n[Estrofe 4]\nSeja eterno este instante,\nQue minh'alma a ti unida\nTem em si do céu a vida,\nTem do céu a paz, o amor.",
+      "chords": "[Estrofe 1]\nGm             D7    Gm\nHóstia santa, imaculada!\n         Cm           Gm\nPão dos anjos, pão da vida,\n      D7          Gm\nÀ minh'alma esmorecida\n     A7             D\nVem dar forças e ardor!\n\n[Refrão]\nG7      Cm          Gm\nVem! Te rogo, Jesus meu!\n      D       D7     Gm\nMeu divino e eterno amor!\n\n[Estrofe 2]\nGm            D7    Gm\nÓ Jesus! Se tu me faltas,\n        Cm            Gm\nFalta o sol à minha vida;\n       D7            Gm\nAndo errante e sem guarida,\n     A7          D\nDesfalece o meu vigor.\n\n[Refrão]\nG7      Cm          Gm\nVem! Te rogo, Jesus meu!\n      D       D7     Gm\nMeu divino e eterno amor!\n\n[Estrofe 3]\nGm           D7      Gm\nÓ Jesus! Escuta os rogos\n        Cm             Gm\nDe minh'alma que te implora:\n     D7           Gm\nVem, Jesus, e sem demora!\n      A7        D\nTe desejo com ardor.\n\n[Refrão]\nG7      Cm          Gm\nVem! Te rogo, Jesus meu!\n      D       D7     Gm\nMeu divino e eterno amor!\n\n[Estrofe 4]\nGm          D7      Gm\nSeja eterno este instante,\n         Cm         Gm\nQue minh'alma a ti unida\n       D7          Gm\nTem em si do céu a vida,\n       A7             D\nTem do céu a paz, o amor.\n\n[Refrão]\nG7      Cm          Gm\nVem! Te rogo, Jesus meu!\n      D       D7     Gm\nMeu divino e eterno amor!",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PUBLIC_DOMAIN",
+        "sourceUrl": "https://s9.imslp.org/files/imglnks/usimg/d/db/IMSLP338865-PMLP546491-Harpa_de_Si%C3%A3o_vozes.pdf",
+        "proofUrl": "https://imslp.org/wiki/H%C3%B3stia_Santa_Imaculada_(Lehmann,_Jo%C3%A3o_Baptista)",
+        "attribution": "Pe. João Baptista Lehmann (1873-1955), Harpa de Sião nº 146. Letra integral em quatro estrofes e cifra completa da versão histórica.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-09-30T00:00:00.000Z"
+      }
+    },
+    {
+      "externalId": "harpa-de-siao-137-divina-eucaristia",
+      "title": "Divina Eucaristia",
+      "author": "Pe. João Baptista Lehmann",
+      "defaultKey": "C",
+      "liturgicalMoments": ["Comunhão", "Adoração", "Ação de graças"],
+      "lyrics": "[Estrofe 1]\nDivina Eucaristia,\nDos anjos o manjar,\nSois força e alegria\nDe quem vos quer amar.\nÓ Deus no Sacramento,\nJesus, meu bom Pastor,\nSois meu doce alimento,\nMeu bem e meu amor.\n\n[Estrofe 2]\nSois minha fortaleza,\nJesus, no meu lidar;\nDo céu sois a riqueza\nE sois meu no altar.\nÓ pio e doce encanto,\nPensar em vós, Senhor,\nMitiga o triste pranto\nDa minha acerba dor.\n\n[Estrofe 3]\nEm vós acha esperança\nMeu pobre coração;\nEm vós, com segurança,\nEspera a salvação.\nJesus, da minha vida,\nSois o consolador;\nDa minha alma oprimida,\nSois o libertador.",
+      "chords": "[Estrofe 1]\nC              G7  C\nDivina Eucaristia,\nC7             F\nDos anjos o manjar,\nG7                C\nSois força e alegria\nD7                  G7\nDe quem vos quer amar.\nC                 F\nÓ Deus no Sacramento,\nG7                 C\nJesus, meu bom Pastor,\nAm                Dm\nSois meu doce alimento,\nG7              C\nMeu bem e meu amor.\n\n[Estrofe 2]\nC                 G7  C\nSois minha fortaleza,\nC7                 F\nJesus, no meu lidar;\nG7                 C\nDo céu sois a riqueza\nD7                 G7\nE sois meu no altar.\nC                 F\nÓ pio e doce encanto,\nG7                C\nPensar em vós, Senhor,\nAm                  Dm\nMitiga o triste pranto\nG7                 C\nDa minha acerba dor.\n\n[Estrofe 3]\nC                    G7  C\nEm vós acha esperança\nC7                 F\nMeu pobre coração;\nG7                    C\nEm vós, com segurança,\nD7                 G7\nEspera a salvação.\nC                  F\nJesus, da minha vida,\nG7                C\nSois o consolador;\nAm                   Dm\nDa minha alma oprimida,\nG7               C\nSois o libertador.",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PUBLIC_DOMAIN",
+        "sourceUrl": "https://s9.imslp.org/files/imglnks/usimg/d/db/IMSLP338865-PMLP546491-Harpa_de_Si%C3%A3o_vozes.pdf",
+        "proofUrl": "https://imslp.org/wiki/Harpa_de_Si%C3%A3o_(Lehmann,_Jo%C3%A3o_Baptista)",
+        "attribution": "Pe. João Baptista Lehmann (1873-1955), Harpa de Sião nº 137. Texto integral em três estrofes; cifra funcional baseada no acompanhamento histórico.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-09-30T00:00:00.000Z"
+      }
+    },
+    {
+      "externalId": "harpa-de-siao-171-coracao-santo",
+      "title": "Coração Santo, Tu Reinarás",
+      "author": "Tradicional — Cânticos Espirituais F.T.D.",
+      "defaultKey": "Dm",
+      "liturgicalMoments": ["Sagrado Coração de Jesus", "Adoração", "Final"],
+      "lyrics": "[Refrão]\nCoração santo, tu reinarás,\nTu, nosso encanto, sempre serás!\nCoração santo, tu reinarás,\nTu, nosso encanto, sempre serás!\n\n[Estrofe 1]\nJesus amável, Jesus piedoso,\nPai amoroso, frágua de amor!\nAos teus pés venho, se tu me deixas,\nHumildes queixas, sentido expor.\n\n[Estrofe 2]\nDivino peito, que amor inflama\nEm viva chama de eterna luz!\nPorque a tens sempre reconcentrada,\nNão adorada, doce Jesus?\n\n[Estrofe 3]\nEstende às almas teu suave fogo\nE tudo logo se inflamará!\nMais tempo a terra, no mal sumida\nE endurecida, não ficará.\n\n[Estrofe 4]\nPor estas chamas de amor benditas,\nNunca permitas ao mal reinar!\nAo Brasil chegue tua caridade,\nQue ele, em verdade, te saiba amar.",
+      "chords": "[Refrão]\nDm                 Gm      Dm\nCoração santo, tu reinarás,\n           Bb       A7      Dm\nTu, nosso encanto, sempre serás!\nDm                 C7      F\nCoração santo, tu reinarás,\n           Gm       A7      Dm\nTu, nosso encanto, sempre serás!\n\n[Estrofe 1]\nD7     Gm   C7          F   Dm\nJesus amável, Jesus piedoso,\n       Gm   A7          Dm  D7\nPai amoroso, frágua de amor!\n       Gm   C7          F   Dm\nAos teus pés venho, se tu me deixas,\n          Gm      A7       Dm\nHumildes queixas, sentido expor.\n\n[Estrofe 2]\nD7      Gm   C7           F   Dm\nDivino peito, que amor inflama\n        Gm    A7          Dm  D7\nEm viva chama de eterna luz!\n           Gm    C7          F   Dm\nPorque a tens sempre reconcentrada,\n          Gm    A7        Dm\nNão adorada, doce Jesus?\n\n[Estrofe 3]\nD7          Gm    C7          F   Dm\nEstende às almas teu suave fogo\n          Gm    A7        Dm  D7\nE tudo logo se inflamará!\n             Gm    C7          F   Dm\nMais tempo a terra, no mal sumida\n             Gm    A7       Dm\nE endurecida, não ficará.\n\n[Estrofe 4]\nD7          Gm    C7           F   Dm\nPor estas chamas de amor benditas,\n             Gm    A7          Dm  D7\nNunca permitas ao mal reinar!\n             Gm    C7         F   Dm\nAo Brasil chegue tua caridade,\n              Gm    A7        Dm\nQue ele, em verdade, te saiba amar.",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PUBLIC_DOMAIN",
+        "sourceUrl": "https://s9.imslp.org/files/imglnks/usimg/d/db/IMSLP338865-PMLP546491-Harpa_de_Si%C3%A3o_vozes.pdf",
+        "proofUrl": "https://imslp.org/wiki/Harpa_de_Si%C3%A3o_(Lehmann,_Jo%C3%A3o_Baptista)",
+        "attribution": "Canto histórico dos Cânticos Espirituais F.T.D., Harpa de Sião nº 171. Versão integral em quatro estrofes.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-09-30T00:00:00.000Z"
+      }
+    },
+    {
+      "externalId": "harpa-de-siao-com-minha-mae-estarei",
+      "title": "Com Minha Mãe Estarei",
+      "author": "Tradicional católico",
+      "defaultKey": "C",
+      "liturgicalMoments": ["Mariano", "Final", "Solenidades marianas"],
+      "lyrics": "[Estrofe 1]\nCom minha Mãe estarei,\nNa santa glória um dia,\nJunto à Virgem Maria,\nNo céu triunfarei.\n\n[Refrão]\nNo céu, no céu,\nCom minha Mãe estarei!\nNo céu, no céu,\nCom minha Mãe estarei!\n\n[Estrofe 2]\nCom minha Mãe estarei,\nAos anjos me ajuntando,\nDo Onipotente ao mando,\nHosanas lhe darei.\n\n[Estrofe 3]\nCom minha Mãe estarei,\nE então coroa digna,\nDe sua mão benigna,\nFeliz receberei.\n\n[Estrofe 4]\nCom minha Mãe estarei,\nE sempre neste exílio,\nDe seu piedoso auxílio,\nCom fé me valerei.",
+      "chords": "[Estrofe 1]\nC                 F\nCom minha Mãe estarei,\nG7                 C\nNa santa glória um dia,\nAm              Dm\nJunto à Virgem Maria,\nG7              C\nNo céu triunfarei.\n\n[Refrão]\nF        C\nNo céu, no céu,\nG7                 C\nCom minha Mãe estarei!\nF        C\nNo céu, no céu,\nG7                 C\nCom minha Mãe estarei!\n\n[Estrofe 2]\nC                 F\nCom minha Mãe estarei,\nG7                  C\nAos anjos me ajuntando,\nAm                    Dm\nDo Onipotente ao mando,\nG7              C\nHosanas lhe darei.\n\n[Estrofe 3]\nC                 F\nCom minha Mãe estarei,\nG7                C\nE então coroa digna,\nAm                 Dm\nDe sua mão benigna,\nG7                 C\nFeliz receberei.\n\n[Estrofe 4]\nC                 F\nCom minha Mãe estarei,\nG7                 C\nE sempre neste exílio,\nAm                   Dm\nDe seu piedoso auxílio,\nG7                C\nCom fé me valerei.",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PUBLIC_DOMAIN",
+        "sourceUrl": "https://repositorio.ufpe.br/bitstream/123456789/7131/1/arquivo3284_1.pdf",
+        "proofUrl": "https://imslp.org/wiki/Harpa_de_Si%C3%A3o_(Lehmann,_Jo%C3%A3o_Baptista)",
+        "attribution": "Canto tradicional documentado na Harpa de Sião de 1922. Versão fechada e integral em quatro estrofes; cifra funcional da melodia tradicional.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-09-30T00:00:00.000Z"
+      }
+    },
+    {
+      "externalId": "harpa-de-siao-queremos-deus",
+      "title": "Queremos Deus",
+      "author": "Popular católico",
+      "defaultKey": "F",
+      "liturgicalMoments": ["Entrada", "Final", "Solenidades"],
+      "lyrics": "[Estrofe 1]\nQueremos Deus, homens ingratos,\nAo Pai supremo, ao Redentor.\nZombam da fé os insensatos,\nErguem-se em vão contra o Senhor.\n\n[Refrão]\nDa nossa fé, ó Virgem,\nO brado abençoai!\nQueremos Deus que é nosso Rei;\nQueremos Deus que é nosso Pai!\nQueremos Deus que é nosso Rei;\nQueremos Deus que é nosso Pai!\n\n[Estrofe 2]\nQueremos Deus! Um povo aflito,\nÓ doce Mãe, vem repetir\nAos vossos pés, d'alma este grito,\nQue aos pés de Deus fareis subir!\n\n[Estrofe 3]\nQueremos Deus e a sã doutrina,\nQue nos legou na sua cruz.\nLeve à escola e à oficina\nA lei de Cristo, amor e luz.\n\n[Estrofe 4]\nQueremos Deus! Na pátria amada,\nAmar-nos todos como irmãos,\nE ver a Igreja respeitada:\nSão nossos votos de cristãos.",
+      "chords": "[Estrofe 1]\nF                    F7\nQueremos Deus, homens ingratos,\nBb          G7      C\nAo Pai supremo, ao Redentor.\nF                    Dm\nZombam da fé os insensatos,\nG7                         C  C7\nErguem-se em vão contra o Senhor.\n\n[Refrão]\nF             Dm   Gm\nDa nossa fé, ó Virgem,\nC7             F\nO brado abençoai!\nF                  F7     Bb\nQueremos Deus que é nosso Rei;\nBb           F       C7   F  F7\nQueremos Deus que é nosso Pai!\nBb                         F\nQueremos Deus que é nosso Rei;\nF                    C7    F\nQueremos Deus que é nosso Pai!\n\n[Estrofe 2]\nF                    F7\nQueremos Deus! Um povo aflito,\nBb               G7  C\nÓ doce Mãe, vem repetir\nF                       Dm\nAos vossos pés, d'alma este grito,\nG7                              C  C7\nQue aos pés de Deus fareis subir!\n\n[Estrofe 3]\nF                       F7\nQueremos Deus e a sã doutrina,\nBb                  G7  C\nQue nos legou na sua cruz.\nF                     Dm\nLeve à escola e à oficina\nG7                         C  C7\nA lei de Cristo, amor e luz.\n\n[Estrofe 4]\nF                       F7\nQueremos Deus! Na pátria amada,\nBb                    G7  C\nAmar-nos todos como irmãos,\nF                       Dm\nE ver a Igreja respeitada:\nG7                         C  C7\nSão nossos votos de cristãos.\n\n[Refrão final]\nF             Dm   Gm\nDa nossa fé, ó Virgem,\nC7             F\nO brado abençoai!\nF                  F7     Bb\nQueremos Deus que é nosso Rei;\nBb           F       C7   F\nQueremos Deus que é nosso Pai!",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PUBLIC_DOMAIN",
+        "sourceUrl": "https://www.cifraclub.com.br/catolicas/queremos-deus/",
+        "proofUrl": "https://anpuh.org.br/uploads/anais-simposios/pdf/2019-01/1548856708_a9987e95dcd7c76224d7cd66e0c6e8aa.pdf",
+        "attribution": "Hino popular católico documentado na Harpa de Sião de 1922. Letra e cifra completas da versão tradicional em quatro estrofes.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-09-30T00:00:00.000Z"
+      }
+    }
+  ]
 }

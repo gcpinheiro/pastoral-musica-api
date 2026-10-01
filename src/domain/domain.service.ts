@@ -678,12 +678,17 @@ export class DomainService {
     },
   ) {
     const parish = this.requireParish(user);
+    if (user.role === 'MEMBER' && !user.memberId) return [];
     const values: unknown[] = [parish];
     let where = 'o.parish_id=$1';
     const memberId = user.role === 'MEMBER' ? user.memberId : filters.memberId;
+    let memberParameter: string | undefined;
     if (memberId) {
       values.push(memberId);
-      where += ` AND EXISTS(SELECT 1 FROM occurrence_members om WHERE om.occurrence_id=o.id AND om.member_id=$${values.length})`;
+      memberParameter = `$${values.length}`;
+      where += ` AND EXISTS(SELECT 1 FROM occurrence_members om WHERE om.occurrence_id=o.id AND om.member_id=${memberParameter})`;
+      if (user.role === 'MEMBER')
+        where += " AND o.status IN ('PUBLISHED','ATTENTION','CANCELLED')";
     }
     for (const [column, value] of [
       ['o.starts_at::date >=', filters.from],
@@ -697,7 +702,14 @@ export class DomainService {
       }
     const rows = (
       await this.db.query(
-        `SELECT o.*,m.name ministry_name,(SELECT count(*) FROM occurrence_members WHERE occurrence_id=o.id)::int member_count,(SELECT count(*) FROM setlist_items WHERE occurrence_id=o.id)::int repertoire_count FROM occurrences o JOIN ministries m ON m.id=o.ministry_id WHERE ${where} ORDER BY starts_at`,
+        `SELECT o.*,m.name ministry_name,
+                (SELECT count(*) FROM occurrence_members WHERE occurrence_id=o.id)::int member_count,
+                (SELECT count(*) FROM setlist_items WHERE occurrence_id=o.id)::int repertoire_count,
+                ${memberParameter ? `(SELECT om.confirmation FROM occurrence_members om WHERE om.occurrence_id=o.id AND om.member_id=${memberParameter})` : 'NULL::text'} current_confirmation
+           FROM occurrences o
+           JOIN ministries m ON m.id=o.ministry_id
+          WHERE ${where}
+          ORDER BY starts_at`,
         values,
       )
     ).rows;
@@ -718,14 +730,29 @@ export class DomainService {
       status: r.status,
       memberCount: Number(r.member_count ?? 0),
       repertoireCount: Number(r.repertoire_count ?? 0),
+      ...(r.current_confirmation
+        ? { myConfirmation: r.current_confirmation }
+        : {}),
     };
   }
   async getOccurrence(user: SessionUser, id: string) {
     const parish = this.requireParish(user);
+    const values: unknown[] = [id, parish];
+    let access = 'o.id=$1 AND o.parish_id=$2';
+    if (user.role === 'MEMBER') {
+      if (!user.memberId)
+        throw new ProblemException(
+          404,
+          'NOT_FOUND',
+          'Ocorrência não encontrada.',
+        );
+      values.push(user.memberId);
+      access += ` AND o.status IN ('PUBLISHED','ATTENTION','CANCELLED') AND EXISTS(SELECT 1 FROM occurrence_members access_member WHERE access_member.occurrence_id=o.id AND access_member.member_id=$3)`;
+    }
     const row = (
       await this.db.query(
-        `SELECT o.*,m.name ministry_name,(SELECT count(*) FROM occurrence_members WHERE occurrence_id=o.id)::int member_count,(SELECT count(*) FROM setlist_items WHERE occurrence_id=o.id)::int repertoire_count FROM occurrences o JOIN ministries m ON m.id=o.ministry_id WHERE o.id=$1 AND o.parish_id=$2`,
-        [id, parish],
+        `SELECT o.*,m.name ministry_name,(SELECT count(*) FROM occurrence_members WHERE occurrence_id=o.id)::int member_count,(SELECT count(*) FROM setlist_items WHERE occurrence_id=o.id)::int repertoire_count FROM occurrences o JOIN ministries m ON m.id=o.ministry_id WHERE ${access}`,
+        values,
       )
     ).rows[0];
     if (!row)
@@ -772,7 +799,15 @@ export class DomainService {
       liturgicalMoment: i.liturgical_moment,
       notes: i.notes,
     }));
-    return { ...this.occurrenceSummary(row), members, setlist: { items } };
+    const myConfirmation = user.memberId
+      ? members.find((member) => member.memberId === user.memberId)?.confirmation
+      : undefined;
+    return {
+      ...this.occurrenceSummary(row),
+      ...(myConfirmation ? { myConfirmation } : {}),
+      members,
+      setlist: { items },
+    };
   }
   async updateOccurrence(user: SessionUser, id: string, input: OccurrenceDto) {
     const result = await this.db.query(
@@ -796,11 +831,109 @@ export class DomainService {
       );
     return this.getOccurrence(user, id);
   }
+  async publishOccurrence(user: SessionUser, id: string) {
+    const parish = this.requireParish(user);
+    await this.db.transaction(async (client) => {
+      const occurrence = (
+        await client.query<{ status: string }>(
+          'SELECT status FROM occurrences WHERE id=$1 AND parish_id=$2 FOR UPDATE',
+          [id, parish],
+        )
+      ).rows[0];
+      if (!occurrence)
+        throw new ProblemException(
+          404,
+          'NOT_FOUND',
+          'Ocorrência não encontrada.',
+        );
+      if (occurrence.status === 'CANCELLED')
+        throw new ProblemException(
+          HttpStatus.CONFLICT,
+          'OCCURRENCE_CANCELLED',
+          'Uma escala cancelada não pode ser publicada.',
+        );
+      if (occurrence.status === 'PUBLISHED') return;
+      await client.query(
+        "UPDATE occurrences SET status='PUBLISHED',version=version+1,updated_at=now() WHERE id=$1",
+        [id],
+      );
+      await client.query(
+        `INSERT INTO audit_logs(parish_id,actor_user_id,action,entity_type,entity_id,details)
+         VALUES($1,$2,'PUBLISH_OCCURRENCE','OCCURRENCE',$3,$4)`,
+        [parish, user.id, id, JSON.stringify({ previousStatus: occurrence.status })],
+      );
+    });
+    return this.getOccurrence(user, id);
+  }
+  async updateConfirmation(
+    user: SessionUser,
+    id: string,
+    memberId: string,
+    confirmation: 'CONFIRMED' | 'DECLINED',
+  ) {
+    if (user.role === 'MEMBER' && user.memberId !== memberId)
+      throw new ProblemException(
+        HttpStatus.FORBIDDEN,
+        'FORBIDDEN',
+        'Você só pode responder por sua própria participação.',
+      );
+    const parish = this.requireParish(user);
+    await this.db.transaction(async (client) => {
+      const participation = (
+        await client.query<{ status: string; confirmation: string }>(
+          `SELECT o.status,om.confirmation
+             FROM occurrences o
+             JOIN occurrence_members om ON om.occurrence_id=o.id
+            WHERE o.id=$1 AND o.parish_id=$2 AND om.member_id=$3
+            FOR UPDATE`,
+          [id, parish, memberId],
+        )
+      ).rows[0];
+      if (!participation)
+        throw new ProblemException(
+          404,
+          'NOT_FOUND',
+          'Participação na escala não encontrada.',
+        );
+      if (!['PUBLISHED', 'ATTENTION'].includes(participation.status))
+        throw new ProblemException(
+          HttpStatus.CONFLICT,
+          'OCCURRENCE_NOT_PUBLISHED',
+          'A participação só pode ser respondida depois da publicação da escala.',
+        );
+      if (participation.confirmation === confirmation) return;
+      await client.query(
+        'UPDATE occurrence_members SET confirmation=$1 WHERE occurrence_id=$2 AND member_id=$3',
+        [confirmation, id, memberId],
+      );
+      await client.query(
+        `INSERT INTO audit_logs(parish_id,actor_user_id,action,entity_type,entity_id,details)
+         VALUES($1,$2,'UPDATE_OCCURRENCE_CONFIRMATION','OCCURRENCE',$3,$4)`,
+        [
+          parish,
+          user.id,
+          id,
+          JSON.stringify({
+            memberId,
+            previousConfirmation: participation.confirmation,
+            confirmation,
+          }),
+        ],
+      );
+    });
+    return this.getOccurrence(user, id);
+  }
   async replaceMembers(
     user: SessionUser,
     id: string,
     members: OccurrenceMemberDto[],
   ) {
+    if (new Set(members.map((member) => member.memberId)).size !== members.length)
+      throw new ProblemException(
+        422,
+        'DUPLICATE_MEMBER',
+        'A formação não pode conter o mesmo membro mais de uma vez.',
+      );
     const parish = this.requireParish(user);
     const occurrence = (
       await this.db.query(
@@ -816,8 +949,8 @@ export class DomainService {
       );
     await this.db.transaction(async (client) => {
       await client.query(
-        'DELETE FROM occurrence_members WHERE occurrence_id=$1',
-        [id],
+        'DELETE FROM occurrence_members WHERE occurrence_id=$1 AND NOT (member_id=ANY($2::uuid[]))',
+        [id, members.map((member) => member.memberId)],
       );
       for (const member of members) {
         const scopedMember = await client.query(
@@ -849,7 +982,12 @@ export class DomainService {
             'Justificativa obrigatória para ignorar conflitos.',
           );
         await client.query(
-          'INSERT INTO occurrence_members(occurrence_id,member_id,role,conflict_override,conflict_justification) VALUES($1,$2,$3,$4,$5)',
+          `INSERT INTO occurrence_members(occurrence_id,member_id,role,conflict_override,conflict_justification)
+           VALUES($1,$2,$3,$4,$5)
+           ON CONFLICT (occurrence_id,member_id) DO UPDATE
+             SET role=EXCLUDED.role,
+                 conflict_override=EXCLUDED.conflict_override,
+                 conflict_justification=EXCLUDED.conflict_justification`,
           [
             id,
             member.memberId,
@@ -916,13 +1054,19 @@ export class DomainService {
     const occurrences = await this.listOccurrences(user, { from, to });
     const news = await this.listNews(user);
     const occurrenceIds = occurrences.map((item) => item.id);
+    const confirmationValues: unknown[] = [occurrenceIds];
+    let confirmationScope = '';
+    if (user.role === 'MEMBER' && user.memberId) {
+      confirmationValues.push(user.memberId);
+      confirmationScope = ' AND member_id=$2';
+    }
     const confirmations = occurrenceIds.length
       ? (
           await this.db.query(
             `SELECT count(*) FILTER (WHERE confirmation='CONFIRMED')::int confirmed,
                     count(*) FILTER (WHERE confirmation='PENDING')::int pending
-             FROM occurrence_members WHERE occurrence_id=ANY($1::uuid[])`,
-            [occurrenceIds],
+             FROM occurrence_members WHERE occurrence_id=ANY($1::uuid[])${confirmationScope}`,
+            confirmationValues,
           )
         ).rows[0]
       : { confirmed: 0, pending: 0 };

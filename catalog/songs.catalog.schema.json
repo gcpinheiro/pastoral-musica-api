@@ -32,7 +32,7 @@
       "additionalProperties": false,
       "properties": {
         "status": { "enum": ["APPROVED", "PENDING_REVIEW", "REJECTED", "UNREVIEWED"] },
-        "type": { "enum": ["PUBLIC_DOMAIN", "CC0", "CC_BY", "CC_BY_SA", "DIRECT_PERMISSION", "LICENSED"] },
+        "type": { "enum": ["PUBLIC_DOMAIN", "CC0", "CC_BY", "CC_BY_SA"] },
         "sourceUrl": { "type": "string", "format": "uri" },
         "proofUrl": { "type": "string", "format": "uri" },
         "attribution": { "type": "string", "minLength": 1 },

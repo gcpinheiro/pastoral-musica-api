@@ -1,21 +1,36 @@
+import 'dotenv/config';
 import { createHash, randomUUID } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import process from 'node:process';
 import { Client } from 'pg';
 
-const RIGHTS_TYPES = new Set([
+const OPEN_RIGHTS_TYPES = new Set([
   'PUBLIC_DOMAIN',
   'CC0',
   'CC_BY',
   'CC_BY_SA',
-  'DIRECT_PERMISSION',
-  'LICENSED',
 ]);
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function argument(name) {
-  const index = process.argv.indexOf(`--${name}`);
-  return index >= 0 ? process.argv[index + 1] : undefined;
+  const option = `--${name}`;
+  const index = process.argv.indexOf(option);
+  if (index >= 0) return process.argv[index + 1];
+  return process.argv.find((value) => value.startsWith(`${option}=`))?.slice(option.length + 1);
+}
+
+function positionalArguments() {
+  const values = [];
+  const args = process.argv.slice(2);
+  const optionsWithValues = new Set(['--file', '--parish-id']);
+  for (let index = 0; index < args.length; index += 1) {
+    if (!args[index].startsWith('--')) {
+      values.push(args[index]);
+      continue;
+    }
+    if (optionsWithValues.has(args[index]) && args[index + 1] && !args[index + 1].startsWith('--')) index += 1;
+  }
+  return values;
 }
 
 function fail(message) {
@@ -50,7 +65,7 @@ function validateCatalog(catalog) {
       errors.push(`${prefix}.liturgicalMoments precisa ter ao menos uma etapa.`);
     const rights = item.rights;
     if (!rights || rights.status !== 'APPROVED') errors.push(`${prefix}.rights.status deve ser APPROVED.`);
-    if (!rights || !RIGHTS_TYPES.has(rights.type)) errors.push(`${prefix}.rights.type não é suportado.`);
+    if (!rights || !OPEN_RIGHTS_TYPES.has(rights.type)) errors.push(`${prefix}.rights.type deve ser PUBLIC_DOMAIN, CC0, CC_BY ou CC_BY_SA.`);
     for (const field of ['sourceUrl', 'proofUrl'])
       if (!rights?.[field] || !String(rights[field]).startsWith('https://')) errors.push(`${prefix}.rights.${field} deve ser uma URL HTTPS.`);
     for (const field of ['allowsStorage', 'allowsLyrics', 'allowsChords', 'allowsTransposition'])
@@ -65,8 +80,9 @@ function validateCatalog(catalog) {
 }
 
 async function main() {
+  const positional = positionalArguments();
   if (process.argv.includes('--report')) {
-    const parishId = argument('parish-id');
+    const parishId = argument('parish-id') ?? positional.find((value) => UUID.test(value));
     if (!parishId || !UUID.test(parishId)) fail('--parish-id precisa ser um UUID válido.');
     if (!process.env.DATABASE_URL) fail('DATABASE_URL não configurada.');
     const client = new Client({ connectionString: process.env.DATABASE_URL });
@@ -89,14 +105,14 @@ async function main() {
     }
     return;
   }
-  const file = argument('file') ?? './catalog/songs.catalog.json';
+  const file = argument('file') ?? positional.find((value) => !UUID.test(value)) ?? './catalog/songs.catalog.json';
   const catalog = JSON.parse(await readFile(file, 'utf8'));
   validateCatalog(catalog);
   if (process.argv.includes('--validate')) {
     console.log(`Catálogo válido: ${catalog.items.length} item(ns).`);
     return;
   }
-  const parishId = argument('parish-id');
+  const parishId = argument('parish-id') ?? positional.find((value) => UUID.test(value));
   if (!parishId || !UUID.test(parishId)) fail('--parish-id precisa ser um UUID válido.');
   if (!process.env.DATABASE_URL) fail('DATABASE_URL não configurada.');
 

@@ -6,6 +6,9 @@ preenchido copiando letras ou cifras de sites públicos sem autorização.
 Cada item precisa conter letra, cifra e registro de direitos para a mesma versão.
 O importador só publica itens com `rights.status = "APPROVED"` e com todas as
 permissões de armazenamento, letra, cifra e transposição marcadas como `true`.
+Neste fluxo aberto, os únicos tipos aceitos são `PUBLIC_DOMAIN`, `CC0`, `CC_BY`
+e `CC_BY_SA`. Autorizações diretas e licenças comerciais não são importadas
+por este comando.
 
 Validar o lote:
 

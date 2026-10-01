@@ -25,6 +25,7 @@ import type { SessionUser } from '../common/auth.types';
 import { ProblemException } from '../common/problem.exception';
 import { DomainService } from './domain.service';
 import {
+  ConfirmationDto,
   GenerateDto,
   MemberDto,
   MinistryDto,
@@ -299,12 +300,28 @@ export class DomainController {
   ) {
     return this.domain.updateOccurrence(u, id, b);
   }
+  @Roles('LEADER') @Post('occurrences/:id/publish') publishOccurrence(
+    @CurrentUser() u: SessionUser,
+    @Param('id') id: string,
+  ) {
+    return this.domain.publishOccurrence(u, id);
+  }
   @Roles('LEADER') @Put('occurrences/:id/members') replaceMembers(
     @CurrentUser() u: SessionUser,
     @Param('id') id: string,
     @Body() b: ReplaceMembersDto,
   ) {
     return this.domain.replaceMembers(u, id, b.members);
+  }
+  @Roles('LEADER', 'MEMBER')
+  @Patch('occurrences/:id/members/:memberId/confirmation')
+  updateConfirmation(
+    @CurrentUser() u: SessionUser,
+    @Param('id') id: string,
+    @Param('memberId') memberId: string,
+    @Body() body: ConfirmationDto,
+  ) {
+    return this.domain.updateConfirmation(u, id, memberId, body.confirmation);
   }
   @Roles('LEADER') @Put('occurrences/:id/setlist') replaceSetlist(
     @CurrentUser() u: SessionUser,

@@ -4,6 +4,7 @@ import {
   IsDateString,
   IsEmail,
   IsInt,
+  IsIn,
   IsOptional,
   IsString,
   IsUUID,
@@ -76,6 +77,10 @@ export class ReplaceMembersDto {
   @ValidateNested({ each: true })
   @Type(() => OccurrenceMemberDto)
   members!: OccurrenceMemberDto[];
+}
+export class ConfirmationDto {
+  @IsIn(['CONFIRMED', 'DECLINED'])
+  confirmation!: 'CONFIRMED' | 'DECLINED';
 }
 export class SetlistItemDto {
   @IsUUID() songId!: string;

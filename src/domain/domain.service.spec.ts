@@ -81,3 +81,104 @@ describe('DomainService occurrence generation', () => {
     });
   });
 });
+
+describe('DomainService occurrence confirmations', () => {
+  const memberUser: SessionUser = {
+    id: 'user-id',
+    parishId: 'parish-id',
+    memberId: 'member-id',
+    name: 'Membro',
+    email: 'membro@example.com',
+    role: 'MEMBER',
+    initials: 'ME',
+  };
+
+  it('prevents a member from responding for another member', async () => {
+    const database = {
+      transaction: jest.fn(),
+    } as unknown as DatabaseService;
+
+    await expect(
+      new DomainService(database).updateConfirmation(
+        memberUser,
+        'occurrence-id',
+        'another-member-id',
+        'CONFIRMED',
+      ),
+    ).rejects.toMatchObject({ response: { code: 'FORBIDDEN' } });
+    expect(database.transaction).not.toHaveBeenCalled();
+  });
+
+  it('updates the authenticated member confirmation and audits the change', async () => {
+    const transactionQuery = jest
+      .fn()
+      .mockResolvedValueOnce({
+        rows: [{ status: 'PUBLISHED', confirmation: 'PENDING' }],
+        rowCount: 1,
+      })
+      .mockResolvedValueOnce({ rows: [], rowCount: 1 })
+      .mockResolvedValueOnce({ rows: [], rowCount: 1 });
+    const database = {
+      transaction: jest.fn((work: (client: TransactionClient) => Promise<void>) =>
+        work({ query: transactionQuery } as unknown as TransactionClient),
+      ),
+    } as unknown as DatabaseService;
+    const service = new DomainService(database);
+    jest.spyOn(service, 'getOccurrence').mockResolvedValue({ id: 'occurrence-id' });
+
+    await service.updateConfirmation(
+      memberUser,
+      'occurrence-id',
+      'member-id',
+      'CONFIRMED',
+    );
+
+    expect(transactionQuery.mock.calls[1][0]).toContain(
+      'UPDATE occurrence_members SET confirmation=$1',
+    );
+    expect(transactionQuery.mock.calls[1][1]).toEqual([
+      'CONFIRMED',
+      'occurrence-id',
+      'member-id',
+    ]);
+    expect(transactionQuery.mock.calls[2][0]).toContain(
+      'UPDATE_OCCURRENCE_CONFIRMATION',
+    );
+  });
+
+  it('preserves confirmations when the leader edits the formation', async () => {
+    const transactionQuery = jest
+      .fn()
+      .mockResolvedValueOnce({ rows: [], rowCount: 0 })
+      .mockResolvedValueOnce({ rows: [{}], rowCount: 1 })
+      .mockResolvedValueOnce({ rows: [], rowCount: 0 })
+      .mockResolvedValueOnce({ rows: [], rowCount: 1 });
+    const database = {
+      query: jest.fn().mockResolvedValue({
+        rows: [{ starts_at: new Date('2026-10-04T22:00:00Z') }],
+        rowCount: 1,
+      }),
+      transaction: jest.fn((work: (client: TransactionClient) => Promise<void>) =>
+        work({ query: transactionQuery } as unknown as TransactionClient),
+      ),
+    } as unknown as DatabaseService;
+    const service = new DomainService(database);
+    jest.spyOn(service, 'getOccurrence').mockResolvedValue({ id: 'occurrence-id' });
+
+    await service.replaceMembers(
+      { ...memberUser, role: 'LEADER' },
+      'occurrence-id',
+      [{ memberId: 'member-id', role: 'Voz', overrideConflicts: false }],
+    );
+
+    expect(transactionQuery.mock.calls[0][0]).toContain(
+      'NOT (member_id=ANY($2::uuid[]))',
+    );
+    expect(transactionQuery.mock.calls[3][0]).toContain(
+      'ON CONFLICT (occurrence_id,member_id) DO UPDATE',
+    );
+    expect(transactionQuery.mock.calls[3][0]).not.toContain(
+      'confirmation=EXCLUDED.confirmation',
+    );
+  });
+});
