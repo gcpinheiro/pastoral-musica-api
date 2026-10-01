@@ -13,6 +13,7 @@ import {
   Max,
   Min,
   MinLength,
+  ValidateIf,
   ValidateNested,
 } from 'class-validator';
 
@@ -100,8 +101,20 @@ export class SongDto {
   @IsString() author!: string;
   @IsString() defaultKey!: string;
   @IsArray() liturgicalMoments!: string[];
-  @IsString() lyrics!: string;
-  @IsString() chords!: string;
+  @IsOptional() @IsIn(['INTERNAL', 'EXTERNAL_EMBED'])
+  contentMode?: 'INTERNAL' | 'EXTERNAL_EMBED';
+  @ValidateIf((input: SongDto) => input.contentMode !== 'EXTERNAL_EMBED')
+  @IsString()
+  @MinLength(1)
+  lyrics?: string;
+  @ValidateIf((input: SongDto) => input.contentMode !== 'EXTERNAL_EMBED')
+  @IsString()
+  @MinLength(1)
+  chords?: string;
+  @ValidateIf((input: SongDto) => input.contentMode === 'EXTERNAL_EMBED')
+  @IsString()
+  @MinLength(1)
+  externalUrl?: string;
 }
 export class NewsDto {
   @IsString() title!: string;

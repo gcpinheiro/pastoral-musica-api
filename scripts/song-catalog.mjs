@@ -10,6 +10,11 @@ const OPEN_RIGHTS_TYPES = new Set([
   'CC_BY',
   'CC_BY_SA',
 ]);
+const EXTERNAL_SONG_HOSTS = new Set([
+  'cifrascatolicas.com.br',
+  'www.cifraclub.com.br',
+  'cifraclub.com.br',
+]);
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 function argument(name) {
@@ -38,6 +43,16 @@ function fail(message) {
 }
 
 function canonical(item) {
+  if (item.contentMode === 'EXTERNAL_EMBED') {
+    return JSON.stringify({
+      title: item.title.trim(),
+      author: item.author.trim(),
+      defaultKey: item.defaultKey.trim(),
+      liturgicalMoments: [...item.liturgicalMoments].map((value) => value.trim()).sort(),
+      contentMode: item.contentMode,
+      externalUrl: item.externalUrl.trim(),
+    });
+  }
   return JSON.stringify({
     title: item.title.trim(),
     author: item.author.trim(),
@@ -59,17 +74,31 @@ function validateCatalog(catalog) {
   const hashes = new Set();
   catalog.items.forEach((item, index) => {
     const prefix = `items[${index}]`;
-    for (const field of ['title', 'author', 'defaultKey', 'lyrics', 'chords'])
+    for (const field of ['title', 'author', 'defaultKey'])
       if (typeof item[field] !== 'string' || !item[field].trim()) errors.push(`${prefix}.${field} é obrigatório.`);
     if (!Array.isArray(item.liturgicalMoments) || item.liturgicalMoments.length === 0)
       errors.push(`${prefix}.liturgicalMoments precisa ter ao menos uma etapa.`);
-    const rights = item.rights;
-    if (!rights || rights.status !== 'APPROVED') errors.push(`${prefix}.rights.status deve ser APPROVED.`);
-    if (!rights || !OPEN_RIGHTS_TYPES.has(rights.type)) errors.push(`${prefix}.rights.type deve ser PUBLIC_DOMAIN, CC0, CC_BY ou CC_BY_SA.`);
-    for (const field of ['sourceUrl', 'proofUrl'])
-      if (!rights?.[field] || !String(rights[field]).startsWith('https://')) errors.push(`${prefix}.rights.${field} deve ser uma URL HTTPS.`);
-    for (const field of ['allowsStorage', 'allowsLyrics', 'allowsChords', 'allowsTransposition'])
-      if (rights?.[field] !== true) errors.push(`${prefix}.rights.${field} precisa ser true.`);
+    if (item.contentMode === 'EXTERNAL_EMBED') {
+      try {
+        const url = new URL(item.externalUrl);
+        if (url.protocol !== 'https:' || url.port || url.username || url.password || !EXTERNAL_SONG_HOSTS.has(url.hostname.toLowerCase()))
+          errors.push(`${prefix}.externalUrl precisa usar HTTPS e uma fonte externa permitida.`);
+      } catch {
+        errors.push(`${prefix}.externalUrl precisa ser uma URL válida.`);
+      }
+      if (typeof item.sourceAttribution !== 'string' || !item.sourceAttribution.trim())
+        errors.push(`${prefix}.sourceAttribution é obrigatório.`);
+    } else {
+      for (const field of ['lyrics', 'chords'])
+        if (typeof item[field] !== 'string' || !item[field].trim()) errors.push(`${prefix}.${field} é obrigatório.`);
+      const rights = item.rights;
+      if (!rights || rights.status !== 'APPROVED') errors.push(`${prefix}.rights.status deve ser APPROVED.`);
+      if (!rights || !OPEN_RIGHTS_TYPES.has(rights.type)) errors.push(`${prefix}.rights.type deve ser PUBLIC_DOMAIN, CC0, CC_BY ou CC_BY_SA.`);
+      for (const field of ['sourceUrl', 'proofUrl'])
+        if (!rights?.[field] || !String(rights[field]).startsWith('https://')) errors.push(`${prefix}.rights.${field} deve ser uma URL HTTPS.`);
+      for (const field of ['allowsStorage', 'allowsLyrics', 'allowsChords', 'allowsTransposition'])
+        if (rights?.[field] !== true) errors.push(`${prefix}.rights.${field} precisa ser true.`);
+    }
     if (typeof item.title === 'string' && typeof item.author === 'string') {
       const contentHash = hash(item);
       if (hashes.has(contentHash)) errors.push(`${prefix} duplica outra música no mesmo lote.`);
@@ -127,12 +156,14 @@ async function main() {
     if (!parish.rowCount) fail('Paróquia não encontrada ou inativa.');
     for (const item of catalog.items) {
       const contentHash = hash(item);
+      const external = item.contentMode === 'EXTERNAL_EMBED';
+      const rights = item.rights;
       const existing = await client.query('SELECT id FROM songs WHERE parish_id=$1 AND content_hash=$2', [parishId, contentHash]);
       await client.query(
-        `INSERT INTO songs(parish_id,title,author,default_key,liturgical_moments,lyrics,chords,status,rights_status,rights_type,source_url,proof_url,attribution,content_hash,import_batch_id,rights_reviewed_at)
-         VALUES($1,$2,$3,$4,$5::jsonb,$6,$7,'ACTIVE',$8,$9,$10,$11,$12,$13,$14,$15)
-         ON CONFLICT (parish_id,content_hash) DO UPDATE SET title=EXCLUDED.title,author=EXCLUDED.author,default_key=EXCLUDED.default_key,liturgical_moments=EXCLUDED.liturgical_moments,lyrics=EXCLUDED.lyrics,chords=EXCLUDED.chords,status='ACTIVE',rights_status=EXCLUDED.rights_status,rights_type=EXCLUDED.rights_type,source_url=EXCLUDED.source_url,proof_url=EXCLUDED.proof_url,attribution=EXCLUDED.attribution,import_batch_id=EXCLUDED.import_batch_id,rights_reviewed_at=EXCLUDED.rights_reviewed_at,updated_at=now()`,
-        [parishId, item.title.trim(), item.author.trim(), item.defaultKey.trim(), JSON.stringify(item.liturgicalMoments), item.lyrics.trim(), item.chords.trim(), item.rights.status, item.rights.type, item.rights.sourceUrl, item.rights.proofUrl, item.rights.attribution, contentHash, batchId, item.rights.reviewedAt ?? new Date().toISOString()],
+        `INSERT INTO songs(parish_id,title,author,default_key,liturgical_moments,lyrics,chords,content_mode,external_url,status,rights_status,rights_type,source_url,proof_url,attribution,content_hash,import_batch_id,rights_reviewed_at)
+         VALUES($1,$2,$3,$4,$5::jsonb,$6,$7,$8,$9,'ACTIVE',$10,$11,$12,$13,$14,$15,$16,$17)
+         ON CONFLICT (parish_id,content_hash) DO UPDATE SET title=EXCLUDED.title,author=EXCLUDED.author,default_key=EXCLUDED.default_key,liturgical_moments=EXCLUDED.liturgical_moments,lyrics=EXCLUDED.lyrics,chords=EXCLUDED.chords,content_mode=EXCLUDED.content_mode,external_url=EXCLUDED.external_url,status='ACTIVE',rights_status=EXCLUDED.rights_status,rights_type=EXCLUDED.rights_type,source_url=EXCLUDED.source_url,proof_url=EXCLUDED.proof_url,attribution=EXCLUDED.attribution,import_batch_id=EXCLUDED.import_batch_id,rights_reviewed_at=EXCLUDED.rights_reviewed_at,updated_at=now()`,
+        [parishId, item.title.trim(), item.author.trim(), item.defaultKey.trim(), JSON.stringify(item.liturgicalMoments), external ? '' : item.lyrics.trim(), external ? '' : item.chords.trim(), external ? 'EXTERNAL_EMBED' : 'INTERNAL', external ? item.externalUrl.trim() : null, external ? 'UNREVIEWED' : rights.status, external ? null : rights.type, external ? item.externalUrl.trim() : rights.sourceUrl, external ? null : rights.proofUrl, external ? item.sourceAttribution.trim() : rights.attribution, contentHash, batchId, external ? null : rights.reviewedAt ?? new Date().toISOString()],
       );
       if (existing.rowCount) updated += 1;
       else inserted += 1;

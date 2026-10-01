@@ -3,12 +3,16 @@
 Este diretório recebe lotes autorizados de músicas. O arquivo JSON não deve ser
 preenchido copiando letras ou cifras de sites públicos sem autorização.
 
-Cada item precisa conter letra, cifra e registro de direitos para a mesma versão.
-O importador só publica itens com `rights.status = "APPROVED"` e com todas as
-permissões de armazenamento, letra, cifra e transposição marcadas como `true`.
-Neste fluxo aberto, os únicos tipos aceitos são `PUBLIC_DOMAIN`, `CC0`, `CC_BY`
-e `CC_BY_SA`. Autorizações diretas e licenças comerciais não são importadas
-por este comando.
+O catálogo aceita duas modalidades:
+
+- `INTERNAL` (padrão): guarda letra e cifra integrais. Exige direitos aprovados
+  para a mesma versão e todas as permissões de armazenamento, letra, cifra e
+  transposição. Os tipos aceitos são `PUBLIC_DOMAIN`, `CC0`, `CC_BY` e
+  `CC_BY_SA`.
+- `EXTERNAL_EMBED`: guarda somente metadados, tom, atribuição e URL HTTPS de uma
+  fonte permitida. A letra e a cifra permanecem hospedadas na fonte original e
+  a tela sempre oferece um link para abri-la diretamente caso o iframe seja
+  bloqueado pelo provedor.
 
 Validar o lote:
 

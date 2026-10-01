@@ -212,6 +212,8 @@ model songs {
   liturgical_moments Json            @default("[]")
   lyrics             String
   chords             String
+  content_mode       String          @default("INTERNAL")
+  external_url       String?
   status             String          @default("ACTIVE")
   rights_status      String          @default("UNREVIEWED")
   rights_type        String?

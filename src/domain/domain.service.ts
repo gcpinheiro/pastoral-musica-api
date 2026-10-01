@@ -18,6 +18,12 @@ import {
 } from './domain.dto';
 
 type Row = Record<string, unknown>;
+const ALLOWED_EXTERNAL_SONG_HOSTS = new Set([
+  'cifrascatolicas.com.br',
+  'www.cifraclub.com.br',
+  'cifraclub.com.br',
+]);
+
 @Injectable()
 export class DomainService {
   constructor(private readonly db: DatabaseService) {}
@@ -102,6 +108,8 @@ export class DomainService {
       liturgicalMoments: row.liturgical_moments,
       lyrics: row.lyrics,
       chords: row.chords,
+      contentMode: row.content_mode ?? 'INTERNAL',
+      externalUrl: row.external_url,
       status: row.status,
       rightsStatus: row.rights_status,
       rightsType: row.rights_type,
@@ -320,17 +328,20 @@ export class DomainService {
     return (await this.db.query(sql, values)).rows.map((r) => this.song(r));
   }
   async createSong(user: SessionUser, input: SongDto) {
+    const content = this.songContent(input);
     const row = (
       await this.db.query(
-        'INSERT INTO songs(parish_id,title,author,default_key,liturgical_moments,lyrics,chords) VALUES($1,$2,$3,$4,$5,$6,$7) RETURNING *',
+        'INSERT INTO songs(parish_id,title,author,default_key,liturgical_moments,lyrics,chords,content_mode,external_url) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *',
         [
           this.requireParish(user),
           input.title,
           input.author,
           input.defaultKey,
           JSON.stringify(input.liturgicalMoments),
-          input.lyrics,
-          input.chords,
+          content.lyrics,
+          content.chords,
+          content.mode,
+          content.externalUrl,
         ],
       )
     ).rows[0];
@@ -348,16 +359,19 @@ export class DomainService {
     return this.song(row);
   }
   async updateSong(user: SessionUser, id: string, input: SongDto) {
+    const content = this.songContent(input);
     const row = (
       await this.db.query(
-        'UPDATE songs SET title=$1,author=$2,default_key=$3,liturgical_moments=$4,lyrics=$5,chords=$6,updated_at=now() WHERE id=$7 AND parish_id=$8 RETURNING *',
+        'UPDATE songs SET title=$1,author=$2,default_key=$3,liturgical_moments=$4,lyrics=$5,chords=$6,content_mode=$7,external_url=$8,updated_at=now() WHERE id=$9 AND parish_id=$10 RETURNING *',
         [
           input.title,
           input.author,
           input.defaultKey,
           JSON.stringify(input.liturgicalMoments),
-          input.lyrics,
-          input.chords,
+          content.lyrics,
+          content.chords,
+          content.mode,
+          content.externalUrl,
           id,
           this.requireParish(user),
         ],
@@ -366,6 +380,53 @@ export class DomainService {
     if (!row)
       throw new ProblemException(404, 'NOT_FOUND', 'Música não encontrada.');
     return this.song(row);
+  }
+
+  private songContent(input: SongDto): {
+    mode: 'INTERNAL' | 'EXTERNAL_EMBED';
+    lyrics: string;
+    chords: string;
+    externalUrl: string | null;
+  } {
+    const mode = input.contentMode ?? 'INTERNAL';
+    if (mode === 'INTERNAL') {
+      return {
+        mode,
+        lyrics: input.lyrics?.trim() ?? '',
+        chords: input.chords?.trim() ?? '',
+        externalUrl: null,
+      };
+    }
+
+    let url: URL;
+    try {
+      url = new URL(input.externalUrl ?? '');
+    } catch {
+      throw new ProblemException(
+        HttpStatus.BAD_REQUEST,
+        'INVALID_SONG_SOURCE',
+        'A URL da cifra externa é inválida.',
+      );
+    }
+    if (
+      url.protocol !== 'https:' ||
+      url.port ||
+      url.username ||
+      url.password ||
+      !ALLOWED_EXTERNAL_SONG_HOSTS.has(url.hostname.toLowerCase())
+    ) {
+      throw new ProblemException(
+        HttpStatus.BAD_REQUEST,
+        'EXTERNAL_SONG_SOURCE_NOT_ALLOWED',
+        'A fonte da cifra externa não é permitida.',
+      );
+    }
+    return {
+      mode,
+      lyrics: '',
+      chords: '',
+      externalUrl: url.toString(),
+    };
   }
   async listNews(user: SessionUser) {
     const rows = (

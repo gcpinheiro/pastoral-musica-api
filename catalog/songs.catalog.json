@@ -221,6 +221,116 @@
         "allowsTransposition": true,
         "reviewedAt": "2026-09-30T00:00:00.000Z"
       }
+    },
+    {
+      "externalId": "externa-jesus-meu-esposo",
+      "title": "Jesus, Meu Esposo",
+      "author": "Colo de Deus",
+      "defaultKey": "G",
+      "liturgicalMoments": ["Adoração", "Oração"],
+      "contentMode": "EXTERNAL_EMBED",
+      "externalUrl": "https://cifrascatolicas.com.br/colo-de-deus/jesus-meu-esposo",
+      "sourceAttribution": "Cifra exibida a partir do Cifras Católicas. O conteúdo permanece hospedado na fonte original."
+    },
+    {
+      "externalId": "externa-divino-esposo",
+      "title": "Divino Esposo",
+      "author": "Suely Façanha",
+      "defaultKey": "A",
+      "liturgicalMoments": ["Comunhão", "Adoração"],
+      "contentMode": "EXTERNAL_EMBED",
+      "externalUrl": "https://cifrascatolicas.com.br/suely-facanha/divino-esposo",
+      "sourceAttribution": "Cifra exibida a partir do Cifras Católicas. O conteúdo permanece hospedado na fonte original."
+    },
+    {
+      "externalId": "externa-tua-presenca-cura",
+      "title": "Tua Presença Cura",
+      "author": "Gabriela de Sá",
+      "defaultKey": "G",
+      "liturgicalMoments": ["Comunhão", "Adoração"],
+      "contentMode": "EXTERNAL_EMBED",
+      "externalUrl": "https://www.cifraclub.com.br/ana-gabriela/tua-presenca-cura/",
+      "sourceAttribution": "Cifra exibida a partir do Cifra Club. O conteúdo permanece hospedado na fonte original."
+    },
+    {
+      "externalId": "externa-podes-reinar",
+      "title": "Podes Reinar",
+      "author": "Armando Filho",
+      "defaultKey": "G",
+      "liturgicalMoments": ["Entrada", "Adoração"],
+      "contentMode": "EXTERNAL_EMBED",
+      "externalUrl": "https://cifrascatolicas.com.br/banda-agnus-dei/podes-reinar",
+      "sourceAttribution": "Cifra exibida a partir do Cifras Católicas. O conteúdo permanece hospedado na fonte original."
+    },
+    {
+      "externalId": "missa-gloria-2026-10-entrada-derrama-o-teu-amor",
+      "title": "Derrama o Teu Amor Aqui",
+      "author": "Celina Borges",
+      "defaultKey": "E",
+      "liturgicalMoments": ["Entrada"],
+      "contentMode": "EXTERNAL_EMBED",
+      "externalUrl": "https://cifrascatolicas.com.br/celina-borges/derrama-o-teu-amor-aqui",
+      "sourceAttribution": "Cifra exibida a partir do Cifras Católicas. O conteúdo permanece hospedado na fonte original."
+    },
+    {
+      "externalId": "missa-gloria-2026-10-entrada-vamos-celebrar",
+      "title": "Vamos Celebrar",
+      "author": "Ministério Amor e Adoração",
+      "defaultKey": "E",
+      "liturgicalMoments": ["Entrada"],
+      "contentMode": "EXTERNAL_EMBED",
+      "externalUrl": "https://www.cifraclub.com.br/ministerio-amor-e-adoracao/vamos-celebrar/",
+      "sourceAttribution": "Cifra exibida a partir do Cifra Club. O conteúdo permanece hospedado na fonte original."
+    },
+    {
+      "externalId": "missa-gloria-2026-10-ato-penitencial",
+      "title": "Sois o Caminho",
+      "author": "Comunidade Católica Shalom",
+      "defaultKey": "A#",
+      "liturgicalMoments": ["Ato penitencial"],
+      "contentMode": "EXTERNAL_EMBED",
+      "externalUrl": "https://cifrascatolicas.com.br/missionario_shalom/sois-o-caminho-comunidade-shalom",
+      "sourceAttribution": "Cifra exibida a partir do Cifras Católicas. O conteúdo permanece hospedado na fonte original."
+    },
+    {
+      "externalId": "missa-gloria-2026-10-aclamacao",
+      "title": "Tua Palavra",
+      "author": "Comunidade Católica Shalom",
+      "defaultKey": "D",
+      "liturgicalMoments": ["Aclamação"],
+      "contentMode": "EXTERNAL_EMBED",
+      "externalUrl": "https://cifrascatolicas.com.br/comunidade-catolica-shalom/tua-palavra",
+      "sourceAttribution": "Cifra exibida a partir do Cifras Católicas. O conteúdo permanece hospedado na fonte original."
+    },
+    {
+      "externalId": "missa-gloria-2026-10-santo",
+      "title": "Santo é o Senhor",
+      "author": "Comunidade Católica Shalom — Na Dança da Vida",
+      "defaultKey": "Dm",
+      "liturgicalMoments": ["Santo"],
+      "contentMode": "EXTERNAL_EMBED",
+      "externalUrl": "https://cifrascatolicas.com.br/comunidade-cat%C3%B3lica-shalom/santo-e-o-senhor",
+      "sourceAttribution": "Cifra exibida a partir do Cifras Católicas. O conteúdo permanece hospedado na fonte original."
+    },
+    {
+      "externalId": "missa-gloria-2026-10-cordeiro",
+      "title": "Cordeiro de Deus",
+      "author": "Ministério Amor e Adoração",
+      "defaultKey": "F",
+      "liturgicalMoments": ["Cordeiro"],
+      "contentMode": "EXTERNAL_EMBED",
+      "externalUrl": "https://cifrascatolicas.com.br/ministerio-amor-e-adoracao/cordeiro-ministerio-amor-e-adoracao",
+      "sourceAttribution": "Cifra exibida a partir do Cifras Católicas. O conteúdo permanece hospedado na fonte original."
+    },
+    {
+      "externalId": "missa-gloria-2026-10-amem",
+      "title": "Eis o Mistério da Fé",
+      "author": "Comunidade Católica Shalom",
+      "defaultKey": "G",
+      "liturgicalMoments": ["Mistério da fé", "Amém"],
+      "contentMode": "EXTERNAL_EMBED",
+      "externalUrl": "https://cifrascatolicas.com.br/comunidade-cat%C3%B3lica-shalom/eis-o-misterio-da-fe",
+      "sourceAttribution": "Cifra exibida a partir do Cifras Católicas. O conteúdo permanece hospedado na fonte original."
     }
   ]
 }

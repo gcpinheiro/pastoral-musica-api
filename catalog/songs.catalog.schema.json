@@ -13,7 +13,7 @@
   "$defs": {
     "song": {
       "type": "object",
-      "required": ["title", "author", "defaultKey", "liturgicalMoments", "lyrics", "chords", "rights"],
+      "required": ["title", "author", "defaultKey", "liturgicalMoments"],
       "additionalProperties": false,
       "properties": {
         "externalId": { "type": "string", "minLength": 1 },
@@ -21,10 +21,23 @@
         "author": { "type": "string", "minLength": 1 },
         "defaultKey": { "type": "string", "minLength": 1 },
         "liturgicalMoments": { "type": "array", "minItems": 1, "items": { "type": "string", "minLength": 1 } },
+        "contentMode": { "enum": ["INTERNAL", "EXTERNAL_EMBED"] },
         "lyrics": { "type": "string", "minLength": 1 },
         "chords": { "type": "string", "minLength": 1 },
+        "externalUrl": { "type": "string", "format": "uri" },
+        "sourceAttribution": { "type": "string", "minLength": 1 },
         "rights": { "$ref": "#/$defs/rights" }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": ["contentMode"],
+            "properties": { "contentMode": { "const": "EXTERNAL_EMBED" } }
+          },
+          "then": { "required": ["externalUrl", "sourceAttribution"] },
+          "else": { "required": ["lyrics", "chords", "rights"] }
+        }
+      ]
     },
     "rights": {
       "type": "object",

@@ -182,3 +182,62 @@ describe('DomainService occurrence confirmations', () => {
     );
   });
 });
+
+describe('DomainService external song sources', () => {
+  const leader: SessionUser = {
+    id: 'leader-id',
+    parishId: 'parish-id',
+    memberId: 'member-id',
+    name: 'Eury',
+    email: 'eury@example.com',
+    role: 'LEADER',
+    initials: 'EU',
+  };
+
+  it('accepts an exact HTTPS host from the allowlist', async () => {
+    const query = jest.fn().mockResolvedValue({
+      rows: [{
+        id: 'song-id',
+        parish_id: 'parish-id',
+        title: 'Tua Palavra',
+        author: 'Comunidade Católica Shalom',
+        default_key: 'D',
+        liturgical_moments: ['Aclamação'],
+        lyrics: '',
+        chords: '',
+        content_mode: 'EXTERNAL_EMBED',
+        external_url: 'https://cifrascatolicas.com.br/comunidade-catolica-shalom/tua-palavra',
+        status: 'ACTIVE',
+      }],
+      rowCount: 1,
+    });
+    const service = new DomainService({ query } as unknown as DatabaseService);
+
+    const result = await service.createSong(leader, {
+      title: 'Tua Palavra',
+      author: 'Comunidade Católica Shalom',
+      defaultKey: 'D',
+      liturgicalMoments: ['Aclamação'],
+      contentMode: 'EXTERNAL_EMBED',
+      externalUrl: 'https://cifrascatolicas.com.br/comunidade-catolica-shalom/tua-palavra',
+    });
+
+    expect(result).toMatchObject({ contentMode: 'EXTERNAL_EMBED', lyrics: '', chords: '' });
+    expect(query.mock.calls[0][1]).toContain('EXTERNAL_EMBED');
+  });
+
+  it('rejects deceptive and non-allowlisted hosts before querying the database', async () => {
+    const query = jest.fn();
+    const service = new DomainService({ query } as unknown as DatabaseService);
+
+    await expect(service.createSong(leader, {
+      title: 'Música externa',
+      author: 'Autor',
+      defaultKey: 'C',
+      liturgicalMoments: ['Entrada'],
+      contentMode: 'EXTERNAL_EMBED',
+      externalUrl: 'https://cifrascatolicas.com.br.attacker.test/musica',
+    })).rejects.toMatchObject({ response: { code: 'EXTERNAL_SONG_SOURCE_NOT_ALLOWED' } });
+    expect(query).not.toHaveBeenCalled();
+  });
+});
