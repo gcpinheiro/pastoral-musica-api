@@ -40,8 +40,6 @@ services:
         condition: service_healthy
     networks: [application, data]
     restart: unless-stopped
-    volumes:
-      - api-uploads:/app/uploads
     healthcheck:
       test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:3000/api/v1/health"]
       interval: 30s
@@ -114,7 +112,6 @@ services:
     restart: unless-stopped
 
 volumes:
-  api-uploads:
   postgres-data:
   redis-data:
   pgadmin-data:

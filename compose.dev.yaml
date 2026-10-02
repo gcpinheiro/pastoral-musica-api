@@ -37,7 +37,6 @@ services:
     volumes:
       - .:/app
       - api-node-modules:/app/node_modules
-      - api-uploads:/app/uploads
     depends_on:
       migrate:
         condition: service_completed_successfully
@@ -117,7 +116,6 @@ services:
     restart: unless-stopped
 
 volumes:
-  api-uploads:
   api-node-modules:
   postgres-data:
   redis-data:

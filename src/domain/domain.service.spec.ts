@@ -241,3 +241,44 @@ describe('DomainService external song sources', () => {
     expect(query).not.toHaveBeenCalled();
   });
 });
+
+describe('DomainService occurrence archiving', () => {
+  it('archives the scoped occurrence and records an audit event', async () => {
+    const transactionQuery = jest
+      .fn()
+      .mockResolvedValueOnce({ rows: [{ status: 'PUBLISHED' }], rowCount: 1 })
+      .mockResolvedValueOnce({ rows: [], rowCount: 1 });
+    const database = {
+      transaction: jest.fn((work: (client: TransactionClient) => Promise<void>) =>
+        work({ query: transactionQuery } as unknown as TransactionClient),
+      ),
+    } as unknown as DatabaseService;
+    const user: SessionUser = {
+      id: 'leader-id',
+      parishId: 'parish-id',
+      memberId: 'member-id',
+      name: 'Eury',
+      email: 'eury@example.com',
+      role: 'LEADER',
+      initials: 'EU',
+    };
+
+    await new DomainService(database).archiveOccurrence(user, 'occurrence-id');
+
+    expect(transactionQuery.mock.calls[0][0]).toContain('archived_at=now()');
+    expect(transactionQuery.mock.calls[0][1]).toEqual(['occurrence-id', 'parish-id']);
+    expect(transactionQuery.mock.calls[1][0]).toContain('ARCHIVE_OCCURRENCE');
+  });
+
+  it('returns not found when the occurrence is absent or already archived', async () => {
+    const database = {
+      transaction: jest.fn((work: (client: TransactionClient) => Promise<void>) =>
+        work({ query: jest.fn().mockResolvedValue({ rows: [], rowCount: 0 }) } as unknown as TransactionClient),
+      ),
+    } as unknown as DatabaseService;
+    const user = { id: 'leader-id', parishId: 'parish-id', role: 'LEADER' } as SessionUser;
+
+    await expect(new DomainService(database).archiveOccurrence(user, 'missing-id'))
+      .rejects.toMatchObject({ response: { code: 'NOT_FOUND' } });
+  });
+});

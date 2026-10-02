@@ -225,7 +225,7 @@ export class DomainService {
       page,
       pageSize,
       total: Number(rows[0]?.total_count ?? 0),
-      items: rows.map((r) => this.member(r)),
+      items: rows.map((r) => this.member({ ...r, photo_url: null })),
     };
   }
   async createMember(user: SessionUser, input: MemberDto) {
@@ -300,23 +300,14 @@ export class DomainService {
     if (!result.rowCount)
       throw new ProblemException(404, 'NOT_FOUND', 'Membro não encontrado.');
   }
-  async setPhoto(user: SessionUser, id: string, url: string | null) {
+  async setPhoto(user: SessionUser, id: string, dataUrl: string | null) {
     const result = await this.db.query(
       'UPDATE members SET photo_url=$1,updated_at=now() WHERE id=$2 AND parish_id=$3',
-      [url, id, this.requireParish(user)],
+      [dataUrl, id, this.requireParish(user)],
     );
     if (!result.rowCount)
       throw new ProblemException(404, 'NOT_FOUND', 'Membro não encontrado.');
   }
-  async assertPhotoAccess(user: SessionUser, name: string): Promise<void> {
-    const result = await this.db.query(
-      'SELECT 1 FROM members WHERE parish_id=$1 AND photo_url=$2',
-      [this.requireParish(user), `/api/v1/media/member-photos/${name}`],
-    );
-    if (!result.rowCount)
-      throw new ProblemException(404, 'NOT_FOUND', 'Foto não encontrada.');
-  }
-
   async listSongs(user: SessionUser, query?: string) {
     const values: unknown[] = [this.requireParish(user)];
     let sql = "SELECT * FROM songs WHERE parish_id=$1 AND status='ACTIVE'";
@@ -741,7 +732,7 @@ export class DomainService {
     const parish = this.requireParish(user);
     if (user.role === 'MEMBER' && !user.memberId) return [];
     const values: unknown[] = [parish];
-    let where = 'o.parish_id=$1';
+    let where = 'o.parish_id=$1 AND o.archived_at IS NULL';
     const memberId = user.role === 'MEMBER' ? user.memberId : filters.memberId;
     let memberParameter: string | undefined;
     if (memberId) {
@@ -799,7 +790,7 @@ export class DomainService {
   async getOccurrence(user: SessionUser, id: string) {
     const parish = this.requireParish(user);
     const values: unknown[] = [id, parish];
-    let access = 'o.id=$1 AND o.parish_id=$2';
+    let access = 'o.id=$1 AND o.parish_id=$2 AND o.archived_at IS NULL';
     if (user.role === 'MEMBER') {
       if (!user.memberId)
         throw new ProblemException(
@@ -872,7 +863,7 @@ export class DomainService {
   }
   async updateOccurrence(user: SessionUser, id: string, input: OccurrenceDto) {
     const result = await this.db.query(
-      `UPDATE occurrences SET title=$1,starts_at=$2,timezone=$3,location=$4,ministry_id=$5,liturgical_time=$6,notes=$7,version=version+1,updated_at=now() WHERE id=$8 AND parish_id=$9 AND version=$10`,
+      `UPDATE occurrences SET title=$1,starts_at=$2,timezone=$3,location=$4,ministry_id=$5,liturgical_time=$6,notes=$7,version=version+1,updated_at=now() WHERE id=$8 AND parish_id=$9 AND version=$10 AND archived_at IS NULL`,
       [
         input.title,
         input.startsAt,
@@ -892,12 +883,31 @@ export class DomainService {
       );
     return this.getOccurrence(user, id);
   }
+  async archiveOccurrence(user: SessionUser, id: string): Promise<void> {
+    const parish = this.requireParish(user);
+    await this.db.transaction(async (client) => {
+      const archived = await client.query<{ status: string }>(
+        `UPDATE occurrences
+            SET archived_at=now(),version=version+1,updated_at=now()
+          WHERE id=$1 AND parish_id=$2 AND archived_at IS NULL
+          RETURNING status`,
+        [id, parish],
+      );
+      if (!archived.rowCount)
+        throw new ProblemException(404, 'NOT_FOUND', 'Ocorrência não encontrada.');
+      await client.query(
+        `INSERT INTO audit_logs(parish_id,actor_user_id,action,entity_type,entity_id,details)
+         VALUES($1,$2,'ARCHIVE_OCCURRENCE','OCCURRENCE',$3,$4)`,
+        [parish, user.id, id, JSON.stringify({ previousStatus: archived.rows[0].status })],
+      );
+    });
+  }
   async publishOccurrence(user: SessionUser, id: string) {
     const parish = this.requireParish(user);
     await this.db.transaction(async (client) => {
       const occurrence = (
         await client.query<{ status: string }>(
-          'SELECT status FROM occurrences WHERE id=$1 AND parish_id=$2 FOR UPDATE',
+          'SELECT status FROM occurrences WHERE id=$1 AND parish_id=$2 AND archived_at IS NULL FOR UPDATE',
           [id, parish],
         )
       ).rows[0];
@@ -945,7 +955,7 @@ export class DomainService {
           `SELECT o.status,om.confirmation
              FROM occurrences o
              JOIN occurrence_members om ON om.occurrence_id=o.id
-            WHERE o.id=$1 AND o.parish_id=$2 AND om.member_id=$3
+            WHERE o.id=$1 AND o.parish_id=$2 AND o.archived_at IS NULL AND om.member_id=$3
             FOR UPDATE`,
           [id, parish, memberId],
         )
@@ -998,7 +1008,7 @@ export class DomainService {
     const parish = this.requireParish(user);
     const occurrence = (
       await this.db.query(
-        'SELECT starts_at FROM occurrences WHERE id=$1 AND parish_id=$2',
+        'SELECT starts_at FROM occurrences WHERE id=$1 AND parish_id=$2 AND archived_at IS NULL',
         [id, parish],
       )
     ).rows[0];
@@ -1025,7 +1035,7 @@ export class DomainService {
             'Membro não encontrado.',
           );
         const conflict = await client.query(
-          `SELECT 1 FROM occurrence_members om JOIN occurrences o ON o.id=om.occurrence_id WHERE om.member_id=$1 AND o.starts_at=$2 AND o.id<>$3`,
+          `SELECT 1 FROM occurrence_members om JOIN occurrences o ON o.id=om.occurrence_id WHERE om.member_id=$1 AND o.starts_at=$2 AND o.id<>$3 AND o.archived_at IS NULL`,
           [member.memberId, occurrence.starts_at, id],
         );
         if (conflict.rowCount && !member.overrideConflicts)
@@ -1078,7 +1088,7 @@ export class DomainService {
     const parish = this.requireParish(user);
     await this.db.transaction(async (client) => {
       const exists = await client.query(
-        'SELECT 1 FROM occurrences WHERE id=$1 AND parish_id=$2',
+        'SELECT 1 FROM occurrences WHERE id=$1 AND parish_id=$2 AND archived_at IS NULL',
         [id, parish],
       );
       if (!exists.rowCount)

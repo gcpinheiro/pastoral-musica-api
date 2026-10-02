@@ -64,6 +64,7 @@ model members {
   name               String
   email              String
   phone              String?
+  /// Data URL Base64 de imagem JPEG, PNG ou WebP. O nome legado da coluna é mantido por compatibilidade.
   photo_url          String?
   talent_ids         Json                 @default("[]")
   availability       Json                 @default("[]")
@@ -141,6 +142,7 @@ model occurrences {
   liturgical_time    String?
   notes              String?
   status             String               @default("DRAFT")
+  archived_at        DateTime?            @db.Timestamptz(6)
   version            Int                  @default(0)
   local_date         DateTime             @db.Date
   local_time         DateTime             @db.Time(6)

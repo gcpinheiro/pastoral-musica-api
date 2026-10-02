@@ -11,15 +11,10 @@ import {
   Post,
   Put,
   Query,
-  Res,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { randomUUID } from 'node:crypto';
-import { mkdir, unlink, writeFile } from 'node:fs/promises';
-import { join } from 'node:path';
-import type { Response } from 'express';
 import { CurrentUser, Roles } from '../common/auth.decorators';
 import type { SessionUser } from '../common/auth.types';
 import { ProblemException } from '../common/problem.exception';
@@ -36,6 +31,7 @@ import {
   SetlistDto,
   SongDto,
 } from './domain.dto';
+import { memberPhotoDataUrl } from './member-photo';
 
 @Controller()
 export class DomainController {
@@ -128,17 +124,9 @@ export class DomainController {
         'Operação não permitida.',
       );
     if (!file) throw new BadRequestException('Arquivo obrigatório.');
-    await this.domain.getMember(u, id);
-    const directory = join(process.cwd(), 'uploads', 'member-photos');
-    await mkdir(directory, { recursive: true });
-    const extensions: Record<string, string> = {
-      'image/jpeg': '.jpg',
-      'image/png': '.png',
-      'image/webp': '.webp',
-    };
-    const name = `${randomUUID()}${extensions[file.mimetype]}`;
-    await writeFile(join(directory, name), file.buffer);
-    const photoUrl = `/api/v1/media/member-photos/${name}`;
+    const photoUrl = memberPhotoDataUrl(file.buffer, file.mimetype);
+    if (!photoUrl)
+      throw new BadRequestException('O conteúdo do arquivo não corresponde a uma imagem JPG, PNG ou WebP válida.');
     await this.domain.setPhoto(u, id, photoUrl);
     return { photoUrl };
   }
@@ -151,30 +139,7 @@ export class DomainController {
         'FORBIDDEN',
         'Operação não permitida.',
       );
-    const member = await this.domain.getMember(u, id);
-    if (member.photoUrl) {
-      const name =
-        typeof member.photoUrl === 'string'
-          ? member.photoUrl.split('/').pop()
-          : undefined;
-      if (name)
-        await unlink(
-          join(process.cwd(), 'uploads', 'member-photos', name),
-        ).catch(() => undefined);
-    }
     await this.domain.setPhoto(u, id, null);
-  }
-  @Get('media/member-photos/:name') async sendPhoto(
-    @CurrentUser() user: SessionUser,
-    @Param('name') name: string,
-    @Res() response: Response,
-  ) {
-    if (name !== name.replace(/[^a-zA-Z0-9._-]/g, ''))
-      throw new BadRequestException();
-    await this.domain.assertPhotoAccess(user, name);
-    return response.sendFile(
-      join(process.cwd(), 'uploads', 'member-photos', name),
-    );
   }
   @Get('dashboard') dashboard(
     @CurrentUser() u: SessionUser,
@@ -299,6 +264,15 @@ export class DomainController {
     @Body() b: OccurrenceDto,
   ) {
     return this.domain.updateOccurrence(u, id, b);
+  }
+  @Roles('LEADER')
+  @Delete('occurrences/:id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  archiveOccurrence(
+    @CurrentUser() u: SessionUser,
+    @Param('id') id: string,
+  ) {
+    return this.domain.archiveOccurrence(u, id);
   }
   @Roles('LEADER') @Post('occurrences/:id/publish') publishOccurrence(
     @CurrentUser() u: SessionUser,
