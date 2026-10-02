@@ -29,6 +29,7 @@ import {
   ParishDto,
   ReplaceMembersDto,
   SetlistDto,
+  SetlistLyricsDto,
   SongDto,
 } from './domain.dto';
 import { memberPhotoDataUrl } from './member-photo';
@@ -303,5 +304,15 @@ export class DomainController {
     @Body() b: SetlistDto,
   ) {
     return this.domain.replaceSetlist(u, id, b);
+  }
+  @Roles('LEADER')
+  @Patch('occurrences/:id/setlist/items/:itemId/lyrics')
+  updateSetlistLyrics(
+    @CurrentUser() u: SessionUser,
+    @Param('id') id: string,
+    @Param('itemId') itemId: string,
+    @Body() body: SetlistLyricsDto,
+  ) {
+    return this.domain.updateSetlistLyrics(u, id, itemId, body.content);
   }
 }

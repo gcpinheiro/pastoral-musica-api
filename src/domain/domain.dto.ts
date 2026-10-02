@@ -6,6 +6,7 @@ import {
   IsInt,
   IsIn,
   IsOptional,
+  IsObject,
   IsString,
   IsUUID,
   Length,
@@ -95,6 +96,9 @@ export class SetlistDto {
   @ValidateNested({ each: true })
   @Type(() => SetlistItemDto)
   items!: SetlistItemDto[];
+}
+export class SetlistLyricsDto {
+  @IsObject() content!: Record<string, unknown>;
 }
 export class SongDto {
   @IsString() title!: string;

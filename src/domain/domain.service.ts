@@ -16,6 +16,7 @@ import {
   SetlistDto,
   SongDto,
 } from './domain.dto';
+import { normalizeLyricsDocument } from './lyrics-document';
 
 type Row = Record<string, unknown>;
 const ALLOWED_EXTERNAL_SONG_HOSTS = new Set([
@@ -839,7 +840,7 @@ export class DomainService {
     }));
     const items = (
       await this.db.query(
-        `SELECT si.*,s.title FROM setlist_items si JOIN songs s ON s.id=si.song_id WHERE si.occurrence_id=$1 ORDER BY position`,
+        `SELECT si.*,s.title,COALESCE(si.lyrics_snapshot,s.lyrics) resolved_lyrics FROM setlist_items si JOIN songs s ON s.id=si.song_id WHERE si.occurrence_id=$1 ORDER BY position`,
         [id],
       )
     ).rows.map((i) => ({
@@ -850,6 +851,8 @@ export class DomainService {
       key: i.key,
       liturgicalMoment: i.liturgical_moment,
       notes: i.notes,
+      lyricsSnapshot: i.resolved_lyrics,
+      formattedLyrics: i.formatted_lyrics,
     }));
     const myConfirmation = user.memberId
       ? members.find((member) => member.memberId === user.memberId)?.confirmation
@@ -1097,24 +1100,80 @@ export class DomainService {
           'NOT_FOUND',
           'Ocorrência não encontrada.',
         );
+      const existingItems = (
+        await client.query(
+          'SELECT song_id,lyrics_snapshot,formatted_lyrics FROM setlist_items WHERE occurrence_id=$1',
+          [id],
+        )
+      ).rows;
+      const arrangements = new Map(
+        existingItems.map((item) => [String(item.song_id), item]),
+      );
       await client.query('DELETE FROM setlist_items WHERE occurrence_id=$1', [
         id,
       ]);
-      for (const item of input.items)
+      for (const item of input.items) {
+        const arrangement = arrangements.get(item.songId);
         await client.query(
-          `INSERT INTO setlist_items(occurrence_id,song_id,position,key,liturgical_moment,notes) SELECT $1,id,$2,$3,$4,$5 FROM songs WHERE id=$6 AND parish_id=$7`,
+          `INSERT INTO setlist_items(occurrence_id,song_id,position,key,liturgical_moment,notes,lyrics_snapshot,formatted_lyrics)
+           SELECT $1,id,$2,$3,$4,$5,COALESCE($6,lyrics),$7::jsonb FROM songs WHERE id=$8 AND parish_id=$9`,
           [
             id,
             item.position,
             item.key,
             item.liturgicalMoment,
             item.notes ?? null,
+            arrangement?.lyrics_snapshot ?? null,
+            arrangement?.formatted_lyrics
+              ? JSON.stringify(arrangement.formatted_lyrics)
+              : null,
             item.songId,
             parish,
           ],
         );
+      }
     });
     return this.getOccurrence(user, id);
+  }
+  async updateSetlistLyrics(
+    user: SessionUser,
+    occurrenceId: string,
+    itemId: string,
+    input: unknown,
+  ) {
+    const parish = this.requireParish(user);
+    const content = normalizeLyricsDocument(input);
+    await this.db.transaction(async (client) => {
+      const updated = await client.query(
+        `UPDATE setlist_items AS item
+            SET formatted_lyrics=$1::jsonb
+           FROM occurrences AS occurrence
+          WHERE item.id=$2
+            AND item.occurrence_id=$3
+            AND occurrence.id=item.occurrence_id
+            AND occurrence.parish_id=$4
+            AND occurrence.archived_at IS NULL
+          RETURNING item.id`,
+        [JSON.stringify(content), itemId, occurrenceId, parish],
+      );
+      if (!updated.rowCount)
+        throw new ProblemException(
+          404,
+          'NOT_FOUND',
+          'Música da escala não encontrada.',
+        );
+      await client.query(
+        `INSERT INTO audit_logs(parish_id,actor_user_id,action,entity_type,entity_id,details)
+         VALUES($1,$2,'UPDATE_SETLIST_LYRICS','OCCURRENCE',$3,$4)`,
+        [
+          parish,
+          user.id,
+          occurrenceId,
+          JSON.stringify({ setlistItemId: itemId }),
+        ],
+      );
+    });
+    return this.getOccurrence(user, occurrenceId);
   }
   async dashboard(user: SessionUser, month: string) {
     const [year, monthNumber] = month.split('-').map(Number);

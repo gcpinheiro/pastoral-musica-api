@@ -282,3 +282,32 @@ describe('DomainService occurrence archiving', () => {
       .rejects.toMatchObject({ response: { code: 'NOT_FOUND' } });
   });
 });
+
+describe('DomainService setlist lyrics arrangement', () => {
+  it('updates only the scoped setlist item and records an audit entry', async () => {
+    const transactionQuery = jest
+      .fn()
+      .mockResolvedValueOnce({ rows: [{ id: 'item-id' }], rowCount: 1 })
+      .mockResolvedValueOnce({ rows: [], rowCount: 1 });
+    const database = {
+      transaction: jest.fn((work: (client: TransactionClient) => Promise<void>) =>
+        work({ query: transactionQuery } as unknown as TransactionClient),
+      ),
+    } as unknown as DatabaseService;
+    const service = new DomainService(database);
+    jest.spyOn(service, 'getOccurrence').mockResolvedValue({ id: 'occurrence-id' });
+    const user = { id: 'leader-id', parishId: 'parish-id', role: 'LEADER' } as SessionUser;
+    const content = { version: 1, segments: [{ text: 'Cantai', voice: 'WOMEN', bold: true }] };
+
+    await service.updateSetlistLyrics(user, 'occurrence-id', 'item-id', content);
+
+    expect(transactionQuery.mock.calls[0][0]).toContain('formatted_lyrics');
+    expect(transactionQuery.mock.calls[0][1]).toEqual([
+      JSON.stringify({ version: 1, segments: [{ text: 'Cantai', bold: true, voice: 'WOMEN' }] }),
+      'item-id',
+      'occurrence-id',
+      'parish-id',
+    ]);
+    expect(transactionQuery.mock.calls[1][0]).toContain('UPDATE_SETLIST_LYRICS');
+  });
+});
