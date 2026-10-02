@@ -183,6 +183,41 @@ describe('DomainService occurrence confirmations', () => {
   });
 });
 
+describe('DomainService paginated song options and bulk archive', () => {
+  const leader: SessionUser = {
+    id: 'leader-id',
+    parishId: 'parish-id',
+    memberId: 'member-id',
+    name: 'Eury',
+    email: 'eury@example.com',
+    role: 'LEADER',
+    initials: 'EU',
+  };
+
+  it('returns a lightweight page of song options', async () => {
+    const query = jest.fn().mockResolvedValue({ rows: [{ id: 'song-id', title: 'Tua Palavra', default_key: 'D', liturgical_moments: ['Aclamação'], total_count: 12 }] });
+    const result = await new DomainService({ query } as unknown as DatabaseService).listSongOptions(leader, 'Palavra', 2, 5);
+
+    expect(query.mock.calls[0][1]).toEqual(['parish-id', 'Palavra', '%Palavra%', 5, 5]);
+    expect(result).toEqual({ items: [{ songId: 'song-id', title: 'Tua Palavra', key: 'D', liturgicalMoment: 'Aclamação' }], page: 2, pageSize: 5, total: 12 });
+  });
+
+  it('archives all selected occurrences in one transaction and audits each one', async () => {
+    const transactionQuery = jest.fn()
+      .mockResolvedValueOnce({ rows: [{ id: 'occurrence-1', status: 'DRAFT' }, { id: 'occurrence-2', status: 'PUBLISHED' }], rowCount: 2 })
+      .mockResolvedValueOnce({ rows: [], rowCount: 2 })
+      .mockResolvedValueOnce({ rows: [], rowCount: 1 })
+      .mockResolvedValueOnce({ rows: [], rowCount: 1 });
+    const database = { transaction: jest.fn((work: (client: TransactionClient) => Promise<void>) => work({ query: transactionQuery } as unknown as TransactionClient)) } as unknown as DatabaseService;
+
+    await new DomainService(database).archiveOccurrences(leader, ['occurrence-1', 'occurrence-2']);
+
+    expect(transactionQuery.mock.calls[1][0]).toContain('UPDATE occurrences');
+    expect(transactionQuery.mock.calls[2][0]).toContain('ARCHIVE_OCCURRENCE');
+    expect(transactionQuery.mock.calls[3][0]).toContain('ARCHIVE_OCCURRENCE');
+  });
+});
+
 describe('DomainService external song sources', () => {
   const leader: SessionUser = {
     id: 'leader-id',

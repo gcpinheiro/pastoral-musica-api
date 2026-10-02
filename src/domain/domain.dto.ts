@@ -1,5 +1,7 @@
 import { Type } from 'class-transformer';
 import {
+  ArrayMaxSize,
+  ArrayMinSize,
   IsArray,
   IsDateString,
   IsEmail,
@@ -100,6 +102,13 @@ export class SetlistDto {
   @ValidateNested({ each: true })
   @Type(() => SetlistItemDto)
   items!: SetlistItemDto[];
+}
+export class ArchiveOccurrencesDto {
+  @IsArray()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(100)
+  @IsUUID('4', { each: true })
+  ids!: string[];
 }
 export class SetlistLyricsDto {
   @IsObject() content!: Record<string, unknown>;

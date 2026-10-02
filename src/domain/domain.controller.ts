@@ -21,6 +21,7 @@ import { CurrentUser, Roles } from '../common/auth.decorators';
 import type { SessionUser } from '../common/auth.types';
 import { DomainService } from './domain.service';
 import {
+  ArchiveOccurrencesDto,
   ConfirmationDto,
   GenerateDto,
   MemberDto,
@@ -164,6 +165,14 @@ export class DomainController {
   ) {
     return this.domain.listSongs(u, q);
   }
+  @Get('songs/options') listSongOptions(
+    @CurrentUser() u: SessionUser,
+    @Query('query') query = '',
+    @Query('page') page = '1',
+    @Query('pageSize') pageSize = '8',
+  ) {
+    return this.domain.listSongOptions(u, query, Number(page), Number(pageSize));
+  }
   @Roles('LEADER') @Post('songs') createSong(
     @CurrentUser() u: SessionUser,
     @Body() b: SongDto,
@@ -262,6 +271,15 @@ export class DomainController {
     @Body() b: OccurrenceDto,
   ) {
     return this.domain.createOccurrence(u, b);
+  }
+  @Roles('LEADER')
+  @Post('occurrences/archive')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  archiveOccurrences(
+    @CurrentUser() u: SessionUser,
+    @Body() body: ArchiveOccurrencesDto,
+  ) {
+    return this.domain.archiveOccurrences(u, body.ids);
   }
   @Get('occurrences/:id') getOccurrence(
     @CurrentUser() u: SessionUser,

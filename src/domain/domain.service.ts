@@ -365,6 +365,50 @@ export class DomainService {
     sql += ' ORDER BY title';
     return (await this.db.query(sql, values)).rows.map((r) => this.song(r));
   }
+  async listSongOptions(
+    user: SessionUser,
+    query = '',
+    requestedPage = 1,
+    requestedPageSize = 8,
+  ) {
+    const page = Number.isFinite(requestedPage)
+      ? Math.max(1, Math.floor(requestedPage))
+      : 1;
+    const pageSize = Number.isFinite(requestedPageSize)
+      ? Math.min(50, Math.max(1, Math.floor(requestedPageSize)))
+      : 8;
+    const normalizedQuery = query.trim();
+    const rows = (
+      await this.db.query(
+        `SELECT id,title,default_key,liturgical_moments,count(*) OVER()::int total_count
+           FROM songs
+          WHERE parish_id=$1 AND status='ACTIVE'
+            AND ($2='' OR title ILIKE $3 OR author ILIKE $3)
+          ORDER BY title,id
+          LIMIT $4 OFFSET $5`,
+        [
+          this.requireParish(user),
+          normalizedQuery,
+          `%${normalizedQuery}%`,
+          pageSize,
+          (page - 1) * pageSize,
+        ],
+      )
+    ).rows;
+    return {
+      items: rows.map((row) => ({
+        songId: row.id,
+        title: row.title,
+        key: row.default_key,
+        liturgicalMoment: Array.isArray(row.liturgical_moments)
+          ? String(row.liturgical_moments[0] ?? '')
+          : '',
+      })),
+      page,
+      pageSize,
+      total: Number(rows[0]?.total_count ?? 0),
+    };
+  }
   async createSong(user: SessionUser, input: SongDto) {
     const content = this.songContent(input);
     const row = (
@@ -951,6 +995,42 @@ export class DomainService {
          VALUES($1,$2,'ARCHIVE_OCCURRENCE','OCCURRENCE',$3,$4)`,
         [parish, user.id, id, JSON.stringify({ previousStatus: archived.rows[0].status })],
       );
+    });
+  }
+  async archiveOccurrences(user: SessionUser, ids: string[]): Promise<void> {
+    const uniqueIds = [...new Set(ids)];
+    const parish = this.requireParish(user);
+    await this.db.transaction(async (client) => {
+      const scoped = await client.query<{ id: string; status: string }>(
+        `SELECT id,status FROM occurrences
+          WHERE id=ANY($1::uuid[]) AND parish_id=$2 AND archived_at IS NULL
+          FOR UPDATE`,
+        [uniqueIds, parish],
+      );
+      if (scoped.rows.length !== uniqueIds.length)
+        throw new ProblemException(
+          404,
+          'NOT_FOUND',
+          'Uma ou mais ocorrências não foram encontradas.',
+        );
+      await client.query(
+        `UPDATE occurrences
+            SET archived_at=now(),version=version+1,updated_at=now()
+          WHERE id=ANY($1::uuid[]) AND parish_id=$2 AND archived_at IS NULL`,
+        [uniqueIds, parish],
+      );
+      for (const occurrence of scoped.rows) {
+        await client.query(
+          `INSERT INTO audit_logs(parish_id,actor_user_id,action,entity_type,entity_id,details)
+           VALUES($1,$2,'ARCHIVE_OCCURRENCE','OCCURRENCE',$3,$4)`,
+          [
+            parish,
+            user.id,
+            occurrence.id,
+            JSON.stringify({ previousStatus: occurrence.status, bulk: true }),
+          ],
+        );
+      }
     });
   }
   async publishOccurrence(user: SessionUser, id: string) {
