@@ -17,6 +17,7 @@ interface UserRow {
   password_hash: string;
   role: SessionUser['role'];
   status: string;
+  has_photo?: boolean;
 }
 interface InvitationRow {
   id: string;
@@ -104,6 +105,7 @@ export class AuthService {
         .map((part) => part[0])
         .join('')
         .toUpperCase(),
+      hasPhoto: Boolean(row.has_photo),
     };
   }
   private async createSession(
@@ -139,7 +141,7 @@ export class AuthService {
     response: Response,
   ): Promise<{ user: SessionUser }> {
     const result = await this.db.query<UserRow>(
-      'SELECT * FROM users WHERE lower(email) = lower($1)',
+      'SELECT u.*,(m.photo_url IS NOT NULL) has_photo FROM users u LEFT JOIN members m ON m.id=u.member_id WHERE lower(u.email) = lower($1)',
       [input.email],
     );
     const user = result.rows[0];
@@ -158,7 +160,7 @@ export class AuthService {
   async resolve(token?: string): Promise<SessionUser | null> {
     if (!token) return null;
     const result = await this.db.query<UserRow>(
-      `SELECT u.* FROM sessions s JOIN users u ON u.id=s.user_id WHERE s.token_hash=$1 AND s.revoked_at IS NULL AND s.expires_at > now() AND u.status='ACTIVE'`,
+      `SELECT u.*,(m.photo_url IS NOT NULL) has_photo FROM sessions s JOIN users u ON u.id=s.user_id LEFT JOIN members m ON m.id=u.member_id WHERE s.token_hash=$1 AND s.revoked_at IS NULL AND s.expires_at > now() AND u.status='ACTIVE'`,
       [this.hash(token)],
     );
     return result.rows[0] ? this.present(result.rows[0]) : null;

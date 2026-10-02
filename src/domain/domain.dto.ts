@@ -46,6 +46,10 @@ export class MemberDto {
   availability!: AvailabilityDto[];
   @IsOptional() @IsString() notes?: string;
 }
+export class ProfileDto {
+  @IsString() @MinLength(3) name!: string;
+  @Matches(/^\+[1-9]\d{7,14}$/) phone!: string;
+}
 export class SeriesDto {
   @IsString() title!: string;
   @IsString() location!: string;

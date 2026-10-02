@@ -13,6 +13,7 @@ import {
   OccurrenceDto,
   OccurrenceMemberDto,
   ParishDto,
+  ProfileDto,
   SetlistDto,
   SongDto,
 } from './domain.dto';
@@ -91,6 +92,7 @@ export class DomainService {
       email: row.email,
       phone: row.phone,
       photoUrl: row.photo_url,
+      hasPhoto: row.has_photo ?? Boolean(row.photo_url),
       talentIds: row.talent_ids,
       ministryIds: ministries.map((ministry) => ministry.id),
       ministries,
@@ -226,7 +228,9 @@ export class DomainService {
       page,
       pageSize,
       total: Number(rows[0]?.total_count ?? 0),
-      items: rows.map((r) => this.member({ ...r, photo_url: null })),
+      items: rows.map((r) =>
+        this.member({ ...r, has_photo: Boolean(r.photo_url), photo_url: null }),
+      ),
     };
   }
   async createMember(user: SessionUser, input: MemberDto) {
@@ -301,13 +305,55 @@ export class DomainService {
     if (!result.rowCount)
       throw new ProblemException(404, 'NOT_FOUND', 'Membro não encontrado.');
   }
-  async setPhoto(user: SessionUser, id: string, dataUrl: string | null) {
+  async getOwnProfile(user: SessionUser) {
+    if (!user.memberId)
+      throw new ProblemException(404, 'PROFILE_NOT_FOUND', 'Perfil de membro não encontrado.');
+    return this.getMember(user, user.memberId);
+  }
+  async updateOwnProfile(user: SessionUser, input: ProfileDto) {
+    if (!user.memberId)
+      throw new ProblemException(404, 'PROFILE_NOT_FOUND', 'Perfil de membro não encontrado.');
+    const parish = this.requireParish(user);
+    await this.db.transaction(async (client) => {
+      const updated = await client.query(
+        `UPDATE members SET name=$1,phone=$2,updated_at=now()
+          WHERE id=$3 AND parish_id=$4 AND status='ACTIVE' RETURNING id`,
+        [input.name, input.phone, user.memberId, parish],
+      );
+      if (!updated.rowCount)
+        throw new ProblemException(404, 'PROFILE_NOT_FOUND', 'Perfil de membro não encontrado.');
+      await client.query('UPDATE users SET name=$1,updated_at=now() WHERE id=$2', [
+        input.name,
+        user.id,
+      ]);
+      await client.query(
+        `INSERT INTO audit_logs(parish_id,actor_user_id,action,entity_type,entity_id,details)
+         VALUES($1,$2,'UPDATE_OWN_PROFILE','MEMBER',$3,'{}'::jsonb)`,
+        [parish, user.id, user.memberId],
+      );
+    });
+    return this.getMember(user, user.memberId);
+  }
+  async setOwnPhoto(user: SessionUser, dataUrl: string | null) {
+    if (!user.memberId)
+      throw new ProblemException(404, 'PROFILE_NOT_FOUND', 'Perfil de membro não encontrado.');
     const result = await this.db.query(
       'UPDATE members SET photo_url=$1,updated_at=now() WHERE id=$2 AND parish_id=$3',
-      [dataUrl, id, this.requireParish(user)],
+      [dataUrl, user.memberId, this.requireParish(user)],
     );
     if (!result.rowCount)
-      throw new ProblemException(404, 'NOT_FOUND', 'Membro não encontrado.');
+      throw new ProblemException(404, 'PROFILE_NOT_FOUND', 'Perfil de membro não encontrado.');
+  }
+  async getMemberPhoto(user: SessionUser, id: string): Promise<string> {
+    const row = (
+      await this.db.query<{ photo_url: string }>(
+        'SELECT photo_url FROM members WHERE id=$1 AND parish_id=$2 AND photo_url IS NOT NULL',
+        [id, this.requireParish(user)],
+      )
+    ).rows[0];
+    if (!row)
+      throw new ProblemException(404, 'NOT_FOUND', 'Foto não encontrada.');
+    return row.photo_url;
   }
   async listSongs(user: SessionUser, query?: string) {
     const values: unknown[] = [this.requireParish(user)];
@@ -537,7 +583,7 @@ export class DomainService {
       );
     const members = (
       await this.db.query(
-        `SELECT m.id member_id,m.name,m.phone,'Integrante' role,'PENDING' confirmation FROM ministry_members mm JOIN members m ON m.id=mm.member_id WHERE mm.ministry_id=$1`,
+        `SELECT m.id member_id,m.name,m.phone,(m.photo_url IS NOT NULL) has_photo,'Integrante' role,'PENDING' confirmation FROM ministry_members mm JOIN members m ON m.id=mm.member_id WHERE mm.ministry_id=$1`,
         [id],
       )
     ).rows;
@@ -555,6 +601,7 @@ export class DomainService {
         memberId: m.member_id,
         name: m.name,
         initials: this.initials(String(m.name)),
+        hasPhoto: Boolean(m.has_photo),
         whatsapp: m.phone,
         role: m.role,
         confirmation: m.confirmation,
@@ -827,13 +874,14 @@ export class DomainService {
       );
     const members = (
       await this.db.query(
-        `SELECT om.*,m.name,m.phone FROM occurrence_members om JOIN members m ON m.id=om.member_id WHERE om.occurrence_id=$1 ORDER BY m.name`,
+        `SELECT om.*,m.name,m.phone,(m.photo_url IS NOT NULL) has_photo FROM occurrence_members om JOIN members m ON m.id=om.member_id WHERE om.occurrence_id=$1 ORDER BY m.name`,
         [id],
       )
     ).rows.map((m) => ({
       memberId: m.member_id,
       name: m.name,
       initials: this.initials(String(m.name)),
+      hasPhoto: Boolean(m.has_photo),
       role: m.role,
       confirmation: m.confirmation,
       ...(maySeePhone ? { whatsapp: m.phone } : {}),

@@ -11,13 +11,14 @@ import {
   Post,
   Put,
   Query,
+  Res,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import type { Response } from 'express';
 import { CurrentUser, Roles } from '../common/auth.decorators';
 import type { SessionUser } from '../common/auth.types';
-import { ProblemException } from '../common/problem.exception';
 import { DomainService } from './domain.service';
 import {
   ConfirmationDto,
@@ -27,12 +28,13 @@ import {
   NewsDto,
   OccurrenceDto,
   ParishDto,
+  ProfileDto,
   ReplaceMembersDto,
   SetlistDto,
   SetlistLyricsDto,
   SongDto,
 } from './domain.dto';
-import { memberPhotoDataUrl } from './member-photo';
+import { memberPhotoDataUrl, memberPhotoFromDataUrl } from './member-photo';
 
 @Controller()
 export class DomainController {
@@ -100,7 +102,16 @@ export class DomainController {
   archiveMember(@CurrentUser() u: SessionUser, @Param('id') id: string) {
     return this.domain.archiveMember(u, id);
   }
-  @Put('members/:id/photo')
+  @Get('profile') getProfile(@CurrentUser() u: SessionUser) {
+    return this.domain.getOwnProfile(u);
+  }
+  @Patch('profile') updateProfile(
+    @CurrentUser() u: SessionUser,
+    @Body() body: ProfileDto,
+  ) {
+    return this.domain.updateOwnProfile(u, body);
+  }
+  @Put('profile/photo')
   @UseInterceptors(
     FileInterceptor('file', {
       limits: { fileSize: 5 * 1024 * 1024 },
@@ -113,34 +124,33 @@ export class DomainController {
         ),
     }),
   )
-  async uploadPhoto(
+  async uploadOwnPhoto(
     @CurrentUser() u: SessionUser,
-    @Param('id') id: string,
     @UploadedFile() file?: Express.Multer.File,
   ) {
-    if (u.role !== 'LEADER' && u.memberId !== id)
-      throw new ProblemException(
-        HttpStatus.FORBIDDEN,
-        'FORBIDDEN',
-        'Operação não permitida.',
-      );
     if (!file) throw new BadRequestException('Arquivo obrigatório.');
     const photoUrl = memberPhotoDataUrl(file.buffer, file.mimetype);
     if (!photoUrl)
       throw new BadRequestException('O conteúdo do arquivo não corresponde a uma imagem JPG, PNG ou WebP válida.');
-    await this.domain.setPhoto(u, id, photoUrl);
+    await this.domain.setOwnPhoto(u, photoUrl);
     return { photoUrl };
   }
-  @Delete('members/:id/photo')
+  @Delete('profile/photo')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deletePhoto(@CurrentUser() u: SessionUser, @Param('id') id: string) {
-    if (u.role !== 'LEADER' && u.memberId !== id)
-      throw new ProblemException(
-        HttpStatus.FORBIDDEN,
-        'FORBIDDEN',
-        'Operação não permitida.',
-      );
-    await this.domain.setPhoto(u, id, null);
+  async deleteOwnPhoto(@CurrentUser() u: SessionUser) {
+    await this.domain.setOwnPhoto(u, null);
+  }
+  @Get('members/:id/photo')
+  async getMemberPhoto(
+    @CurrentUser() u: SessionUser,
+    @Param('id') id: string,
+    @Res() response: Response,
+  ) {
+    const photo = memberPhotoFromDataUrl(await this.domain.getMemberPhoto(u, id));
+    if (!photo) return response.status(HttpStatus.NOT_FOUND).end();
+    response.setHeader('Content-Type', photo.mime);
+    response.setHeader('Cache-Control', 'private, no-store');
+    response.send(photo.buffer);
   }
   @Get('dashboard') dashboard(
     @CurrentUser() u: SessionUser,

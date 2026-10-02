@@ -20,3 +20,11 @@ export function memberPhotoDataUrl(buffer: Buffer, declaredMime: string): string
   if (!detectedMime || detectedMime !== declaredMime) return null;
   return `data:${detectedMime};base64,${buffer.toString('base64')}`;
 }
+
+export function memberPhotoFromDataUrl(value: string): { mime: MemberPhotoMime; buffer: Buffer } | null {
+  const match = /^data:(image\/(?:jpeg|png|webp));base64,([A-Za-z0-9+/=]+)$/.exec(value);
+  if (!match) return null;
+  const buffer = Buffer.from(match[2], 'base64');
+  const mime = match[1] as MemberPhotoMime;
+  return detectMemberPhotoMime(buffer) === mime ? { mime, buffer } : null;
+}

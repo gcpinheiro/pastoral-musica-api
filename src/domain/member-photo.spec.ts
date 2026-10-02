@@ -1,4 +1,4 @@
-import { detectMemberPhotoMime, memberPhotoDataUrl } from './member-photo';
+import { detectMemberPhotoMime, memberPhotoDataUrl, memberPhotoFromDataUrl } from './member-photo';
 
 describe('memberPhotoDataUrl', () => {
   it('creates a Base64 data URL for a valid PNG', () => {
@@ -15,5 +15,20 @@ describe('memberPhotoDataUrl', () => {
   it('rejects a valid image declared as another allowed image type', () => {
     const jpeg = Buffer.from([0xff, 0xd8, 0xff, 0xe0]);
     expect(memberPhotoDataUrl(jpeg, 'image/webp')).toBeNull();
+  });
+
+  it('restores a validated image from a stored data URL', () => {
+    const png = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00]);
+    const dataUrl = memberPhotoDataUrl(png, 'image/png');
+
+    expect(dataUrl).not.toBeNull();
+    expect(memberPhotoFromDataUrl(dataUrl!)).toEqual({ mime: 'image/png', buffer: png });
+  });
+
+  it('rejects a stored data URL whose declared type does not match its content', () => {
+    const jpeg = Buffer.from([0xff, 0xd8, 0xff, 0xe0]);
+    const forged = `data:image/png;base64,${jpeg.toString('base64')}`;
+
+    expect(memberPhotoFromDataUrl(forged)).toBeNull();
   });
 });

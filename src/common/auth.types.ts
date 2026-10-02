@@ -7,6 +7,7 @@ export interface SessionUser {
   email: string;
   role: UserRole;
   initials: string;
+  hasPhoto?: boolean;
 }
 export interface AuthenticatedRequest {
   cookies?: Record<string, string>;
