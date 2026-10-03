@@ -41,13 +41,14 @@
     },
     "rights": {
       "type": "object",
-      "required": ["status", "type", "sourceUrl", "proofUrl", "attribution", "allowsStorage", "allowsLyrics", "allowsChords", "allowsTransposition"],
+      "required": ["status", "type", "attribution", "allowsStorage", "allowsLyrics", "allowsChords", "allowsTransposition"],
       "additionalProperties": false,
       "properties": {
         "status": { "enum": ["APPROVED", "PENDING_REVIEW", "REJECTED", "UNREVIEWED"] },
-        "type": { "enum": ["PUBLIC_DOMAIN", "CC0", "CC_BY", "CC_BY_SA"] },
+        "type": { "enum": ["PUBLIC_DOMAIN", "CC0", "CC_BY", "CC_BY_SA", "PARISH_PROVIDED"] },
         "sourceUrl": { "type": "string", "format": "uri" },
         "proofUrl": { "type": "string", "format": "uri" },
+        "sourceDocument": { "type": "string", "minLength": 1 },
         "attribution": { "type": "string", "minLength": 1 },
         "territory": { "type": "string", "minLength": 2 },
         "allowsStorage": { "const": true },
@@ -55,7 +56,14 @@
         "allowsChords": { "const": true },
         "allowsTransposition": { "const": true },
         "reviewedAt": { "type": "string", "format": "date-time" }
-      }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "PARISH_PROVIDED" } } },
+          "then": { "required": ["sourceDocument"] },
+          "else": { "required": ["sourceUrl", "proofUrl"] }
+        }
+      ]
     }
   }
 }

@@ -10,6 +10,7 @@ const OPEN_RIGHTS_TYPES = new Set([
   'CC_BY',
   'CC_BY_SA',
 ]);
+const PROVIDED_RIGHTS_TYPE = 'PARISH_PROVIDED';
 const EXTERNAL_SONG_HOSTS = new Set([
   'cifrascatolicas.com.br',
   'www.cifraclub.com.br',
@@ -93,9 +94,15 @@ function validateCatalog(catalog) {
         if (typeof item[field] !== 'string' || !item[field].trim()) errors.push(`${prefix}.${field} é obrigatório.`);
       const rights = item.rights;
       if (!rights || rights.status !== 'APPROVED') errors.push(`${prefix}.rights.status deve ser APPROVED.`);
-      if (!rights || !OPEN_RIGHTS_TYPES.has(rights.type)) errors.push(`${prefix}.rights.type deve ser PUBLIC_DOMAIN, CC0, CC_BY ou CC_BY_SA.`);
-      for (const field of ['sourceUrl', 'proofUrl'])
-        if (!rights?.[field] || !String(rights[field]).startsWith('https://')) errors.push(`${prefix}.rights.${field} deve ser uma URL HTTPS.`);
+      if (!rights || (!OPEN_RIGHTS_TYPES.has(rights.type) && rights.type !== PROVIDED_RIGHTS_TYPE))
+        errors.push(`${prefix}.rights.type deve ser uma licença aberta reconhecida ou PARISH_PROVIDED.`);
+      if (rights?.type === PROVIDED_RIGHTS_TYPE) {
+        if (typeof rights.sourceDocument !== 'string' || !rights.sourceDocument.trim())
+          errors.push(`${prefix}.rights.sourceDocument é obrigatório para PARISH_PROVIDED.`);
+      } else {
+        for (const field of ['sourceUrl', 'proofUrl'])
+          if (!rights?.[field] || !String(rights[field]).startsWith('https://')) errors.push(`${prefix}.rights.${field} deve ser uma URL HTTPS.`);
+      }
       for (const field of ['allowsStorage', 'allowsLyrics', 'allowsChords', 'allowsTransposition'])
         if (rights?.[field] !== true) errors.push(`${prefix}.rights.${field} precisa ser true.`);
     }
@@ -163,7 +170,7 @@ async function main() {
         `INSERT INTO songs(parish_id,title,author,default_key,liturgical_moments,lyrics,chords,content_mode,external_url,status,rights_status,rights_type,source_url,proof_url,attribution,content_hash,import_batch_id,rights_reviewed_at)
          VALUES($1,$2,$3,$4,$5::jsonb,$6,$7,$8,$9,'ACTIVE',$10,$11,$12,$13,$14,$15,$16,$17)
          ON CONFLICT (parish_id,content_hash) DO UPDATE SET title=EXCLUDED.title,author=EXCLUDED.author,default_key=EXCLUDED.default_key,liturgical_moments=EXCLUDED.liturgical_moments,lyrics=EXCLUDED.lyrics,chords=EXCLUDED.chords,content_mode=EXCLUDED.content_mode,external_url=EXCLUDED.external_url,status='ACTIVE',rights_status=EXCLUDED.rights_status,rights_type=EXCLUDED.rights_type,source_url=EXCLUDED.source_url,proof_url=EXCLUDED.proof_url,attribution=EXCLUDED.attribution,import_batch_id=EXCLUDED.import_batch_id,rights_reviewed_at=EXCLUDED.rights_reviewed_at,updated_at=now()`,
-        [parishId, item.title.trim(), item.author.trim(), item.defaultKey.trim(), JSON.stringify(item.liturgicalMoments), external ? '' : item.lyrics.trim(), external ? '' : item.chords.trim(), external ? 'EXTERNAL_EMBED' : 'INTERNAL', external ? item.externalUrl.trim() : null, external ? 'UNREVIEWED' : rights.status, external ? null : rights.type, external ? item.externalUrl.trim() : rights.sourceUrl, external ? null : rights.proofUrl, external ? item.sourceAttribution.trim() : rights.attribution, contentHash, batchId, external ? null : rights.reviewedAt ?? new Date().toISOString()],
+        [parishId, item.title.trim(), item.author.trim(), item.defaultKey.trim(), JSON.stringify(item.liturgicalMoments), external ? '' : item.lyrics.trim(), external ? '' : item.chords.trim(), external ? 'EXTERNAL_EMBED' : 'INTERNAL', external ? item.externalUrl.trim() : null, external ? 'UNREVIEWED' : rights.status, external ? null : rights.type, external ? item.externalUrl.trim() : rights.sourceUrl ?? null, external ? null : rights.proofUrl ?? null, external ? item.sourceAttribution.trim() : rights.attribution, contentHash, batchId, external ? null : rights.reviewedAt ?? new Date().toISOString()],
       );
       if (existing.rowCount) updated += 1;
       else inserted += 1;

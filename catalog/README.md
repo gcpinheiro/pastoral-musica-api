@@ -1,5 +1,10 @@
 # Catálogo JSON de músicas
 
+> `PARISH_PROVIDED` identifica conteúdo entregue e autorizado diretamente pela
+> paróquia. Nessa modalidade, `sourceDocument` registra a procedência do material
+> e não representa uma licença aberta. O lote do retiro está em
+> `catalog/retiro-coroinhas.catalog.json`.
+
 Este diretório recebe lotes autorizados de músicas. O arquivo JSON não deve ser
 preenchido copiando letras ou cifras de sites públicos sem autorização.
 
