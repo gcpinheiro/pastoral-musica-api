@@ -751,8 +751,8 @@ export class DomainService {
         if (weekdays[cursor.getUTCDay()] !== series.weekday) continue;
         const date = cursor.toISOString().slice(0, 10);
         const inserted = await client.query<{ id: string }>(
-          `INSERT INTO occurrences(parish_id,series_id,ministry_id,title,starts_at,timezone,location,local_date,local_time)
-           VALUES($1,$2,$3,$4,(($7::date + $8::time) AT TIME ZONE $5),$5,$6,$7,$8)
+          `INSERT INTO occurrences(parish_id,series_id,ministry_id,created_by,title,starts_at,timezone,location,local_date,local_time)
+           VALUES($1,$2,$3,$9,$4,(($7::date + $8::time) AT TIME ZONE $5),$5,$6,$7,$8)
            ON CONFLICT DO NOTHING RETURNING id`,
           [
             parish,
@@ -763,6 +763,7 @@ export class DomainService {
             series.location,
             date,
             localTime,
+            user.id,
           ],
         );
         if (!inserted.rows[0]) {
@@ -788,7 +789,7 @@ export class DomainService {
     const starts = new Date(input.startsAt);
     const row = (
       await this.db.query(
-        `INSERT INTO occurrences(parish_id,ministry_id,title,starts_at,timezone,location,liturgical_time,notes,local_date,local_time) SELECT $1,id,$2,$3,$4,$5,$6,$7,$8,$9 FROM ministries WHERE id=$10 AND parish_id=$1 RETURNING id`,
+        `INSERT INTO occurrences(parish_id,ministry_id,created_by,title,starts_at,timezone,location,liturgical_time,notes,local_date,local_time) SELECT $1,id,$11,$2,$3,$4,$5,$6,$7,(($3::timestamptz AT TIME ZONE $4)::date),(($3::timestamptz AT TIME ZONE $4)::time) FROM ministries WHERE id=$10 AND parish_id=$1 RETURNING id`,
         [
           this.requireParish(user),
           input.title,
@@ -800,6 +801,7 @@ export class DomainService {
           starts.toISOString().slice(0, 10),
           starts.toISOString().slice(11, 19),
           input.ministryId,
+          user.id,
         ],
       )
     ).rows[0];
@@ -857,9 +859,9 @@ export class DomainService {
         values,
       )
     ).rows;
-    return rows.map((r) => this.occurrenceSummary(r));
+    return rows.map((r) => this.occurrenceSummary(r, user));
   }
-  private occurrenceSummary(r: Row) {
+  private occurrenceSummary(r: Row, user: SessionUser) {
     return {
       id: r.id,
       title: r.title,
@@ -874,6 +876,9 @@ export class DomainService {
       status: r.status,
       memberCount: Number(r.member_count ?? 0),
       repertoireCount: Number(r.repertoire_count ?? 0),
+      canEdit:
+        user.role === 'LEADER' &&
+        (!r.created_by || String(r.created_by) === user.id),
       ...(r.current_confirmation
         ? { myConfirmation: r.current_confirmation }
         : {}),
@@ -950,15 +955,36 @@ export class DomainService {
       ? members.find((member) => member.memberId === user.memberId)?.confirmation
       : undefined;
     return {
-      ...this.occurrenceSummary(row),
+      ...this.occurrenceSummary(row, user),
       ...(myConfirmation ? { myConfirmation } : {}),
       members,
       setlist: { items },
     };
   }
   async updateOccurrence(user: SessionUser, id: string, input: OccurrenceDto) {
+    const parish = this.requireParish(user);
+    const current = (
+      await this.db.query(
+        'SELECT created_by,version FROM occurrences WHERE id=$1 AND parish_id=$2 AND archived_at IS NULL',
+        [id, parish],
+      )
+    ).rows[0];
+    if (!current)
+      throw new ProblemException(404, 'NOT_FOUND', 'Ocorrência não encontrada.');
+    if (current.created_by && String(current.created_by) !== user.id)
+      throw new ProblemException(
+        403,
+        'FORBIDDEN',
+        'Somente quem criou esta escala pode editar seus dados.',
+      );
     const result = await this.db.query(
-      `UPDATE occurrences SET title=$1,starts_at=$2,timezone=$3,location=$4,ministry_id=$5,liturgical_time=$6,notes=$7,version=version+1,updated_at=now() WHERE id=$8 AND parish_id=$9 AND version=$10 AND archived_at IS NULL`,
+      `UPDATE occurrences
+          SET title=$1,starts_at=$2,timezone=$3,location=$4,ministry_id=$5,
+              liturgical_time=$6,notes=$7,
+              local_date=(($2::timestamptz AT TIME ZONE $3)::date),
+              local_time=(($2::timestamptz AT TIME ZONE $3)::time),
+              created_by=COALESCE(created_by,$11),version=version+1,updated_at=now()
+        WHERE id=$8 AND parish_id=$9 AND version=$10 AND archived_at IS NULL`,
       [
         input.title,
         input.startsAt,
@@ -968,8 +994,9 @@ export class DomainService {
         input.liturgicalTime ?? null,
         input.notes ?? null,
         id,
-        this.requireParish(user),
+        parish,
         input.version ?? 0,
+        user.id,
       ],
     );
     if (!result.rowCount)
