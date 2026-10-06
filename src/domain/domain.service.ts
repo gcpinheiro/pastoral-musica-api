@@ -985,7 +985,7 @@ export class DomainService {
           );
 
         await client.query(
-          'SELECT pg_advisory_xact_lock(hashtextextended($1,0))',
+          'SELECT pg_advisory_xact_lock(hashtextextended($1,0))::text AS locked',
           [`${parish}|${input.ministryId}|${slot.startsAt}`],
         );
         const duplicate = await client.query(

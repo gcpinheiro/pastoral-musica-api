@@ -264,6 +264,9 @@ describe('DomainService occurrence batch creation', () => {
     const occurrenceInserts = transactionQuery.mock.calls.filter(([sql]) =>
       String(sql).includes('INSERT INTO occurrences'),
     );
+    const lockQueries = transactionQuery.mock.calls.filter(([sql]) =>
+      String(sql).includes('pg_advisory_xact_lock'),
+    );
     const memberInserts = transactionQuery.mock.calls.filter(([sql]) =>
       String(sql).includes('INSERT INTO occurrence_members'),
     );
@@ -274,6 +277,8 @@ describe('DomainService occurrence batch creation', () => {
       occurrenceIds: ['occurrence-1', 'occurrence-2'],
     });
     expect(occurrenceInserts).toHaveLength(2);
+    expect(lockQueries).toHaveLength(2);
+    expect(lockQueries.every(([sql]) => String(sql).includes('::text'))).toBe(true);
     expect(occurrenceInserts[0][1]).toEqual(expect.arrayContaining([
       'Santa Missa',
       'Igreja Matriz',

@@ -13,6 +13,10 @@ export class PrismaService
       adapter: new PrismaPg({
         connectionString: config.getOrThrow<string>('DATABASE_URL'),
       }),
+      transactionOptions: {
+        maxWait: 5_000,
+        timeout: 60_000,
+      },
     });
   }
 
