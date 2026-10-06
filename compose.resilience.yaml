@@ -1,0 +1,78 @@
+name: pastoral-musica-resilience
+
+services:
+  api:
+    ports: !reset []
+    environment:
+      INSTANCE_ID: ${HOSTNAME:-docker-api}
+    healthcheck:
+      interval: 5s
+      timeout: 2s
+      start_period: 10s
+      retries: 3
+
+  load-balancer:
+    image: nginx:1.27-alpine
+    init: true
+    ports:
+      - "${RESILIENCE_API_PORT:-3000}:80"
+    volumes:
+      - ./infra/resilience/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      api:
+        condition: service_healthy
+    networks: [application]
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/api/v1/health"]
+      interval: 5s
+      timeout: 2s
+      start_period: 5s
+      retries: 3
+
+  load-test:
+    image: grafana/k6:0.54.0
+    profiles: ["load-test"]
+    ports:
+      - "127.0.0.1:${K6_DASHBOARD_PORT:-5665}:5665"
+    environment:
+      BASE_URL: http://load-balancer
+      TEST_EMAIL: ${TEST_EMAIL:-}
+      TEST_PASSWORD: ${TEST_PASSWORD:-}
+      K6_VUS: ${K6_VUS:-20}
+      K6_DURATION: ${K6_DURATION:-2m}
+      K6_WEB_DASHBOARD: "true"
+      K6_WEB_DASHBOARD_HOST: 0.0.0.0
+      K6_WEB_DASHBOARD_PORT: 5665
+      K6_WEB_DASHBOARD_PERIOD: 1s
+      K6_WEB_DASHBOARD_EXPORT: /results/k6-resilience-report.html
+    volumes:
+      - ./infra/resilience/k6:/scripts:ro
+      - ./infra/resilience/results:/results
+    command: ["run", "/scripts/api-failover.js"]
+    depends_on:
+      load-balancer:
+        condition: service_healthy
+    networks: [application]
+
+  seed-test-user:
+    image: pastoral-musica-resilience-migrate
+    profiles: ["setup"]
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-musica_app}:${POSTGRES_PASSWORD:-change-me}@postgres:5432/${POSTGRES_DB:-musica_da_gloria}
+      TEST_EMAIL: ${TEST_EMAIL:-}
+      TEST_PASSWORD: ${TEST_PASSWORD:-}
+    command: ["node", "./scripts/resilience-seed.mjs"]
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    networks: [data]
+
+  postgres:
+    ports: !reset []
+
+  redis:
+    ports: !reset []
+
+  pgadmin:
+    ports: !reset []

@@ -41,6 +41,9 @@ lerna-debug.log*
 .env.test.local
 .env.production.local
 .env.local
+.env.resilience
+/infra/resilience/results/*
+!/infra/resilience/results/.gitkeep
 
 # temp directory
 .temp

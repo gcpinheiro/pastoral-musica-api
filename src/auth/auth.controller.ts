@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Get,
+  Header,
   HttpCode,
   HttpStatus,
   Param,
@@ -54,6 +55,12 @@ export class AuthController {
     @Param('id', ParseUUIDPipe) invitationId: string,
   ) {
     return this.auth.refreshInvitationLink(user, invitationId);
+  }
+  @Public()
+  @Get('users/invitations/:token/validate')
+  @Header('Cache-Control', 'no-store')
+  validateInvitation(@Param('token') token: string) {
+    return this.auth.validateInvitation(token);
   }
   @Public()
   @Post('users/invitations/:token/accept')

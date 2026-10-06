@@ -326,6 +326,24 @@ export class AuthService {
       acceptanceUrl: this.invitationUrl(token),
     };
   }
+  async validateInvitation(
+    token: string,
+  ): Promise<{ valid: true; expiresAt: Date }> {
+    const result = await this.db.query<{ expires_at: Date }>(
+      `SELECT expires_at
+         FROM user_invitations
+        WHERE token_hash=$1 AND status='PENDING' AND expires_at>now()`,
+      [this.hash(token)],
+    );
+    const invitation = result.rows[0];
+    if (!invitation)
+      throw new ProblemException(
+        HttpStatus.GONE,
+        'INVITATION_INVALID',
+        'Este convite é inválido, expirou ou já foi utilizado.',
+      );
+    return { valid: true, expiresAt: invitation.expires_at };
+  }
   async accept(
     token: string,
     input: AcceptInvitationDto,
