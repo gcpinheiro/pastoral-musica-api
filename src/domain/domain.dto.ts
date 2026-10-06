@@ -3,6 +3,7 @@ import {
   ArrayMaxSize,
   ArrayMinSize,
   IsArray,
+  IsBoolean,
   IsDateString,
   IsEmail,
   IsInt,
@@ -77,7 +78,7 @@ export class OccurrenceDto {
 export class OccurrenceMemberDto {
   @IsUUID() memberId!: string;
   @IsString() role!: string;
-  @IsOptional() overrideConflicts = false;
+  @IsOptional() @IsBoolean() overrideConflicts = false;
   @IsOptional() @IsString() conflictJustification?: string;
 }
 export class ReplaceMembersDto {
@@ -102,6 +103,40 @@ export class SetlistDto {
   @ValidateNested({ each: true })
   @Type(() => SetlistItemDto)
   items!: SetlistItemDto[];
+}
+export class OccurrenceConflictOverrideDto {
+  @IsUUID() memberId!: string;
+  @IsString() @MinLength(10) conflictJustification!: string;
+}
+export class OccurrenceBatchSlotDto {
+  @IsDateString() startsAt!: string;
+  @IsArray() @IsUUID('4', { each: true }) excludedMemberIds!: string[];
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => OccurrenceMemberDto)
+  additionalMembers!: OccurrenceMemberDto[];
+  @IsOptional()
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => OccurrenceConflictOverrideDto)
+  conflictOverrides?: OccurrenceConflictOverrideDto[];
+}
+export class OccurrenceBatchDto {
+  @IsString() @MinLength(1) title!: string;
+  @IsIn(['America/Fortaleza']) timezone!: string;
+  @IsString() @MinLength(1) location!: string;
+  @IsUUID() ministryId!: string;
+  @IsOptional() @IsString() liturgicalTime?: string;
+  @IsOptional() @IsString() notes?: string;
+  @IsArray()
+  @ArrayMinSize(1)
+  @ArrayMaxSize(50)
+  @ValidateNested({ each: true })
+  @Type(() => OccurrenceBatchSlotDto)
+  slots!: OccurrenceBatchSlotDto[];
+  @ValidateNested()
+  @Type(() => SetlistDto)
+  setlist!: SetlistDto;
 }
 export class ArchiveOccurrencesDto {
   @IsArray()

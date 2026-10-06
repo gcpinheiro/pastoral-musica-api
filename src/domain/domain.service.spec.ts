@@ -183,6 +183,131 @@ describe('DomainService occurrence confirmations', () => {
   });
 });
 
+describe('DomainService occurrence batch creation', () => {
+  const leader: SessionUser = {
+    id: '00000000-0000-4000-8000-000000000001',
+    parishId: '00000000-0000-4000-8000-000000000002',
+    memberId: '00000000-0000-4000-8000-000000000003',
+    name: 'Eury',
+    email: 'eury@example.com',
+    role: 'LEADER',
+    initials: 'EU',
+  };
+  const ministryId = '00000000-0000-4000-8000-000000000004';
+  const firstMemberId = '00000000-0000-4000-8000-000000000005';
+  const secondMemberId = '00000000-0000-4000-8000-000000000006';
+  const idempotencyKey = '00000000-0000-4000-8000-000000000007';
+
+  it('creates independent member copies for every date in one transaction', async () => {
+    let occurrenceIndex = 0;
+    const transactionQuery = jest.fn(async (sql: string) => {
+      if (sql.includes('INSERT INTO occurrence_creation_batches'))
+        return { rows: [{ id: 'batch-id' }], rowCount: 1 };
+      if (sql.includes("SELECT id FROM ministries"))
+        return { rows: [{ id: ministryId }], rowCount: 1 };
+      if (sql.includes('FROM ministry_members mm'))
+        return {
+          rows: [
+            { member_id: firstMemberId, role: 'Voz' },
+            { member_id: secondMemberId, role: 'Violão' },
+          ],
+          rowCount: 2,
+        };
+      if (sql.includes('SELECT pg_advisory_xact_lock'))
+        return { rows: [{}], rowCount: 1 };
+      if (sql.includes('SELECT 1 FROM occurrences'))
+        return { rows: [], rowCount: 0 };
+      if (sql.includes('SELECT DISTINCT om.member_id'))
+        return { rows: [], rowCount: 0 };
+      if (sql.includes('INSERT INTO occurrences')) {
+        occurrenceIndex++;
+        return { rows: [{ id: `occurrence-${occurrenceIndex}` }], rowCount: 1 };
+      }
+      return { rows: [], rowCount: 1 };
+    });
+    const database = {
+      transaction: jest.fn((work: (client: TransactionClient) => Promise<unknown>) =>
+        work({ query: transactionQuery } as unknown as TransactionClient),
+      ),
+    } as unknown as DatabaseService;
+
+    const result = await new DomainService(database).createOccurrenceBatch(
+      leader,
+      idempotencyKey,
+      {
+        title: 'Santa Missa',
+        timezone: 'America/Fortaleza',
+        location: 'Igreja Matriz',
+        ministryId,
+        slots: [
+          { startsAt: '2026-10-14T09:00:00-03:00', excludedMemberIds: [], additionalMembers: [] },
+          { startsAt: '2026-10-28T19:00:00-03:00', excludedMemberIds: [secondMemberId], additionalMembers: [] },
+        ],
+        setlist: { items: [] },
+      },
+    );
+
+    const occurrenceInserts = transactionQuery.mock.calls.filter(([sql]) =>
+      String(sql).includes('INSERT INTO occurrences'),
+    );
+    const memberInserts = transactionQuery.mock.calls.filter(([sql]) =>
+      String(sql).includes('INSERT INTO occurrence_members'),
+    );
+    expect(result).toEqual({
+      batchId: 'batch-id',
+      createdCount: 2,
+      replayed: false,
+      occurrenceIds: ['occurrence-1', 'occurrence-2'],
+    });
+    expect(occurrenceInserts).toHaveLength(2);
+    expect(memberInserts).toHaveLength(3);
+    expect(memberInserts[0][1][0]).toBe('occurrence-1');
+    expect(memberInserts[2][1][0]).toBe('occurrence-2');
+    expect(memberInserts[2][1][1]).toBe(firstMemberId);
+  });
+
+  it('replays an existing batch without creating occurrences again', async () => {
+    let requestHash = '';
+    const transactionQuery = jest.fn(async (sql: string, values?: readonly unknown[]) => {
+      if (sql.includes('INSERT INTO occurrence_creation_batches')) {
+        requestHash = String(values?.[3]);
+        return { rows: [], rowCount: 0 };
+      }
+      if (sql.includes('SELECT id,request_hash'))
+        return { rows: [{ id: 'batch-id', request_hash: requestHash }], rowCount: 1 };
+      if (sql.includes('SELECT id FROM occurrences'))
+        return {
+          rows: [{ id: 'occurrence-1' }, { id: 'occurrence-2' }],
+          rowCount: 2,
+        };
+      return { rows: [], rowCount: 0 };
+    });
+    const database = {
+      transaction: jest.fn((work: (client: TransactionClient) => Promise<unknown>) =>
+        work({ query: transactionQuery } as unknown as TransactionClient),
+      ),
+    } as unknown as DatabaseService;
+    const service = new DomainService(database);
+    const input = {
+      title: 'Santa Missa',
+      timezone: 'America/Fortaleza',
+      location: 'Igreja Matriz',
+      ministryId,
+      slots: [{ startsAt: '2026-10-14T09:00:00-03:00', excludedMemberIds: [], additionalMembers: [] }],
+      setlist: { items: [] },
+    };
+
+    await expect(service.createOccurrenceBatch(leader, idempotencyKey, input))
+      .resolves.toEqual({
+        batchId: 'batch-id',
+        createdCount: 2,
+        replayed: true,
+        occurrenceIds: ['occurrence-1', 'occurrence-2'],
+      });
+    expect(transactionQuery).toHaveBeenCalledTimes(3);
+  });
+});
+
 describe('DomainService paginated song options and bulk archive', () => {
   const leader: SessionUser = {
     id: 'leader-id',

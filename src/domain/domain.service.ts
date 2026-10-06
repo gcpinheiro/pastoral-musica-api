@@ -1,4 +1,5 @@
 import { ConflictException, HttpStatus, Injectable } from '@nestjs/common';
+import { createHash } from 'node:crypto';
 import {
   DatabaseService,
   TransactionClient,
@@ -10,6 +11,7 @@ import {
   MemberDto,
   MinistryDto,
   NewsDto,
+  OccurrenceBatchDto,
   OccurrenceDto,
   OccurrenceMemberDto,
   ParishDto,
@@ -25,6 +27,17 @@ const ALLOWED_EXTERNAL_SONG_HOSTS = new Set([
   'www.cifraclub.com.br',
   'cifraclub.com.br',
 ]);
+
+function stableJson(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map(stableJson).join(',')}]`;
+  if (value && typeof value === 'object') {
+    const entries = Object.entries(value as Record<string, unknown>)
+      .filter(([, item]) => item !== undefined)
+      .sort(([left], [right]) => left.localeCompare(right));
+    return `{${entries.map(([key, item]) => `${JSON.stringify(key)}:${stableJson(item)}`).join(',')}}`;
+  }
+  return JSON.stringify(value);
+}
 
 @Injectable()
 export class DomainService {
@@ -627,7 +640,10 @@ export class DomainService {
       );
     const members = (
       await this.db.query(
-        `SELECT m.id member_id,m.name,m.phone,(m.photo_url IS NOT NULL) has_photo,'Integrante' role,'PENDING' confirmation FROM ministry_members mm JOIN members m ON m.id=mm.member_id WHERE mm.ministry_id=$1`,
+        `SELECT m.id member_id,m.name,m.phone,(m.photo_url IS NOT NULL) has_photo,mm.role,'PENDING' confirmation
+           FROM ministry_members mm
+           JOIN members m ON m.id=mm.member_id
+          WHERE mm.ministry_id=$1 AND m.status='ACTIVE'`,
         [id],
       )
     ).rows;
@@ -812,6 +828,336 @@ export class DomainService {
         'Ministério não encontrado.',
       );
     return this.getOccurrence(user, String(row.id));
+  }
+  async createOccurrenceBatch(
+    user: SessionUser,
+    idempotencyKey: string,
+    input: OccurrenceBatchDto,
+  ) {
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(idempotencyKey))
+      throw new ProblemException(
+        HttpStatus.UNPROCESSABLE_ENTITY,
+        'IDEMPOTENCY_KEY_REQUIRED',
+        'Envie uma Idempotency-Key UUID válida para criar o lote.',
+      );
+    const normalizedSlots = input.slots.map((slot) => ({
+      ...slot,
+      startsAt: new Date(slot.startsAt).toISOString(),
+    }));
+    if (new Set(normalizedSlots.map((slot) => slot.startsAt)).size !== normalizedSlots.length)
+      throw new ProblemException(
+        HttpStatus.UNPROCESSABLE_ENTITY,
+        'DUPLICATE_OCCURRENCE_SLOT',
+        'O lote não pode conter a mesma data e horário mais de uma vez.',
+      );
+    const positions = input.setlist.items.map((item) => item.position);
+    if (new Set(positions).size !== positions.length)
+      throw new ProblemException(
+        HttpStatus.UNPROCESSABLE_ENTITY,
+        'DUPLICATE_SETLIST_POSITION',
+        'O repertório não pode repetir posições.',
+      );
+    const parish = this.requireParish(user);
+    const requestHash = createHash('sha256')
+      .update(stableJson({ ...input, slots: normalizedSlots }))
+      .digest('hex');
+
+    return this.db.transaction(async (client) => {
+      const insertedBatch = (
+        await client.query<{ id: string }>(
+          `INSERT INTO occurrence_creation_batches(parish_id,created_by,idempotency_key,request_hash)
+           VALUES($1,$2,$3,$4)
+           ON CONFLICT (parish_id,idempotency_key) DO NOTHING
+           RETURNING id`,
+          [parish, user.id, idempotencyKey, requestHash],
+        )
+      ).rows[0];
+      if (!insertedBatch) {
+        const existingBatch = (
+          await client.query<{ id: string; request_hash: string }>(
+            `SELECT id,request_hash FROM occurrence_creation_batches
+             WHERE parish_id=$1 AND idempotency_key=$2`,
+            [parish, idempotencyKey],
+          )
+        ).rows[0];
+        if (!existingBatch || existingBatch.request_hash !== requestHash)
+          throw new ProblemException(
+            HttpStatus.CONFLICT,
+            'IDEMPOTENCY_KEY_REUSED',
+            'Esta chave de idempotência já foi usada com outro conteúdo.',
+          );
+        const occurrenceIds = (
+          await client.query<{ id: string }>(
+            `SELECT id FROM occurrences
+             WHERE creation_batch_id=$1 AND parish_id=$2
+             ORDER BY starts_at,id`,
+            [existingBatch.id, parish],
+          )
+        ).rows.map((row) => row.id);
+        return {
+          batchId: existingBatch.id,
+          createdCount: occurrenceIds.length,
+          replayed: true,
+          occurrenceIds,
+        };
+      }
+
+      const ministry = (
+        await client.query<{ id: string }>(
+          `SELECT id FROM ministries
+           WHERE id=$1 AND parish_id=$2 AND status='ACTIVE'`,
+          [input.ministryId, parish],
+        )
+      ).rows[0];
+      if (!ministry)
+        throw new ProblemException(404, 'NOT_FOUND', 'Ministério não encontrado.');
+
+      const baseMembers = (
+        await client.query<{ member_id: string; role: string }>(
+          `SELECT mm.member_id,mm.role
+             FROM ministry_members mm
+             JOIN members m ON m.id=mm.member_id
+            WHERE mm.ministry_id=$1 AND m.parish_id=$2 AND m.status='ACTIVE'`,
+          [input.ministryId, parish],
+        )
+      ).rows;
+      const baseMemberIds = new Set(baseMembers.map((member) => member.member_id));
+
+      const additionalIds = normalizedSlots.flatMap((slot) =>
+        slot.additionalMembers.map((member) => member.memberId),
+      );
+      const uniqueAdditionalIds = [...new Set(additionalIds)];
+      if (uniqueAdditionalIds.length) {
+        const scopedIds = new Set(
+          (
+            await client.query<{ id: string }>(
+              `SELECT id FROM members
+               WHERE id=ANY($1::uuid[]) AND parish_id=$2 AND status='ACTIVE'`,
+              [uniqueAdditionalIds, parish],
+            )
+          ).rows.map((member) => member.id),
+        );
+        if (uniqueAdditionalIds.some((id) => !scopedIds.has(id)))
+          throw new ProblemException(404, 'NOT_FOUND', 'Membro não encontrado.');
+      }
+
+      const songIds = input.setlist.items.map((item) => item.songId);
+      const uniqueSongIds = [...new Set(songIds)];
+      if (uniqueSongIds.length !== songIds.length)
+        throw new ProblemException(
+          HttpStatus.UNPROCESSABLE_ENTITY,
+          'DUPLICATE_SETLIST_SONG',
+          'A mesma música não pode aparecer duas vezes no repertório.',
+        );
+      const songs = uniqueSongIds.length
+        ? (
+            await client.query<{ id: string; lyrics: string }>(
+              `SELECT id,lyrics FROM songs
+               WHERE id=ANY($1::uuid[]) AND parish_id=$2 AND status='ACTIVE'`,
+              [uniqueSongIds, parish],
+            )
+          ).rows
+        : [];
+      const lyricsBySong = new Map(songs.map((song) => [song.id, song.lyrics]));
+      if (songs.length !== uniqueSongIds.length)
+        throw new ProblemException(404, 'NOT_FOUND', 'Música não encontrada.');
+
+      const occurrenceIds: string[] = [];
+      for (const [slotIndex, slot] of normalizedSlots.entries()) {
+        if (new Set(slot.excludedMemberIds).size !== slot.excludedMemberIds.length)
+          throw new ProblemException(
+            HttpStatus.UNPROCESSABLE_ENTITY,
+            'DUPLICATE_EXCLUDED_MEMBER',
+            `A data ${slotIndex + 1} possui um membro removido mais de uma vez.`,
+          );
+        if (slot.excludedMemberIds.some((id) => !baseMemberIds.has(id)))
+          throw new ProblemException(
+            HttpStatus.UNPROCESSABLE_ENTITY,
+            'INVALID_EXCLUDED_MEMBER',
+            `A data ${slotIndex + 1} tenta remover alguém que não pertence à formação habitual.`,
+          );
+        const additionalMemberIds = slot.additionalMembers.map((member) => member.memberId);
+        if (new Set(additionalMemberIds).size !== additionalMemberIds.length)
+          throw new ProblemException(
+            HttpStatus.UNPROCESSABLE_ENTITY,
+            'DUPLICATE_ADDITIONAL_MEMBER',
+            `A data ${slotIndex + 1} possui um membro adicional repetido.`,
+          );
+
+        await client.query(
+          'SELECT pg_advisory_xact_lock(hashtextextended($1,0))',
+          [`${parish}|${input.ministryId}|${slot.startsAt}`],
+        );
+        const duplicate = await client.query(
+          `SELECT 1 FROM occurrences
+           WHERE parish_id=$1 AND ministry_id=$2 AND starts_at=$3
+             AND archived_at IS NULL`,
+          [parish, input.ministryId, slot.startsAt],
+        );
+        if (duplicate.rowCount)
+          throw new ProblemException(
+            HttpStatus.CONFLICT,
+            'OCCURRENCE_SLOT_CONFLICT',
+            `Já existe uma escala deste ministério em ${slot.startsAt}.`,
+          );
+
+        const formation = new Map(
+          baseMembers.map((member) => [
+            member.member_id,
+            {
+              memberId: member.member_id,
+              role: member.role,
+              overrideConflicts: false,
+              conflictJustification: null as string | null,
+            },
+          ]),
+        );
+        for (const memberId of slot.excludedMemberIds) formation.delete(memberId);
+        for (const member of slot.additionalMembers) {
+          if (
+            member.overrideConflicts &&
+            (!member.conflictJustification || member.conflictJustification.length < 10)
+          )
+            throw new ProblemException(
+              HttpStatus.UNPROCESSABLE_ENTITY,
+              'JUSTIFICATION_REQUIRED',
+              'Justificativa obrigatória para ignorar conflitos.',
+            );
+          formation.set(member.memberId, {
+            memberId: member.memberId,
+            role: member.role,
+            overrideConflicts: member.overrideConflicts ?? false,
+            conflictJustification: member.conflictJustification ?? null,
+          });
+        }
+        for (const override of slot.conflictOverrides ?? []) {
+          const member = formation.get(override.memberId);
+          if (!member)
+            throw new ProblemException(
+              HttpStatus.UNPROCESSABLE_ENTITY,
+              'INVALID_CONFLICT_OVERRIDE',
+              'A exceção de conflito referencia um membro fora desta escala.',
+            );
+          formation.set(override.memberId, {
+            ...member,
+            overrideConflicts: true,
+            conflictJustification: override.conflictJustification,
+          });
+        }
+
+        const memberIds = [...formation.keys()];
+        const conflicts = memberIds.length
+          ? (
+              await client.query<{ member_id: string }>(
+                `SELECT DISTINCT om.member_id
+                   FROM occurrence_members om
+                   JOIN occurrences o ON o.id=om.occurrence_id
+                  WHERE om.member_id=ANY($1::uuid[]) AND o.starts_at=$2
+                    AND o.archived_at IS NULL`,
+                [memberIds, slot.startsAt],
+              )
+            ).rows
+          : [];
+        const blockingConflict = conflicts.find(
+          ({ member_id }) => !formation.get(member_id)?.overrideConflicts,
+        );
+        if (blockingConflict)
+          throw new ProblemException(
+            HttpStatus.CONFLICT,
+            'MEMBER_SCHEDULE_CONFLICT',
+            `O membro ${blockingConflict.member_id} já está escalado neste horário.`,
+            [{ field: `slots.${slotIndex}.members`, message: blockingConflict.member_id }],
+          );
+
+        const occurrence = (
+          await client.query<{ id: string }>(
+            `INSERT INTO occurrences(
+               parish_id,ministry_id,created_by,creation_batch_id,title,starts_at,
+               timezone,location,liturgical_time,notes,local_date,local_time
+             ) VALUES(
+               $1,$2,$3,$4,$5,$6,$7,$8,$9,$10,
+               (($6::timestamptz AT TIME ZONE $7)::date),
+               (($6::timestamptz AT TIME ZONE $7)::time)
+             ) RETURNING id`,
+            [
+              parish,
+              input.ministryId,
+              user.id,
+              insertedBatch.id,
+              input.title,
+              slot.startsAt,
+              input.timezone,
+              input.location,
+              input.liturgicalTime ?? null,
+              input.notes ?? null,
+            ],
+          )
+        ).rows[0];
+        occurrenceIds.push(occurrence.id);
+
+        for (const member of formation.values()) {
+          await client.query(
+            `INSERT INTO occurrence_members(
+               occurrence_id,member_id,role,conflict_override,conflict_justification
+             ) VALUES($1,$2,$3,$4,$5)`,
+            [
+              occurrence.id,
+              member.memberId,
+              member.role,
+              member.overrideConflicts,
+              member.conflictJustification,
+            ],
+          );
+          if (member.overrideConflicts)
+            await client.query(
+              `INSERT INTO audit_logs(parish_id,actor_user_id,action,entity_type,entity_id,details)
+               VALUES($1,$2,'OVERRIDE_CONFLICT','OCCURRENCE',$3,$4)`,
+              [
+                parish,
+                user.id,
+                occurrence.id,
+                JSON.stringify({
+                  memberId: member.memberId,
+                  justification: member.conflictJustification,
+                }),
+              ],
+            );
+        }
+        for (const item of input.setlist.items) {
+          await client.query(
+            `INSERT INTO setlist_items(
+               occurrence_id,song_id,position,key,liturgical_moment,notes,lyrics_snapshot
+             ) VALUES($1,$2,$3,$4,$5,$6,$7)`,
+            [
+              occurrence.id,
+              item.songId,
+              item.position,
+              item.key,
+              item.liturgicalMoment,
+              item.notes ?? null,
+              lyricsBySong.get(item.songId) ?? '',
+            ],
+          );
+        }
+        await client.query(
+          `INSERT INTO audit_logs(parish_id,actor_user_id,action,entity_type,entity_id,details)
+           VALUES($1,$2,'CREATE_OCCURRENCE','OCCURRENCE',$3,$4)`,
+          [
+            parish,
+            user.id,
+            occurrence.id,
+            JSON.stringify({ batchId: insertedBatch.id, slotIndex }),
+          ],
+        );
+      }
+
+      return {
+        batchId: insertedBatch.id,
+        createdCount: occurrenceIds.length,
+        replayed: false,
+        occurrenceIds,
+      };
+    });
   }
   async listOccurrences(
     user: SessionUser,

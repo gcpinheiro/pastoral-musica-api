@@ -4,6 +4,7 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   HttpCode,
   HttpStatus,
   Param,
@@ -27,6 +28,7 @@ import {
   MemberDto,
   MinistryDto,
   NewsDto,
+  OccurrenceBatchDto,
   OccurrenceDto,
   ParishDto,
   ProfileDto,
@@ -271,6 +273,13 @@ export class DomainController {
     @Body() b: OccurrenceDto,
   ) {
     return this.domain.createOccurrence(u, b);
+  }
+  @Roles('LEADER') @Post('occurrences/batch') createOccurrenceBatch(
+    @CurrentUser() u: SessionUser,
+    @Headers('idempotency-key') idempotencyKey: string | undefined,
+    @Body() body: OccurrenceBatchDto,
+  ) {
+    return this.domain.createOccurrenceBatch(u, idempotencyKey ?? '', body);
   }
   @Roles('LEADER')
   @Post('occurrences/archive')

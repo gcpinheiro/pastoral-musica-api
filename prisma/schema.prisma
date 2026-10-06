@@ -131,57 +131,76 @@ model occurrence_members {
 }
 
 model occurrences {
-  id                 String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  parish_id          String               @db.Uuid
-  series_id          String?              @db.Uuid
-  created_by         String?              @db.Uuid
-  ministry_id        String               @db.Uuid
+  id                 String                       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  parish_id          String                       @db.Uuid
+  series_id          String?                      @db.Uuid
+  created_by         String?                      @db.Uuid
+  creation_batch_id  String?                      @db.Uuid
+  ministry_id        String                       @db.Uuid
   title              String
-  starts_at          DateTime             @db.Timestamptz(6)
+  starts_at          DateTime                     @db.Timestamptz(6)
   timezone           String
   location           String
   liturgical_time    String?
   notes              String?
-  status             String               @default("DRAFT")
-  archived_at        DateTime?            @db.Timestamptz(6)
-  version            Int                  @default(0)
-  local_date         DateTime             @db.Date
-  local_time         DateTime             @db.Time(6)
-  created_at         DateTime             @default(now()) @db.Timestamptz(6)
-  updated_at         DateTime             @default(now()) @db.Timestamptz(6)
+  status             String                       @default("DRAFT")
+  archived_at        DateTime?                    @db.Timestamptz(6)
+  version            Int                          @default(0)
+  local_date         DateTime                     @db.Date
+  local_time         DateTime                     @db.Time(6)
+  created_at         DateTime                     @default(now()) @db.Timestamptz(6)
+  updated_at         DateTime                     @default(now()) @db.Timestamptz(6)
   occurrence_members occurrence_members[]
-  ministries         ministries           @relation(fields: [ministry_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  parishes           parishes             @relation(fields: [parish_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  celebration_series celebration_series?  @relation(fields: [series_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  creator            users?               @relation(fields: [created_by], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  ministries         ministries                   @relation(fields: [ministry_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parishes           parishes                     @relation(fields: [parish_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  celebration_series celebration_series?          @relation(fields: [series_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  creator            users?                       @relation(fields: [created_by], references: [id], onDelete: SetNull, onUpdate: NoAction)
+  creation_batch     occurrence_creation_batches? @relation(fields: [creation_batch_id], references: [id], onDelete: SetNull, onUpdate: NoAction)
   setlist_items      setlist_items[]
 
   @@unique([series_id, local_date, local_time], map: "occurrences_series_local_unique")
   @@index([parish_id, starts_at], map: "occurrences_parish_starts_idx")
   @@index([created_by], map: "occurrences_created_by_idx")
+  @@index([creation_batch_id], map: "occurrences_creation_batch_idx")
+}
+
+model occurrence_creation_batches {
+  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  parish_id       String        @db.Uuid
+  created_by      String        @db.Uuid
+  idempotency_key String        @db.Uuid
+  request_hash    String
+  created_at      DateTime      @default(now()) @db.Timestamptz(6)
+  parishes        parishes      @relation(fields: [parish_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users           users         @relation(fields: [created_by], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  occurrences     occurrences[]
+
+  @@unique([parish_id, idempotency_key], map: "occurrence_batches_parish_key_unique")
+  @@index([created_by], map: "occurrence_batches_created_by_idx")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model parishes {
-  id                  String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name                String
-  slug                String                @unique
-  city                String
-  state               String                @db.Char(2)
-  timezone            String                @default("America/Fortaleza")
-  status              String                @default("ACTIVE")
-  created_at          DateTime              @default(now()) @db.Timestamptz(6)
-  updated_at          DateTime              @default(now()) @db.Timestamptz(6)
-  audit_logs          audit_logs[]
-  celebration_series  celebration_series[]
-  leadership_requests leadership_requests[]
-  members             members[]
-  ministries          ministries[]
-  news                news[]
-  occurrences         occurrences[]
-  songs               songs[]
-  user_invitations    user_invitations[]
-  users               users[]
+  id                          String                        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                        String
+  slug                        String                        @unique
+  city                        String
+  state                       String                        @db.Char(2)
+  timezone                    String                        @default("America/Fortaleza")
+  status                      String                        @default("ACTIVE")
+  created_at                  DateTime                      @default(now()) @db.Timestamptz(6)
+  updated_at                  DateTime                      @default(now()) @db.Timestamptz(6)
+  audit_logs                  audit_logs[]
+  celebration_series          celebration_series[]
+  leadership_requests         leadership_requests[]
+  members                     members[]
+  ministries                  ministries[]
+  news                        news[]
+  occurrences                 occurrences[]
+  occurrence_creation_batches occurrence_creation_batches[]
+  songs                       songs[]
+  user_invitations            user_invitations[]
+  users                       users[]
 }
 
 model sessions {
@@ -261,24 +280,25 @@ model user_invitations {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model users {
-  id                                                                  String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  parish_id                                                           String?               @db.Uuid
-  member_id                                                           String?               @unique @db.Uuid
+  id                                                                  String                        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  parish_id                                                           String?                       @db.Uuid
+  member_id                                                           String?                       @unique @db.Uuid
   name                                                                String
-  email                                                               String                @unique
+  email                                                               String                        @unique
   password_hash                                                       String
   role                                                                String
-  status                                                              String                @default("ACTIVE")
-  created_at                                                          DateTime              @default(now()) @db.Timestamptz(6)
-  updated_at                                                          DateTime              @default(now()) @db.Timestamptz(6)
+  status                                                              String                        @default("ACTIVE")
+  created_at                                                          DateTime                      @default(now()) @db.Timestamptz(6)
+  updated_at                                                          DateTime                      @default(now()) @db.Timestamptz(6)
   audit_logs                                                          audit_logs[]
-  leadership_requests_leadership_requests_decided_by_user_idTousers   leadership_requests[] @relation("leadership_requests_decided_by_user_idTousers")
-  leadership_requests_leadership_requests_requested_by_user_idTousers leadership_requests[] @relation("leadership_requests_requested_by_user_idTousers")
-  leadership_requests_leadership_requests_target_user_idTousers       leadership_requests[] @relation("leadership_requests_target_user_idTousers")
+  leadership_requests_leadership_requests_decided_by_user_idTousers   leadership_requests[]         @relation("leadership_requests_decided_by_user_idTousers")
+  leadership_requests_leadership_requests_requested_by_user_idTousers leadership_requests[]         @relation("leadership_requests_requested_by_user_idTousers")
+  leadership_requests_leadership_requests_target_user_idTousers       leadership_requests[]         @relation("leadership_requests_target_user_idTousers")
   news                                                                news[]
   sessions                                                            sessions[]
   user_invitations                                                    user_invitations[]
   created_occurrences                                                 occurrences[]
-  members                                                             members?              @relation(fields: [member_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  parishes                                                            parishes?             @relation(fields: [parish_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  occurrence_creation_batches                                         occurrence_creation_batches[]
+  members                                                             members?                      @relation(fields: [member_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  parishes                                                            parishes?                     @relation(fields: [parish_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
