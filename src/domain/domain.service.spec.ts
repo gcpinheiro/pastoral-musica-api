@@ -197,8 +197,38 @@ describe('DomainService occurrence batch creation', () => {
   const firstMemberId = '00000000-0000-4000-8000-000000000005';
   const secondMemberId = '00000000-0000-4000-8000-000000000006';
   const idempotencyKey = '00000000-0000-4000-8000-000000000007';
+  const firstSongId = '00000000-0000-4000-8000-000000000008';
+  const secondSongId = '00000000-0000-4000-8000-000000000009';
 
-  it('creates independent member copies for every date in one transaction', async () => {
+  it('rejects batches with more than five dates before opening a transaction', async () => {
+    const database = { transaction: jest.fn() } as unknown as DatabaseService;
+    const slot = {
+      startsAt: '2026-10-14T09:00:00-03:00',
+      title: 'Santa Missa',
+      location: 'Igreja Matriz',
+      excludedMemberIds: [],
+      additionalMembers: [],
+      setlist: { items: [] },
+    };
+
+    await expect(new DomainService(database).createOccurrenceBatch(
+      leader,
+      idempotencyKey,
+      {
+        timezone: 'America/Fortaleza',
+        ministryId,
+        slots: Array.from({ length: 6 }, (_, index) => ({
+          ...slot,
+          startsAt: `2026-10-${String(14 + index).padStart(2, '0')}T09:00:00-03:00`,
+        })),
+      },
+    )).rejects.toMatchObject({
+      response: { code: 'OCCURRENCE_BATCH_LIMIT_EXCEEDED' },
+    });
+    expect(database.transaction).not.toHaveBeenCalled();
+  });
+
+  it('creates independent member and repertoire copies for every date in one transaction', async () => {
     let occurrenceIndex = 0;
     const transactionQuery = jest.fn(async (sql: string) => {
       if (sql.includes('INSERT INTO occurrence_creation_batches'))
@@ -210,6 +240,14 @@ describe('DomainService occurrence batch creation', () => {
           rows: [
             { member_id: firstMemberId, role: 'Voz' },
             { member_id: secondMemberId, role: 'Violão' },
+          ],
+          rowCount: 2,
+        };
+      if (sql.includes('SELECT id,lyrics FROM songs'))
+        return {
+          rows: [
+            { id: firstSongId, lyrics: 'Primeira letra' },
+            { id: secondSongId, lyrics: 'Segunda letra' },
           ],
           rowCount: 2,
         };
@@ -246,6 +284,14 @@ describe('DomainService occurrence batch creation', () => {
             notes: 'Primeira celebração',
             excludedMemberIds: [],
             additionalMembers: [],
+            setlist: {
+              items: [{
+                songId: firstSongId,
+                position: 1,
+                key: 'C',
+                liturgicalMoment: 'Entrada',
+              }],
+            },
           },
           {
             startsAt: '2026-10-28T19:00:00-03:00',
@@ -255,9 +301,16 @@ describe('DomainService occurrence batch creation', () => {
             notes: 'Segunda celebração',
             excludedMemberIds: [secondMemberId],
             additionalMembers: [],
+            setlist: {
+              items: [{
+                songId: secondSongId,
+                position: 1,
+                key: 'D',
+                liturgicalMoment: 'Comunhão',
+              }],
+            },
           },
         ],
-        setlist: { items: [] },
       },
     );
 
@@ -269,6 +322,9 @@ describe('DomainService occurrence batch creation', () => {
     );
     const memberInserts = transactionQuery.mock.calls.filter(([sql]) =>
       String(sql).includes('INSERT INTO occurrence_members'),
+    );
+    const setlistInserts = transactionQuery.mock.calls.filter(([sql]) =>
+      String(sql).includes('INSERT INTO setlist_items'),
     );
     expect(result).toEqual({
       batchId: 'batch-id',
@@ -295,6 +351,11 @@ describe('DomainService occurrence batch creation', () => {
     expect(memberInserts[0][1][0]).toBe('occurrence-1');
     expect(memberInserts[2][1][0]).toBe('occurrence-2');
     expect(memberInserts[2][1][1]).toBe(firstMemberId);
+    expect(setlistInserts).toHaveLength(2);
+    expect(setlistInserts[0][1][0]).toBe('occurrence-1');
+    expect(setlistInserts[0][1][1]).toBe(firstSongId);
+    expect(setlistInserts[1][1][0]).toBe('occurrence-2');
+    expect(setlistInserts[1][1][1]).toBe(secondSongId);
   });
 
   it('replays an existing batch without creating occurrences again', async () => {
@@ -330,8 +391,8 @@ describe('DomainService occurrence batch creation', () => {
         notes: '',
         excludedMemberIds: [],
         additionalMembers: [],
+        setlist: { items: [] },
       }],
-      setlist: { items: [] },
     };
 
     await expect(service.createOccurrenceBatch(leader, idempotencyKey, input))

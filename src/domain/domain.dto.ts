@@ -5,6 +5,7 @@ import {
   IsArray,
   IsBoolean,
   IsDateString,
+  IsDefined,
   IsEmail,
   IsInt,
   IsIn,
@@ -124,19 +125,20 @@ export class OccurrenceBatchSlotDto {
   @ValidateNested({ each: true })
   @Type(() => OccurrenceConflictOverrideDto)
   conflictOverrides?: OccurrenceConflictOverrideDto[];
+  @IsDefined()
+  @ValidateNested()
+  @Type(() => SetlistDto)
+  setlist!: SetlistDto;
 }
 export class OccurrenceBatchDto {
   @IsIn(['America/Fortaleza']) timezone!: string;
   @IsUUID() ministryId!: string;
   @IsArray()
   @ArrayMinSize(1)
-  @ArrayMaxSize(50)
+  @ArrayMaxSize(5)
   @ValidateNested({ each: true })
   @Type(() => OccurrenceBatchSlotDto)
   slots!: OccurrenceBatchSlotDto[];
-  @ValidateNested()
-  @Type(() => SetlistDto)
-  setlist!: SetlistDto;
 }
 export class ArchiveOccurrencesDto {
   @IsArray()

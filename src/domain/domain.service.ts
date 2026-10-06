@@ -840,6 +840,12 @@ export class DomainService {
         'IDEMPOTENCY_KEY_REQUIRED',
         'Envie uma Idempotency-Key UUID válida para criar o lote.',
       );
+    if (input.slots.length > 5)
+      throw new ProblemException(
+        HttpStatus.UNPROCESSABLE_ENTITY,
+        'OCCURRENCE_BATCH_LIMIT_EXCEEDED',
+        'Cada lote pode conter no máximo 5 escalas.',
+      );
     const normalizedSlots = input.slots.map((slot) => ({
       ...slot,
       startsAt: new Date(slot.startsAt).toISOString(),
@@ -850,13 +856,22 @@ export class DomainService {
         'DUPLICATE_OCCURRENCE_SLOT',
         'O lote não pode conter a mesma data e horário mais de uma vez.',
       );
-    const positions = input.setlist.items.map((item) => item.position);
-    if (new Set(positions).size !== positions.length)
-      throw new ProblemException(
-        HttpStatus.UNPROCESSABLE_ENTITY,
-        'DUPLICATE_SETLIST_POSITION',
-        'O repertório não pode repetir posições.',
-      );
+    for (const [slotIndex, slot] of normalizedSlots.entries()) {
+      const positions = slot.setlist.items.map((item) => item.position);
+      if (new Set(positions).size !== positions.length)
+        throw new ProblemException(
+          HttpStatus.UNPROCESSABLE_ENTITY,
+          'DUPLICATE_SETLIST_POSITION',
+          `O repertório da data ${slotIndex + 1} não pode repetir posições.`,
+        );
+      const songIds = slot.setlist.items.map((item) => item.songId);
+      if (new Set(songIds).size !== songIds.length)
+        throw new ProblemException(
+          HttpStatus.UNPROCESSABLE_ENTITY,
+          'DUPLICATE_SETLIST_SONG',
+          `O repertório da data ${slotIndex + 1} não pode repetir a mesma música.`,
+        );
+    }
     const parish = this.requireParish(user);
     const requestHash = createHash('sha256')
       .update(stableJson({ ...input, slots: normalizedSlots }))
@@ -941,14 +956,13 @@ export class DomainService {
           throw new ProblemException(404, 'NOT_FOUND', 'Membro não encontrado.');
       }
 
-      const songIds = input.setlist.items.map((item) => item.songId);
-      const uniqueSongIds = [...new Set(songIds)];
-      if (uniqueSongIds.length !== songIds.length)
-        throw new ProblemException(
-          HttpStatus.UNPROCESSABLE_ENTITY,
-          'DUPLICATE_SETLIST_SONG',
-          'A mesma música não pode aparecer duas vezes no repertório.',
-        );
+      const uniqueSongIds = [
+        ...new Set(
+          normalizedSlots.flatMap((slot) =>
+            slot.setlist.items.map((item) => item.songId),
+          ),
+        ),
+      ];
       const songs = uniqueSongIds.length
         ? (
             await client.query<{ id: string; lyrics: string }>(
@@ -1123,7 +1137,7 @@ export class DomainService {
               ],
             );
         }
-        for (const item of input.setlist.items) {
+        for (const item of slot.setlist.items) {
           await client.query(
             `INSERT INTO setlist_items(
                occurrence_id,song_id,position,key,liturgical_moment,notes,lyrics_snapshot
