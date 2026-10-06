@@ -110,6 +110,10 @@ export class OccurrenceConflictOverrideDto {
 }
 export class OccurrenceBatchSlotDto {
   @IsDateString() startsAt!: string;
+  @IsString() @MinLength(1) title!: string;
+  @IsString() @MinLength(1) location!: string;
+  @IsOptional() @IsString() liturgicalTime?: string;
+  @IsOptional() @IsString() notes?: string;
   @IsArray() @IsUUID('4', { each: true }) excludedMemberIds!: string[];
   @IsArray()
   @ValidateNested({ each: true })
@@ -122,12 +126,8 @@ export class OccurrenceBatchSlotDto {
   conflictOverrides?: OccurrenceConflictOverrideDto[];
 }
 export class OccurrenceBatchDto {
-  @IsString() @MinLength(1) title!: string;
   @IsIn(['America/Fortaleza']) timezone!: string;
-  @IsString() @MinLength(1) location!: string;
   @IsUUID() ministryId!: string;
-  @IsOptional() @IsString() liturgicalTime?: string;
-  @IsOptional() @IsString() notes?: string;
   @IsArray()
   @ArrayMinSize(1)
   @ArrayMaxSize(50)

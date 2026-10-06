@@ -1084,12 +1084,12 @@ export class DomainService {
               input.ministryId,
               user.id,
               insertedBatch.id,
-              input.title,
+              slot.title,
               slot.startsAt,
               input.timezone,
-              input.location,
-              input.liturgicalTime ?? null,
-              input.notes ?? null,
+              slot.location,
+              slot.liturgicalTime ?? null,
+              slot.notes ?? null,
             ],
           )
         ).rows[0];

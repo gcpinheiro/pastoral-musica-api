@@ -235,13 +235,27 @@ describe('DomainService occurrence batch creation', () => {
       leader,
       idempotencyKey,
       {
-        title: 'Santa Missa',
         timezone: 'America/Fortaleza',
-        location: 'Igreja Matriz',
         ministryId,
         slots: [
-          { startsAt: '2026-10-14T09:00:00-03:00', excludedMemberIds: [], additionalMembers: [] },
-          { startsAt: '2026-10-28T19:00:00-03:00', excludedMemberIds: [secondMemberId], additionalMembers: [] },
+          {
+            startsAt: '2026-10-14T09:00:00-03:00',
+            title: 'Santa Missa',
+            location: 'Igreja Matriz',
+            liturgicalTime: 'Tempo Comum',
+            notes: 'Primeira celebração',
+            excludedMemberIds: [],
+            additionalMembers: [],
+          },
+          {
+            startsAt: '2026-10-28T19:00:00-03:00',
+            title: 'Celebração da Palavra',
+            location: 'Capela do Santíssimo',
+            liturgicalTime: 'Solenidade',
+            notes: 'Segunda celebração',
+            excludedMemberIds: [secondMemberId],
+            additionalMembers: [],
+          },
         ],
         setlist: { items: [] },
       },
@@ -260,6 +274,18 @@ describe('DomainService occurrence batch creation', () => {
       occurrenceIds: ['occurrence-1', 'occurrence-2'],
     });
     expect(occurrenceInserts).toHaveLength(2);
+    expect(occurrenceInserts[0][1]).toEqual(expect.arrayContaining([
+      'Santa Missa',
+      'Igreja Matriz',
+      'Tempo Comum',
+      'Primeira celebração',
+    ]));
+    expect(occurrenceInserts[1][1]).toEqual(expect.arrayContaining([
+      'Celebração da Palavra',
+      'Capela do Santíssimo',
+      'Solenidade',
+      'Segunda celebração',
+    ]));
     expect(memberInserts).toHaveLength(3);
     expect(memberInserts[0][1][0]).toBe('occurrence-1');
     expect(memberInserts[2][1][0]).toBe('occurrence-2');
@@ -289,11 +315,17 @@ describe('DomainService occurrence batch creation', () => {
     } as unknown as DatabaseService;
     const service = new DomainService(database);
     const input = {
-      title: 'Santa Missa',
       timezone: 'America/Fortaleza',
-      location: 'Igreja Matriz',
       ministryId,
-      slots: [{ startsAt: '2026-10-14T09:00:00-03:00', excludedMemberIds: [], additionalMembers: [] }],
+      slots: [{
+        startsAt: '2026-10-14T09:00:00-03:00',
+        title: 'Santa Missa',
+        location: 'Igreja Matriz',
+        liturgicalTime: 'Tempo Comum',
+        notes: '',
+        excludedMemberIds: [],
+        additionalMembers: [],
+      }],
       setlist: { items: [] },
     };
 
