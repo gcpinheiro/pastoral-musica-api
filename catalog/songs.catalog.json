@@ -298,9 +298,21 @@
       "author": "Comunidade Católica Shalom",
       "defaultKey": "D",
       "liturgicalMoments": ["Aclamação"],
-      "contentMode": "EXTERNAL_EMBED",
-      "externalUrl": "https://cifrascatolicas.com.br/comunidade-catolica-shalom/tua-palavra",
-      "sourceAttribution": "Cifra exibida a partir do Cifras Católicas. O conteúdo permanece hospedado na fonte original."
+      "contentMode": "INTERNAL",
+      "lyrics": "Aleluia, aleluia, aleluia!\nAleluia, aleluia, aleluia!\n\nTua palavra é como fogo\nQue faz arder o coração\nTraz a verdade e ilumina a nossa vida\n\nTua palavra é como fogo\nQue faz arder o coração\nTraz a verdade e ilumina a nossa vida\n\nAleluia, aleluia, aleluia!\nAleluia, aleluia, aleluia!",
+      "chords": "[Refrão]\nD                 A\nAleluia, aleluia, aleluia!\nBm                G\nAleluia, aleluia, aleluia!\n\n[Estrofe]\nD\nTua palavra é como fogo\nA\nQue faz arder o coração\nBm                         G\nTraz a verdade e ilumina a nossa vida\n\nD\nTua palavra é como fogo\nA\nQue faz arder o coração\nBm                         G\nTraz a verdade e ilumina a nossa vida\n\n[Refrão]\nD                 A\nAleluia, aleluia, aleluia!\nBm                G       D\nAleluia, aleluia, aleluia!",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PARISH_PROVIDED",
+        "sourceDocument": "Missa 09_10_2026 - 18h 30m.docx",
+        "attribution": "Letra e tom fornecidos pela paróquia no documento Missa 09_10_2026 - 18h 30m.docx. Autoria atribuída à Comunidade Católica Shalom. Cifra pastoral própria em D para uso interno.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-10-07T00:00:00.000Z"
+      }
     },
     {
       "externalId": "missa-gloria-2026-10-santo",
