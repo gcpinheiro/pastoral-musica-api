@@ -105,6 +105,11 @@ export class SetlistDto {
   @Type(() => SetlistItemDto)
   items!: SetlistItemDto[];
 }
+export class UpdateSetlistItemDto {
+  @IsString() @MinLength(1) key!: string;
+  @IsString() @MinLength(1) liturgicalMoment!: string;
+  @IsOptional() @IsString() notes?: string;
+}
 export class OccurrenceConflictOverrideDto {
   @IsUUID() memberId!: string;
   @IsString() @MinLength(10) conflictJustification!: string;

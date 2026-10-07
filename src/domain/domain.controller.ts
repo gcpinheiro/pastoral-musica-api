@@ -34,6 +34,7 @@ import {
   ProfileDto,
   ReplaceMembersDto,
   SetlistDto,
+  UpdateSetlistItemDto,
   SetlistLyricsDto,
   SongDto,
 } from './domain.dto';
@@ -341,6 +342,16 @@ export class DomainController {
     @Body() b: SetlistDto,
   ) {
     return this.domain.replaceSetlist(u, id, b);
+  }
+  @Roles('LEADER')
+  @Patch('occurrences/:id/setlist/items/:itemId')
+  updateSetlistItem(
+    @CurrentUser() u: SessionUser,
+    @Param('id') id: string,
+    @Param('itemId') itemId: string,
+    @Body() body: UpdateSetlistItemDto,
+  ) {
+    return this.domain.updateSetlistItem(u, id, itemId, body);
   }
   @Roles('LEADER')
   @Patch('occurrences/:id/setlist/items/:itemId/lyrics')

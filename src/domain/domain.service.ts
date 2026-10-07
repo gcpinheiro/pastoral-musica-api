@@ -18,6 +18,7 @@ import {
   ProfileDto,
   SetlistDto,
   SongDto,
+  UpdateSetlistItemDto,
 } from './domain.dto';
 import { normalizeLyricsDocument } from './lyrics-document';
 
@@ -1650,6 +1651,70 @@ export class DomainService {
     });
     return this.getOccurrence(user, id);
   }
+  async updateSetlistItem(
+    user: SessionUser,
+    occurrenceId: string,
+    itemId: string,
+    input: UpdateSetlistItemDto,
+  ) {
+    const parish = this.requireParish(user);
+    await this.db.transaction(async (client) => {
+      const occurrence = (
+        await client.query<{ created_by: string | null }>(
+          `SELECT created_by FROM occurrences
+            WHERE id=$1 AND parish_id=$2 AND archived_at IS NULL
+            FOR UPDATE`,
+          [occurrenceId, parish],
+        )
+      ).rows[0];
+      if (!occurrence)
+        throw new ProblemException(
+          404,
+          'NOT_FOUND',
+          'Ocorrência não encontrada.',
+        );
+      if (occurrence.created_by && occurrence.created_by !== user.id)
+        throw new ProblemException(
+          403,
+          'FORBIDDEN',
+          'Somente quem criou esta escala pode editar seu repertório.',
+        );
+      const updated = await client.query(
+        `UPDATE setlist_items
+            SET key=$1,liturgical_moment=$2,notes=$3
+          WHERE id=$4 AND occurrence_id=$5
+          RETURNING id`,
+        [
+          input.key,
+          input.liturgicalMoment,
+          input.notes ?? null,
+          itemId,
+          occurrenceId,
+        ],
+      );
+      if (!updated.rowCount)
+        throw new ProblemException(
+          404,
+          'NOT_FOUND',
+          'Música da escala não encontrada.',
+        );
+      await client.query(
+        `INSERT INTO audit_logs(parish_id,actor_user_id,action,entity_type,entity_id,details)
+         VALUES($1,$2,'UPDATE_SETLIST_ITEM','OCCURRENCE',$3,$4)`,
+        [
+          parish,
+          user.id,
+          occurrenceId,
+          JSON.stringify({
+            setlistItemId: itemId,
+            key: input.key,
+            liturgicalMoment: input.liturgicalMoment,
+          }),
+        ],
+      );
+    });
+    return this.getOccurrence(user, occurrenceId);
+  }
   async updateSetlistLyrics(
     user: SessionUser,
     occurrenceId: string,
@@ -1659,17 +1724,32 @@ export class DomainService {
     const parish = this.requireParish(user);
     const content = normalizeLyricsDocument(input);
     await this.db.transaction(async (client) => {
+      const occurrence = (
+        await client.query<{ created_by: string | null }>(
+          `SELECT created_by FROM occurrences
+            WHERE id=$1 AND parish_id=$2 AND archived_at IS NULL
+            FOR UPDATE`,
+          [occurrenceId, parish],
+        )
+      ).rows[0];
+      if (!occurrence)
+        throw new ProblemException(
+          404,
+          'NOT_FOUND',
+          'Ocorrência não encontrada.',
+        );
+      if (occurrence.created_by && occurrence.created_by !== user.id)
+        throw new ProblemException(
+          403,
+          'FORBIDDEN',
+          'Somente quem criou esta escala pode editar seu repertório.',
+        );
       const updated = await client.query(
-        `UPDATE setlist_items AS item
+        `UPDATE setlist_items
             SET formatted_lyrics=$1::jsonb
-           FROM occurrences AS occurrence
-          WHERE item.id=$2
-            AND item.occurrence_id=$3
-            AND occurrence.id=item.occurrence_id
-            AND occurrence.parish_id=$4
-            AND occurrence.archived_at IS NULL
-          RETURNING item.id`,
-        [JSON.stringify(content), itemId, occurrenceId, parish],
+          WHERE id=$2 AND occurrence_id=$3
+          RETURNING id`,
+        [JSON.stringify(content), itemId, occurrenceId],
       );
       if (!updated.rowCount)
         throw new ProblemException(

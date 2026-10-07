@@ -542,9 +542,42 @@ describe('DomainService occurrence archiving', () => {
 });
 
 describe('DomainService setlist lyrics arrangement', () => {
+  it('updates the key only on the scoped setlist item', async () => {
+    const transactionQuery = jest
+      .fn()
+      .mockResolvedValueOnce({ rows: [{ created_by: 'leader-id' }], rowCount: 1 })
+      .mockResolvedValueOnce({ rows: [{ id: 'item-id' }], rowCount: 1 })
+      .mockResolvedValueOnce({ rows: [], rowCount: 1 });
+    const database = {
+      transaction: jest.fn((work: (client: TransactionClient) => Promise<void>) =>
+        work({ query: transactionQuery } as unknown as TransactionClient),
+      ),
+    } as unknown as DatabaseService;
+    const service = new DomainService(database);
+    jest.spyOn(service, 'getOccurrence').mockResolvedValue({ id: 'occurrence-id' });
+    const user = { id: 'leader-id', parishId: 'parish-id', role: 'LEADER' } as SessionUser;
+
+    await service.updateSetlistItem(user, 'occurrence-id', 'item-id', {
+      key: 'D',
+      liturgicalMoment: 'Entrada',
+      notes: 'Tom definido para esta celebração',
+    });
+
+    expect(transactionQuery.mock.calls[1][0]).toContain('UPDATE setlist_items');
+    expect(transactionQuery.mock.calls[1][1]).toEqual([
+      'D',
+      'Entrada',
+      'Tom definido para esta celebração',
+      'item-id',
+      'occurrence-id',
+    ]);
+    expect(transactionQuery.mock.calls[2][0]).toContain('UPDATE_SETLIST_ITEM');
+  });
+
   it('updates only the scoped setlist item and records an audit entry', async () => {
     const transactionQuery = jest
       .fn()
+      .mockResolvedValueOnce({ rows: [{ created_by: 'leader-id' }], rowCount: 1 })
       .mockResolvedValueOnce({ rows: [{ id: 'item-id' }], rowCount: 1 })
       .mockResolvedValueOnce({ rows: [], rowCount: 1 });
     const database = {
@@ -559,13 +592,34 @@ describe('DomainService setlist lyrics arrangement', () => {
 
     await service.updateSetlistLyrics(user, 'occurrence-id', 'item-id', content);
 
-    expect(transactionQuery.mock.calls[0][0]).toContain('formatted_lyrics');
-    expect(transactionQuery.mock.calls[0][1]).toEqual([
+    expect(transactionQuery.mock.calls[1][0]).toContain('formatted_lyrics');
+    expect(transactionQuery.mock.calls[1][1]).toEqual([
       JSON.stringify({ version: 1, segments: [{ text: 'Cantai', bold: true, voice: 'WOMEN' }] }),
       'item-id',
       'occurrence-id',
-      'parish-id',
     ]);
-    expect(transactionQuery.mock.calls[1][0]).toContain('UPDATE_SETLIST_LYRICS');
+    expect(transactionQuery.mock.calls[2][0]).toContain('UPDATE_SETLIST_LYRICS');
+  });
+
+  it('prevents another leader from editing the occurrence setlist', async () => {
+    const transactionQuery = jest
+      .fn()
+      .mockResolvedValueOnce({ rows: [{ created_by: 'other-leader-id' }], rowCount: 1 });
+    const database = {
+      transaction: jest.fn((work: (client: TransactionClient) => Promise<void>) =>
+        work({ query: transactionQuery } as unknown as TransactionClient),
+      ),
+    } as unknown as DatabaseService;
+    const service = new DomainService(database);
+    const user = { id: 'leader-id', parishId: 'parish-id', role: 'LEADER' } as SessionUser;
+
+    await expect(
+      service.updateSetlistLyrics(user, 'occurrence-id', 'item-id', {
+        version: 1,
+        segments: [{ text: 'Cantai' }],
+      }),
+    ).rejects.toMatchObject({ response: { code: 'FORBIDDEN' } });
+
+    expect(transactionQuery).toHaveBeenCalledTimes(1);
   });
 });
