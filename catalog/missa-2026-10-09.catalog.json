@@ -1,0 +1,137 @@
+{
+  "catalogVersion": 1,
+  "items": [
+    {
+      "externalId": "missa-2026-10-09-dia-de-festa",
+      "title": "Dia de Festa",
+      "author": "Eliana Ribeiro",
+      "defaultKey": "D",
+      "liturgicalMoments": ["Entrada"],
+      "contentMode": "INTERNAL",
+      "lyrics": "Hoje é dia de celebração!\nVamos cantar Aleluia, Aleluia!\nHoje é dia de celebração, é dia de festa\nO céu inteiro está orando por nós!\n\nHoje é dia de celebração!\nVamos cantar Aleluia, Aleluia!\nHoje é dia de celebração, é dia de festa\nO céu inteiro está orando por nós!\n\nAlegrei-me quando me disseram:\nVamos para a casa do Senhor,\npois Ele nos espera!\n\nAlegrei-me quando me disseram:\nVamos para a casa do Senhor,\npois Ele nos espera!\n\nDe braços abertos com uma bênção especial pra nós\nEntão derrama sobre nós o teu Espírito Senhor\nEntão derrama sobre este lugar a tua unção e o teu poder!",
+      "chords": "Tom informado no documento: D.\n\nCifra não informada no documento fornecido.",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PARISH_PROVIDED",
+        "sourceDocument": "Missa 09_10_2026 - 18h 30m.docx",
+        "attribution": "Letra e tom fornecidos pela paróquia no documento Missa 09_10_2026 - 18h 30m.docx. Autoria atribuída a Eliana Ribeiro.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-10-07T00:00:00.000Z"
+      }
+    },
+    {
+      "externalId": "missa-2026-10-09-kyrie-eleison-jmj",
+      "title": "Kyrie Eleison JMJ",
+      "author": "Samara e Rodrigo",
+      "defaultKey": "Bm",
+      "liturgicalMoments": ["Ato penitencial"],
+      "contentMode": "INTERNAL",
+      "lyrics": "(Sabrina)\nSenhor, que viestes salvar\nOs corações arrependidos\nKyrie eleison, eleison, eleison\nKyrie eleison, eleison, eleison\n\n(Mário)\nÓ, Cristo, que viestes chamar\nOs pecadores humilhados\nChriste eleison, eleison, eleison\nChriste eleison, eleison, eleison\n\n(Patrícia)\nSenhor, que intercedeis por nós\nJunto a Deus Pai que nos perdoa\nKyrie eleison, eleison, eleison\nKyrie eleison, eleison, eleison, ooh",
+      "chords": "Tom informado no documento: Bm.\n\nCifra não informada no documento fornecido.",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PARISH_PROVIDED",
+        "sourceDocument": "Missa 09_10_2026 - 18h 30m.docx",
+        "attribution": "Letra e tom fornecidos pela paróquia no documento Missa 09_10_2026 - 18h 30m.docx. Autoria atribuída a Samara e Rodrigo.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-10-07T00:00:00.000Z"
+      }
+    },
+    {
+      "externalId": "missa-2026-10-09-salmo-110",
+      "title": "O Senhor se Lembra Sempre da Aliança",
+      "author": "Salmo 110(111)",
+      "defaultKey": "N/I",
+      "liturgicalMoments": ["Salmo"],
+      "contentMode": "INTERNAL",
+      "lyrics": "[Refrão]\nO Senhor se lembra sempre da Aliança!\nO Senhor se lembra sempre da Aliança!\n\nEu agradeço a Deus de todo o coração\njunto com todos os seus justos reunidos!\nQue grandiosas são as obras do Senhor,\nelas merecem todo o amor e admiração!\n\n[Refrão]\nO Senhor se lembra sempre da Aliança!\n\nQue beleza e esplendor são os seus feitos!\nSua justiça permanece eternamente!\nO Senhor bom e clemente nos deixou\na lembrança de suas grandes maravilhas.\n\n[Refrão]\nO Senhor se lembra sempre da Aliança!\n\nEle dá o alimento aos que o temem\ne jamais esquecerá sua Aliança.\nAo seu povo manifesta seu poder,\ndando a ele a herança das nações.\n\n[Refrão]\nO Senhor se lembra sempre da Aliança!\nO Senhor se lembra sempre da Aliança!",
+      "chords": "Tom e cifra não informados no documento fornecido.",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PARISH_PROVIDED",
+        "sourceDocument": "Missa 09_10_2026 - 18h 30m.docx",
+        "attribution": "Texto do Salmo 110(111), refrão e versos fornecidos pela paróquia no documento Missa 09_10_2026 - 18h 30m.docx.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-10-07T00:00:00.000Z"
+      }
+    },
+    {
+      "externalId": "missa-2026-10-09-coracoes-abrasados",
+      "title": "Corações Abrasados",
+      "author": "Comunidade Católica Shalom",
+      "defaultKey": "N/I",
+      "liturgicalMoments": ["Ofertório"],
+      "contentMode": "INTERNAL",
+      "lyrics": "Corações abrasados trazem hoje ao Altar\nAs primícias do amor, os frutos do nosso labor\nEste pão que ofertamos vida eterna se fará\nE o vinho que trazemos, Vinho Novo então será\n\nCorações abrasados trazem hoje ao Altar\nAs primícias do amor, os frutos do nosso labor\nEste pão que ofertamos vida eterna se fará\nE o vinho que trazemos, Vinho Novo então será\n\nComo incenso ofertamos, sacrifício de louvor\nAquele que merece todo amor\nNo Altar da Cruz Teu Filho\nFez sagradas vida e dor\nToda a terra é recriada em Teu Espírito\nSenhor\n\nCorações abrasados trazem hoje ao Altar\nAs primícias do amor, os frutos do nosso labor\nEste pão que ofertamos vida eterna se fará\nE o vinho que trazemos, Vinho Novo então será\n\nCorações abrasados trazem hoje ao Altar\nAs primícias do amor, os frutos do nosso labor\nEste pão que ofertamos vida eterna se fará\nE o vinho que trazemos, Vinho Novo então será\n\nComo incenso ofertamos, sacrifício de louvor\nAquele que merece todo amor\nNo Altar da Cruz Teu Filho\nFez sagradas vida e dor\nToda a terra é recriada em Teu Espírito\nSenhor",
+      "chords": "Tom e cifra não informados no documento fornecido.",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PARISH_PROVIDED",
+        "sourceDocument": "Missa 09_10_2026 - 18h 30m.docx",
+        "attribution": "Letra fornecida pela paróquia no documento Missa 09_10_2026 - 18h 30m.docx. Autoria atribuída à Comunidade Católica Shalom.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-10-07T00:00:00.000Z"
+      }
+    },
+    {
+      "externalId": "missa-2026-10-09-a-tua-ternura",
+      "title": "A Tua Ternura",
+      "author": "Comunidade Católica Shalom",
+      "defaultKey": "G",
+      "liturgicalMoments": ["Pós-comunhão", "Adoração"],
+      "contentMode": "INTERNAL",
+      "lyrics": "Incomparável Deus, Amigo meu, Amado meu\nQuem poderá nos separar do Teu amor?\nMorte ou dor, guerra ou solidão\nNada é maior que a bondade do Teu coração\n\nO Teu amor me conquistou\nTua ternura me alcançou\nComo não te adorar? Me entregar?\nCorresponder ao Teu amor, que feriu meu coração\nE me ergueu com Seu perdão?\nTodo louvor a Ti, Aquele que tudo em mim realizou\n\nQuero amar-Te mais, bem mais que a mim, naqueles que Tu amas\nQuero amar-Te mais, bem mais que a mim, naqueles que Tu amas\n\nO Teu amor me conquistou\nTua ternura me alcançou\nComo não te adorar? Me entregar?\nCorresponder ao Teu amor, que feriu meu coração\nE me ergueu com Seu perdão?\nTodo louvor a Ti, Aquele que tudo em mim realizou\n\nNão posso mais reter em mim todo esse amor",
+      "chords": "Tom informado no documento: G.\n\nCifra não informada no documento fornecido.",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PARISH_PROVIDED",
+        "sourceDocument": "Missa 09_10_2026 - 18h 30m.docx",
+        "attribution": "Letra e tom fornecidos pela paróquia no documento Missa 09_10_2026 - 18h 30m.docx. Autoria atribuída à Comunidade Católica Shalom.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-10-07T00:00:00.000Z"
+      }
+    },
+    {
+      "externalId": "missa-2026-10-09-enviai",
+      "title": "Enviai",
+      "author": "Eliana Ribeiro",
+      "defaultKey": "D",
+      "liturgicalMoments": ["Final", "Espírito Santo"],
+      "contentMode": "INTERNAL",
+      "lyrics": "Vem, Espírito de amor\nReacender a chama que se apagou\nReinflamar os corações com línguas de fogo\n\nVem, Espírito de amor\nRecriar o que o mundo destruiu\nReavivar em nós o primeiro amor\n\nComo em Pentecostes, vem viver em nós\nNos unindo à criação\nA Deus clamaremos\n\nEnviai Teu Santo Espírito, Senhor\nE renovai a face da Terra\nEnviai Teu Santo Espírito, Senhor\nE renovai a face da Terra\n\nVem, Espírito de amor\nRecriar o que o mundo destruiu\nReavivar em nós o primeiro amor\n\nComo em Pentecostes, vem viver em nós\nNos unindo à criação\nA Deus clamaremos\n\nEnviai Teu Santo Espírito, Senhor\nE renovai a face da Terra\nEnviai Teu Santo Espírito, Senhor\nE renovai a face da Terra\n\nEnviai Teu Santo Espírito, Senhor\nE renovai a face da Terra\nEnviai Teu Santo Espírito, Senhor\nE renovai a face da Terra",
+      "chords": "Tom informado no documento: D.\n\nCifra não informada no documento fornecido.",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PARISH_PROVIDED",
+        "sourceDocument": "Missa 09_10_2026 - 18h 30m.docx",
+        "attribution": "Letra e tom fornecidos pela paróquia no documento Missa 09_10_2026 - 18h 30m.docx. Autoria atribuída a Eliana Ribeiro.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-10-07T00:00:00.000Z"
+      }
+    }
+  ]
+}
