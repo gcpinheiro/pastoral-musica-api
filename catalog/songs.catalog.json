@@ -308,9 +308,21 @@
       "author": "Comunidade Católica Shalom — Na Dança da Vida",
       "defaultKey": "Dm",
       "liturgicalMoments": ["Santo"],
-      "contentMode": "EXTERNAL_EMBED",
-      "externalUrl": "https://cifrascatolicas.com.br/comunidade-cat%C3%B3lica-shalom/santo-e-o-senhor",
-      "sourceAttribution": "Cifra exibida a partir do Cifras Católicas. O conteúdo permanece hospedado na fonte original."
+      "contentMode": "INTERNAL",
+      "lyrics": "Santo, Santo, Santo é o Senhor\nSanto, Santo, Santo é o Senhor\n\nCéus e a Terra\nProclamam Vossa Glória\nHosana nas alturas\n\nSanto, Santo, Santo é o Senhor\nSanto, Santo, Santo é o Senhor\n\nBendito o que vem\nEm nome do Senhor\nHosana nas alturas\n\nSanto, Santo, Santo é o Senhor\nSanto, Santo, Santo é o Senhor\n\nSanto é o Senhor (Santo é o Senhor)\nSanto é o Senhor (Santo é o Senhor)\nSanto é o Senhor (San-to é o Sen-hor)",
+      "chords": "[Refrão]\nDm              C\nSanto, Santo, Santo é o Senhor\nBb              A7\nSanto, Santo, Santo é o Senhor\n\n[Estrofe 1]\nDm\nCéus e a Terra\nC\nProclamam Vossa Glória\nBb             A7\nHosana nas alturas\n\n[Refrão]\nDm              C\nSanto, Santo, Santo é o Senhor\nBb              A7\nSanto, Santo, Santo é o Senhor\n\n[Estrofe 2]\nDm\nBendito o que vem\nC\nEm nome do Senhor\nBb             A7\nHosana nas alturas\n\n[Refrão]\nDm              C\nSanto, Santo, Santo é o Senhor\nBb              A7\nSanto, Santo, Santo é o Senhor\n\n[Final]\nDm\nSanto é o Senhor (Santo é o Senhor)\nC\nSanto é o Senhor (Santo é o Senhor)\nBb              A7             Dm\nSanto é o Senhor (San-to é o Sen-hor)",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PARISH_PROVIDED",
+        "sourceDocument": "Missa 09_10_2026 - 18h 30m.docx",
+        "attribution": "Letra e tom fornecidos pela paróquia no documento Missa 09_10_2026 - 18h 30m.docx. Autoria atribuída à Comunidade Católica Shalom, álbum Na Dança da Vida. Cifra pastoral própria em Dm para uso interno.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-10-07T00:00:00.000Z"
+      }
     },
     {
       "externalId": "missa-gloria-2026-10-cordeiro",
