@@ -132,6 +132,28 @@
         "allowsTransposition": true,
         "reviewedAt": "2026-10-07T00:00:00.000Z"
       }
+    },
+    {
+      "externalId": "missa-2026-10-09-santo-amor-e-adoracao",
+      "title": "Santo",
+      "author": "Ministério Amor e Adoração",
+      "defaultKey": "C",
+      "liturgicalMoments": ["Santo"],
+      "contentMode": "INTERNAL",
+      "lyrics": "Santo, Santo, Santo\nSenhor Deus do universo\nO Céu e a Terra\nProclamam Vossa Glória\n\nSanto, Santo, Santo\nSenhor Deus do universo\nO Céu e a Terra\nProclamam Vossa Glória\n\nHosana (Hosana), Hosana (Hosana),\nHosana nas alturas\nHosana (Hosana), Hosana (Hosana),\nHosana nas alturas\nBendito o que vem em nome do Senhor\nHosana nas alturas\n\nHosana (Hosana), Hosana (Hosana),\nHosana nas alturas\nHosana (Hosana), Hosana (Hosana),\nHosana nas alturas",
+      "chords": "[Estrofe]\nC               G\nSanto, Santo, Santo\nAm                    F\nSenhor Deus do universo\nC              G\nO Céu e a Terra\nF                   G\nProclamam Vossa Glória\n\n[Estrofe]\nC               G\nSanto, Santo, Santo\nAm                    F\nSenhor Deus do universo\nC              G\nO Céu e a Terra\nF                   G\nProclamam Vossa Glória\n\n[Refrão]\nC                         G\nHosana (Hosana), Hosana (Hosana),\nAm               F\nHosana nas alturas\nC                         G\nHosana (Hosana), Hosana (Hosana),\nAm               F\nHosana nas alturas\nC                              G\nBendito o que vem em nome do Senhor\nF          G       C\nHosana nas alturas\n\n[Refrão]\nC                         G\nHosana (Hosana), Hosana (Hosana),\nAm               F\nHosana nas alturas\nC                         G\nHosana (Hosana), Hosana (Hosana),\nF          G       C\nHosana nas alturas",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PARISH_PROVIDED",
+        "sourceDocument": "Mensagem pastoral de 08/10/2026",
+        "attribution": "Letra e tom fornecidos pela paróquia em 08/10/2026. Autoria atribuída ao Ministério Amor e Adoração. Cifra pastoral própria em C para uso interno.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-10-08T00:00:00.000Z"
+      }
     }
   ]
 }
