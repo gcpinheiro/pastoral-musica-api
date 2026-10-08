@@ -49,22 +49,22 @@
       "externalId": "missa-2026-10-09-salmo-110",
       "title": "O Senhor se Lembra Sempre da Aliança",
       "author": "Salmo 110(111)",
-      "defaultKey": "N/I",
+      "defaultKey": "A",
       "liturgicalMoments": ["Salmo"],
       "contentMode": "INTERNAL",
       "lyrics": "[Refrão]\nO Senhor se lembra sempre da Aliança!\nO Senhor se lembra sempre da Aliança!\n\nEu agradeço a Deus de todo o coração\njunto com todos os seus justos reunidos!\nQue grandiosas são as obras do Senhor,\nelas merecem todo o amor e admiração!\n\n[Refrão]\nO Senhor se lembra sempre da Aliança!\n\nQue beleza e esplendor são os seus feitos!\nSua justiça permanece eternamente!\nO Senhor bom e clemente nos deixou\na lembrança de suas grandes maravilhas.\n\n[Refrão]\nO Senhor se lembra sempre da Aliança!\n\nEle dá o alimento aos que o temem\ne jamais esquecerá sua Aliança.\nAo seu povo manifesta seu poder,\ndando a ele a herança das nações.\n\n[Refrão]\nO Senhor se lembra sempre da Aliança!\nO Senhor se lembra sempre da Aliança!",
-      "chords": "Tom e cifra não informados no documento fornecido.",
+      "chords": "[Refrão]\nA        D                 A        E\nO Senhor se lembra sempre da Aliança!\n\n[1]\nA                              D    A\nEu agradeço a Deus de todo o coração\nA                                      D    A\nJunto com todos os seus justos reunidos!\nBm                                 C#m\nQue grandiosas são as obras do Senhor,\nBm                       D             E\nElas merecem todo o amor e admiração!\n\n[2]\nA                              D       A\nQue beleza e esplendor são os seus feitos!\nA                              D    A\nSua justiça permanece eternamente!\nBm                                 C#m\nO Senhor bom e clemente nos deixou\nBm                           D             E\nA lembrança de suas grandes maravilhas.\n\n[3]\nA                          D       A\nEle dá o alimento aos que o temem\nA                              D    A\nE jamais esquecerá sua Aliança.\nBm                              C#m\nAo seu povo manifesta seu poder,\nBm                         D          E\nDando a ele a herança das nações.",
       "rights": {
         "status": "APPROVED",
         "type": "PARISH_PROVIDED",
         "sourceDocument": "Missa 09_10_2026 - 18h 30m.docx",
-        "attribution": "Texto do Salmo 110(111), refrão e versos fornecidos pela paróquia no documento Missa 09_10_2026 - 18h 30m.docx.",
+        "attribution": "Texto do Salmo 110(111), refrão e versos fornecidos pela paróquia no documento Missa 09_10_2026 - 18h 30m.docx. Cifra em A fornecida pela paróquia em 08/10/2026.",
         "territory": "BR",
         "allowsStorage": true,
         "allowsLyrics": true,
         "allowsChords": true,
         "allowsTransposition": true,
-        "reviewedAt": "2026-10-07T00:00:00.000Z"
+        "reviewedAt": "2026-10-08T00:00:00.000Z"
       }
     },
     {
