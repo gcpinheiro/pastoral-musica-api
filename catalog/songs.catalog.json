@@ -300,7 +300,7 @@
       "liturgicalMoments": ["Aclamação"],
       "contentMode": "INTERNAL",
       "lyrics": "Aleluia, aleluia, aleluia!\nAleluia, aleluia, aleluia!\n\nTua palavra é como fogo\nQue faz arder o coração\nTraz a verdade e ilumina a nossa vida\n\nTua palavra é como fogo\nQue faz arder o coração\nTraz a verdade e ilumina a nossa vida\n\nAleluia, aleluia, aleluia!\nAleluia, aleluia, aleluia!",
-      "chords": "[Refrão]\nD                 A\nAleluia, aleluia, aleluia!\nBm                G\nAleluia, aleluia, aleluia!\n\n[Estrofe]\nD\nTua palavra é como fogo\nA\nQue faz arder o coração\nBm                         G\nTraz a verdade e ilumina a nossa vida\n\nD\nTua palavra é como fogo\nA\nQue faz arder o coração\nBm                         G\nTraz a verdade e ilumina a nossa vida\n\n[Refrão]\nD                 A\nAleluia, aleluia, aleluia!\nBm                G       D\nAleluia, aleluia, aleluia!",
+      "chords": "[Intro] D9  A/D  D  G  A  Bm7  Em7  D/F#  G\n\n[Refrão]\nD       A/D  D\nAleluia,\nD/G  D9/G  A\naleluia,\nBm7  Em7  D/F#  A\naleluia!\nD       A/D  D\nAleluia,\nD/G  D9/G  A\naleluia,\nBm7  Em7  D/F#  A\naleluia!\n\n[Estrofe]\nG                    D/F#\nTua palavra é como fogo\nEm7                 D/F#\nQue faz arder o coração\nG                       D/F#             A4  A\nTraz a verdade e ilumina a nossa vida\n\nG                    B7/4  B7\nTua palavra é como fogo\nEm7                 D/F#\nQue faz arder o coração\nG                       D/F#             A4  A\nTraz a verdade e ilumina a nossa vida\n\n[Refrão]\nD       A/D  D\nAleluia,\nD/G  D9/G  A\naleluia,\nBm7  Em7  D/F#  A\naleluia!\nD9      A/D  D\nAleluia,\nG     A\naleluia,\nBm7  Em7  D/F#  A  D\naleluia!",
       "rights": {
         "status": "APPROVED",
         "type": "PARISH_PROVIDED",
@@ -342,9 +342,21 @@
       "author": "Ministério Amor e Adoração",
       "defaultKey": "F",
       "liturgicalMoments": ["Cordeiro"],
-      "contentMode": "EXTERNAL_EMBED",
-      "externalUrl": "https://cifrascatolicas.com.br/ministerio-amor-e-adoracao/cordeiro-ministerio-amor-e-adoracao",
-      "sourceAttribution": "Cifra exibida a partir do Cifras Católicas. O conteúdo permanece hospedado na fonte original."
+      "contentMode": "INTERNAL",
+      "lyrics": "Cordeiro de Deus\nQue tirais o pecado do mundo\nTende piedade, piedade de nós\n\nCordeiro de Deus\nQue tirais o pecado do mundo\nTende piedade, piedade de nós\n\nCordeiro de Deus\nQue tirais o pecado do mundo\nDai-nos a paz, a vossa paz",
+      "chords": "[Intro] Bb/D  C/E  F  Bb  C4  C\n\n[1]\nBb  C          F\nCordeiro de Deus\n        Am7                Bb9\nQue tirais o pecado do mundo\n         Gm7       C          F  Bb\nTende piedade, piedade de nós\n\n[2]\n   C          F\nCordeiro de Deus\n        Am7                Bb9\nQue tirais o pecado do mundo\n         Gm7       C          F  Bb\nTende piedade, piedade de nós\n\n[3]\n   C          F\nCordeiro de Deus\n        Am7                Bb9\nQue tirais o pecado do mundo\n          Gm7      C4  C       F\nDai-nos a paz, a vossa paz\n\n[Final] Bb/D  C/E  F",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PARISH_PROVIDED",
+        "sourceDocument": "Missa 09_10_2026 - 18h 30m.docx",
+        "attribution": "Letra e tom fornecidos pela paróquia. Autoria atribuída ao Ministério Amor e Adoração. Cifra pastoral adaptada para F a partir de referência pública, para uso interno.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-10-09T00:00:00.000Z"
+      }
     },
     {
       "externalId": "missa-gloria-2026-10-amem",
