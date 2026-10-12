@@ -40,3 +40,21 @@ Relatório de cobertura por etapa:
 ```powershell
 npm run catalog:report -- --parish-id UUID_DA_PAROQUIA
 ```
+
+Gerar novamente o lote recebido para as missas de outubro de 2026:
+
+```powershell
+python .\scripts\build-missa-gloria-outubro-catalog.py `
+  --pdf "C:\caminho\MISSA GLÓRIA OUTUBRO.pdf" `
+  --output .\catalog\missa-gloria-outubro-2026.catalog.json
+```
+
+Quando uma música já existe e apenas seu conteúdo foi revisado, sincronize pelo
+título e autor para preservar o UUID e as referências das escalas:
+
+```powershell
+npm run catalog:sync-song -- `
+  --file .\catalog\retiro-coroinhas.catalog.json `
+  --parish-id UUID_DA_PAROQUIA `
+  --title "O Elevador"
+```

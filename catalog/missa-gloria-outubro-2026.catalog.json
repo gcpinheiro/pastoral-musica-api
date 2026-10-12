@@ -1,0 +1,198 @@
+{
+  "catalogVersion": 1,
+  "items": [
+    {
+      "externalId": "missa-gloria-outubro-2026-festa-do-cordeiro",
+      "title": "Festa do Cordeiro",
+      "author": "Comunidade Católica Shalom",
+      "defaultKey": "D",
+      "liturgicalMoments": [
+        "Entrada"
+      ],
+      "contentMode": "INTERNAL",
+      "lyrics": "Ô ô ô ô ô....\nCantai, cantai ao Senhor Deus\nCantai, sua glória entre as nações\nEntrai com alegria, dons e oferendas\nNos átrios do Senhor\nLouvai, louvai ao Senhor Deus\nLouvai, aquele que venceu\nNa Cruz nos deu a vida, curou nossas feridas\nSeu sangue nos lavou\nTrazei o mundo inteiro à festa do Cordeiro\nVinde, vinde celebrar\nReina o Senhor, eterno é o Seu Amor\nVestido de glória e majestade está aqui\nReina o Senhor, eterno é o Seu Amor\nSua beleza tudo recria, tudo refaz\nÔ ô ô ô ô....\nCantai, cantai ao Senhor Deus\nCantai, sua glória entre as nações\nEntrai com alegria, dons e oferendas\nNos átrios do Senhor\nLouvai, louvai ao Senhor Deus\nLouvai, aquele que venceu\nNa Cruz nos deu a vida, curou nossas feridas\nSeu sangue nos lavou\nExultem de alegria\nOs céus e toda a terra\nDiante do Cordeiro Vencedor (Vencedor)\nReina o Senhor, eterno é o Seu Amor\nVestido de glória e majestade está aqui\nReina o Senhor, eterno é o Seu Amor\nSua beleza tudo recria, tudo refaz\nReina o Senhor, eterno é o Seu Amor\nVestido de glória e majestade está aqui\nReina o Senhor, eterno é o Seu Amor\nSua beleza tudo recria, tudo refaz\n(Refrão)\nReina o Senhor\nReina o Senhor\nReina o Senhor ô ô ô",
+      "chords": "[Compasso] 6/8 - 135 bpm\n[Intro] D | D/C | G/B | A4 A | D | D/C | D/F# G A | G/B A\n[Estrofe 1] D | D/C | G/B | A4 | G | G | A4 | A (2x)\n[Pré-refrão] G | G A | Bm | A4 A | G | G | A G/B | A/C#\n[Refrão] D | D | G | G D/F# | Em7 | D/F# | A G/B | A/C# A | D | D Em D/F# | G | A Bm | Em7 | D/F# | A4 | A\n[Interlúdio] D | D | C | C G\n[Estrofe 2] D | D/C | G/B | A4 D/F# | G | G | A4 | A (2x)\n[Pré-refrão 2] G | G A | Bm | D A/C# A D/F# | G | G | A4 | A\n[Refrão] D | D | G | G D/F# | Em7 | D/F# | A G/B | A/C# A | D | D Em D/F# | G | A Bm | Em7 | D/F# | A4 | A\n[Interlúdio 2] G | G | A | A | G/B | G | A4 | A\n[Refrão final] D | D Em D/F# | G | G D/F# | Em7 | D/F# | A G/B | A/C# A | D Em D/F# | D/A | G | G D/F# | Em7 | D/F# | A4 | A\n[Final] G | G | Bm | Bm | G | D/F# | A4 A | D\n\n[Letra completa para acompanhamento]\nÔ ô ô ô ô....\nCantai, cantai ao Senhor Deus\nCantai, sua glória entre as nações\nEntrai com alegria, dons e oferendas\nNos átrios do Senhor\nLouvai, louvai ao Senhor Deus\nLouvai, aquele que venceu\nNa Cruz nos deu a vida, curou nossas feridas\nSeu sangue nos lavou\nTrazei o mundo inteiro à festa do Cordeiro\nVinde, vinde celebrar\nReina o Senhor, eterno é o Seu Amor\nVestido de glória e majestade está aqui\nReina o Senhor, eterno é o Seu Amor\nSua beleza tudo recria, tudo refaz\nÔ ô ô ô ô....\nCantai, cantai ao Senhor Deus\nCantai, sua glória entre as nações\nEntrai com alegria, dons e oferendas\nNos átrios do Senhor\nLouvai, louvai ao Senhor Deus\nLouvai, aquele que venceu\nNa Cruz nos deu a vida, curou nossas feridas\nSeu sangue nos lavou\nExultem de alegria\nOs céus e toda a terra\nDiante do Cordeiro Vencedor (Vencedor)\nReina o Senhor, eterno é o Seu Amor\nVestido de glória e majestade está aqui\nReina o Senhor, eterno é o Seu Amor\nSua beleza tudo recria, tudo refaz\nReina o Senhor, eterno é o Seu Amor\nVestido de glória e majestade está aqui\nReina o Senhor, eterno é o Seu Amor\nSua beleza tudo recria, tudo refaz\n(Refrão)\nReina o Senhor\nReina o Senhor\nReina o Senhor ô ô ô",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PARISH_PROVIDED",
+        "sourceDocument": "MISSA GLÓRIA OUTUBRO.pdf",
+        "attribution": "Letra e repertório fornecidos pela paróquia em MISSA GLÓRIA OUTUBRO.pdf. Mapa harmônico pastoral completo em D, conferido para ensaio e uso interno.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-10-12T00:00:00.000Z"
+      }
+    },
+    {
+      "externalId": "missa-gloria-outubro-2026-aleluia-jmj",
+      "title": "Aleluia - JMJ Rio 2013",
+      "author": "Ministério Alfa & Ômega / JMJ Rio 2013",
+      "defaultKey": "D",
+      "liturgicalMoments": [
+        "Aclamação"
+      ],
+      "contentMode": "INTERNAL",
+      "lyrics": "Aleluia, aleluia\nAleluia, aleluia\nJesus pregava a boa nova, o reino anunciando\nE curava toda espécie de doenças entre o povo",
+      "chords": "[Intro] D | G | A | Bm | D/F# | Em7 | A4 A | D\n[Refrão] D | G A | Bm | D/F# | Em7 Bm | A4 A | D | G A | Bm | D/F# | Em7 | A4 A | D\n[Verso] Bm | Bm | F#m7 | F#m7 | G | Em7 | A4 | G/A A\n[Refrão] D | G A | Bm | D/F# | Em7 Bm | A4 A | D | G A | Bm | D/F# | Em7 | A4 A | D\n[Final] G | A/G | F#m7 | Bm7 | Em7 | G/A | D\n\n[Letra completa para acompanhamento]\nAleluia, aleluia\nAleluia, aleluia\nJesus pregava a boa nova, o reino anunciando\nE curava toda espécie de doenças entre o povo",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PARISH_PROVIDED",
+        "sourceDocument": "MISSA GLÓRIA OUTUBRO.pdf",
+        "attribution": "Letra e repertório fornecidos pela paróquia em MISSA GLÓRIA OUTUBRO.pdf. Mapa harmônico pastoral completo em D, conferido para ensaio e uso interno.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-10-12T00:00:00.000Z"
+      }
+    },
+    {
+      "externalId": "missa-gloria-outubro-2026-estar-em-tuas-maos",
+      "title": "Estar em Tuas Mãos",
+      "author": "Comunidade Católica Shalom",
+      "defaultKey": "F#m",
+      "liturgicalMoments": [
+        "Ofertório"
+      ],
+      "contentMode": "INTERNAL",
+      "lyrics": "Mão na Terra e o coração além deste céu\nE a semente que brota é um germe de eternidade\nVai brotando, crescendo, esperando\nÉ a vida que vem despontar\nE este trigo maduro, a colheita o recolherá\nEstar em Tuas mãos, ó Pai\nE a vida ofertar\nNo pão e no vinho a Ti\nE o céu se abrirá\nEstar em Tuas mãos, Senhor\nE a vida entregar\nA minha oblação em Ti\nSe perderá, frutificará\nFrutificará, frutificará, frutificará!\nDa videira a flor não restará, passará\nE o fruto da terra surgirá, brotará\nPela força do vento, da chuva\n(Ôôô Ôôô Ôôô)\nE do Sol que traz vida e calor\nÔôô ... (Que traz vida e calor ô ô ô)\nCada dia, crescendo e aprendendo a recomeçar\n(Recomeçar...)\nEstar em Tuas mãos, ó Pai\nE a vida ofertar\nNo pão e no vinho a Ti\nE o céu se abrirá\nEstar em Tuas mãos, Senhor\nE a vida entregar\nA minha oblação em Ti\nSe perderá\nEstar em Tuas mãos, ó Pai\nE a vida ofertar (e a vida ofertar)\nNo pão e no vinho a Ti\nE o céu se abrirá\nEstar em Tuas mãos, Senhor\nE a vida entregar\nA minha oblação em Ti (a minha oblação em Ti)\nSe perderá, frutificará\nFrutificará, frutificará, frutificará!",
+      "chords": "[Intro] F#m7 | D7M(9) | A | E (2x)\n[Estrofe 1] F#m7 | D7M(9) | A | C#7 | F#m7 | D7M(9) | A | E4 E | F#m7 | D | A | E7 | F#m7 | D | A | E7 | D | A/C# | Bm7 Bm7/A | E4 E\n[Refrão] A | B/A | D9 | A E/G# | F#m7 E | D A/C# | Bm7 Bm7/A | E4 E | A | B/A | D9 | A E/G# | F#m7 E | D A/C# | Bm7 Bm7/A | E4 E\n[Resposta] F#m7 | D7M(9) | A | E7 (2x)\n[Estrofe 2] F#m7 | D7M(9) | A | C#7 | F#m7 | D7M(9) | A | E4 E | F#m7 | D | A | E7 | F#m7 | D | A | E7 | D | A/C# | Bm7 Bm7/A | E4 E\n[Refrão final] A | B/A | D9 | A E/G# | F#m7 E | D A/C# | Bm7 Bm7/A | E4 E (2x)\n[Final] F#m7 | D7M(9) | A | E7 | F#m7\n\n[Letra completa para acompanhamento]\nMão na Terra e o coração além deste céu\nE a semente que brota é um germe de eternidade\nVai brotando, crescendo, esperando\nÉ a vida que vem despontar\nE este trigo maduro, a colheita o recolherá\nEstar em Tuas mãos, ó Pai\nE a vida ofertar\nNo pão e no vinho a Ti\nE o céu se abrirá\nEstar em Tuas mãos, Senhor\nE a vida entregar\nA minha oblação em Ti\nSe perderá, frutificará\nFrutificará, frutificará, frutificará!\nDa videira a flor não restará, passará\nE o fruto da terra surgirá, brotará\nPela força do vento, da chuva\n(Ôôô Ôôô Ôôô)\nE do Sol que traz vida e calor\nÔôô ... (Que traz vida e calor ô ô ô)\nCada dia, crescendo e aprendendo a recomeçar\n(Recomeçar...)\nEstar em Tuas mãos, ó Pai\nE a vida ofertar\nNo pão e no vinho a Ti\nE o céu se abrirá\nEstar em Tuas mãos, Senhor\nE a vida entregar\nA minha oblação em Ti\nSe perderá\nEstar em Tuas mãos, ó Pai\nE a vida ofertar (e a vida ofertar)\nNo pão e no vinho a Ti\nE o céu se abrirá\nEstar em Tuas mãos, Senhor\nE a vida entregar\nA minha oblação em Ti (a minha oblação em Ti)\nSe perderá, frutificará\nFrutificará, frutificará, frutificará!",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PARISH_PROVIDED",
+        "sourceDocument": "MISSA GLÓRIA OUTUBRO.pdf",
+        "attribution": "Letra e repertório fornecidos pela paróquia em MISSA GLÓRIA OUTUBRO.pdf. Mapa harmônico pastoral completo em F#m, conferido para ensaio e uso interno.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-10-12T00:00:00.000Z"
+      }
+    },
+    {
+      "externalId": "missa-gloria-outubro-2026-tu-nos-atraiste",
+      "title": "Tu Nos Atraíste",
+      "author": "Comunidade Católica Shalom",
+      "defaultKey": "D",
+      "liturgicalMoments": [
+        "Comunhão"
+      ],
+      "contentMode": "INTERNAL",
+      "lyrics": "Cada vez que comemos deste pão\nO teu corpo nos renova nesta comunhão!\nCada vez que bebemos deste vinho\nO teu sangue nos transforma nesta comunhão de amor!\nQuem come deste pão\nViverá para sempre!\nSó Tu tens palavras de vida, vida eterna!\nPara onde ir, longe de Ti?\nTu nos atraíste, oh Senhor! Eis nos aqui!\nCada vez que comemos deste pão\nO teu corpo nos renova nesta comunhão!\nCada vez que bebemos deste vinho\nO teu sangue nos transforma nesta comunhão de amor!\nDeus entre nós, holocausto de amor\nEterna e nova aliança\nEm Teu Sangue elevado na cruz\nCordeiro de Deus\nTu nos atraíste, oh Senhor! Nós somos teus!\nCada vez que comemos deste pão\nO teu corpo nos renova nesta comunhão!\nCada vez que bebemos deste vinho\nO teu sangue nos transforma nesta comunhão de amor!\nVimos-te, Senhor, tua glória refulgir\nEm Teu lado aberto encontramos plena paz\nEm Teu Corpo santo somos recriados\nTu nos atraíste, oh Senhor! Vivo estás!\nCada vez que comemos deste pão\nO teu corpo nos renova nesta comunhão!\nCada vez que bebemos deste vinho\nO teu sangue nos transforma nesta comunhão de amor!\nA Igreja, tua esposa, te espera com ardor\nAlimento de eternidade o Teu Corpo\nNesta comunhão, banquete do céu\nTu nos atraíste, oh Senhor! Eterno bem!",
+      "chords": "[Intro] D | Em7 | F#m7 | G | Bm7 | Em7 | A4 A\n[Refrão] D | Em7 | F#m7 | G | Bm7 | Em7 A4 A | D | Em7 | F#m7 | G | Bm7 | Em7 | A4 A | D\n[Estrofe 1] F#7 | Bm7 | G A | D | F#m7 | Bm7 A | G | D | A/C# | Bm7 | G | D/F# | F#m7 | Bm7 A | G | Em7 | A4 A\n[Refrão]\n[Estrofe 2] F#7 | Bm7 | G A | D | F#m7 | Bm7 A | G | D | A/C# | Bm7 | G | D/F# | F#m7 | Bm7 A | G | Em7 | A4 A\n[Refrão]\n[Estrofe 3] F#7 | Bm7 | G A | D | F#7 | Bm7 A | G | D | A/C# | Bm7 | G | D/F# | F#m7 | Bm7 A | G | Em7 | A4 A\n[Refrão]\n[Estrofe 4] F#7 | Bm7 | G A | D | F#m7 | Bm7 A | G | D | A/C# | Bm7 | G | D/F# | F#m7 | Bm7 A | G | Em7 | A4 A\n[Final] G | A/G | F#m7 | Bm7 | Em7 | A4 A | D\n\n[Letra completa para acompanhamento]\nCada vez que comemos deste pão\nO teu corpo nos renova nesta comunhão!\nCada vez que bebemos deste vinho\nO teu sangue nos transforma nesta comunhão de amor!\nQuem come deste pão\nViverá para sempre!\nSó Tu tens palavras de vida, vida eterna!\nPara onde ir, longe de Ti?\nTu nos atraíste, oh Senhor! Eis nos aqui!\nCada vez que comemos deste pão\nO teu corpo nos renova nesta comunhão!\nCada vez que bebemos deste vinho\nO teu sangue nos transforma nesta comunhão de amor!\nDeus entre nós, holocausto de amor\nEterna e nova aliança\nEm Teu Sangue elevado na cruz\nCordeiro de Deus\nTu nos atraíste, oh Senhor! Nós somos teus!\nCada vez que comemos deste pão\nO teu corpo nos renova nesta comunhão!\nCada vez que bebemos deste vinho\nO teu sangue nos transforma nesta comunhão de amor!\nVimos-te, Senhor, tua glória refulgir\nEm Teu lado aberto encontramos plena paz\nEm Teu Corpo santo somos recriados\nTu nos atraíste, oh Senhor! Vivo estás!\nCada vez que comemos deste pão\nO teu corpo nos renova nesta comunhão!\nCada vez que bebemos deste vinho\nO teu sangue nos transforma nesta comunhão de amor!\nA Igreja, tua esposa, te espera com ardor\nAlimento de eternidade o Teu Corpo\nNesta comunhão, banquete do céu\nTu nos atraíste, oh Senhor! Eterno bem!",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PARISH_PROVIDED",
+        "sourceDocument": "MISSA GLÓRIA OUTUBRO.pdf",
+        "attribution": "Letra e repertório fornecidos pela paróquia em MISSA GLÓRIA OUTUBRO.pdf. Mapa harmônico pastoral completo em D, conferido para ensaio e uso interno.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-10-12T00:00:00.000Z"
+      }
+    },
+    {
+      "externalId": "missa-gloria-outubro-2026-alma-de-cristo",
+      "title": "Alma de Cristo",
+      "author": "Comunidade Católica Shalom",
+      "defaultKey": "C",
+      "liturgicalMoments": [
+        "Comunhão",
+        "Adoração"
+      ],
+      "contentMode": "INTERNAL",
+      "lyrics": "Alma de Cristo, santificai-nos\nCorpo de Cristo, salvai-nos\nSangue de Cristo, inebriai-nos\nÁgua do lado de Cristo, lavai-nos\nPaixão de Cristo, confortai-nos\nÓ bom Jesus, ouvi-nos\nAdoramus te\nLaudamos te, domine\nAdoramus te\nLaudamos te, domine\nEm vossas chagas, escondei-nos\nDo inimigo, defendei-nos\nNão permitais que nos separemos de vós\nNa hora da nossa morte, chamai-nos\nPara louvar-vos com vossos santos\nPela eternidade\nAdoramus te\nLaudamos te, domine\nAdoramus te\nLaudamos te, domine",
+      "chords": "[Intro] C | Am7 | F9 | C\n[Estrofe 1] C | C9 | Am7 | Am7/G | F9 | C/E | G4 G | Am7 | G/B | Am7 | Dm7 | F9 | C\n[Refrão] F9 | C C9 C4 C | F9 | C C9 C4 C | G | Am7 G/B Am/C | F9 | C C9 C4 C | F9 | C C9 C4 C | G4 G | F C\n[Estrofe 2] C | C9 | Am7 | Am7/G | F9 | F9 | C/E | G | F9 | G | Am7 G Dm7 | F9 | C\n[Refrão]\n[Final] F9 | C/E | Dm7 G4 G | C\n\n[Letra completa para acompanhamento]\nAlma de Cristo, santificai-nos\nCorpo de Cristo, salvai-nos\nSangue de Cristo, inebriai-nos\nÁgua do lado de Cristo, lavai-nos\nPaixão de Cristo, confortai-nos\nÓ bom Jesus, ouvi-nos\nAdoramus te\nLaudamos te, domine\nAdoramus te\nLaudamos te, domine\nEm vossas chagas, escondei-nos\nDo inimigo, defendei-nos\nNão permitais que nos separemos de vós\nNa hora da nossa morte, chamai-nos\nPara louvar-vos com vossos santos\nPela eternidade\nAdoramus te\nLaudamos te, domine\nAdoramus te\nLaudamos te, domine",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PARISH_PROVIDED",
+        "sourceDocument": "MISSA GLÓRIA OUTUBRO.pdf",
+        "attribution": "Letra e repertório fornecidos pela paróquia em MISSA GLÓRIA OUTUBRO.pdf. Mapa harmônico pastoral completo em C, conferido para ensaio e uso interno.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-10-12T00:00:00.000Z"
+      }
+    },
+    {
+      "externalId": "missa-gloria-outubro-2026-enquanto-eu-te-adoro",
+      "title": "Enquanto Eu Te Adoro",
+      "author": "Flávio Vitor Jr.",
+      "defaultKey": "D",
+      "liturgicalMoments": [
+        "Adoração"
+      ],
+      "contentMode": "INTERNAL",
+      "lyrics": "Eu vivo milagres todos os dias\nEu vivo promessas que eu nem mais pedia\nEu vivo milagres todos os dias\nEu vivo promessas que eu nem mais pedia\nEnquanto eu Te adoro, Você vai me curando\nEnquanto eu Te busco, Tua mão opera o que eu não consigo fazer\nE sem eu perceber, vou sendo transformado\nEnquanto eu Te adoro, Você vai me curando\nEnquanto eu Te busco, Tua mão opera o que eu não consigo fazer\nE sem eu perceber, vou sendo transformado\nCura, Jesus\nCura, Jesus\nSe o Senhor quiser\nSe o Senhor quiser\nMas se não quiser, ainda assim Te adorarei (ei)\nCura, Jesus\nCura, Jesus\nSe o Senhor quiser\nSe o Senhor quiser\nMas se não quiser, ainda assim Te adorarei\nAdorarei\nAdorarei",
+      "chords": "[Intro] D | G9 | D/F# | G9 (2x)\n[Estrofe] D | G9 | D/F# | G9 | D | G9 | A4 A (2x)\n[Refrão] G9 | A | F#m7 | Bm7 A | G9 | D/F# | Em7 A4 A (2x)\n[Ponte] D | F#m7 | G9 | D/F# | G9 | A | D/F# | Bm7 | G9 | A4 A (2x)\n[Ministração] Bm7 | A/C# | D | G9 | Bm7 | A/C# | G9 | A4 A\n[Refrão final] G9 | A | F#m7 | Bm7 A | G9 | D/F# | Em7 A4 A\n[Final] G9 | A | Bm7 | D/F# | G9 | A4 A | D\n\n[Letra completa para acompanhamento]\nEu vivo milagres todos os dias\nEu vivo promessas que eu nem mais pedia\nEu vivo milagres todos os dias\nEu vivo promessas que eu nem mais pedia\nEnquanto eu Te adoro, Você vai me curando\nEnquanto eu Te busco, Tua mão opera o que eu não consigo fazer\nE sem eu perceber, vou sendo transformado\nEnquanto eu Te adoro, Você vai me curando\nEnquanto eu Te busco, Tua mão opera o que eu não consigo fazer\nE sem eu perceber, vou sendo transformado\nCura, Jesus\nCura, Jesus\nSe o Senhor quiser\nSe o Senhor quiser\nMas se não quiser, ainda assim Te adorarei (ei)\nCura, Jesus\nCura, Jesus\nSe o Senhor quiser\nSe o Senhor quiser\nMas se não quiser, ainda assim Te adorarei\nAdorarei\nAdorarei",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PARISH_PROVIDED",
+        "sourceDocument": "MISSA GLÓRIA OUTUBRO.pdf",
+        "attribution": "Letra e repertório fornecidos pela paróquia em MISSA GLÓRIA OUTUBRO.pdf. Mapa harmônico pastoral completo em D, conferido para ensaio e uso interno.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-10-12T00:00:00.000Z"
+      }
+    },
+    {
+      "externalId": "missa-gloria-outubro-2026-serei-tudo",
+      "title": "Serei Tudo",
+      "author": "Comunidade Católica Shalom feat. Laura Salvador",
+      "defaultKey": "G",
+      "liturgicalMoments": [
+        "Adoração"
+      ],
+      "contentMode": "INTERNAL",
+      "lyrics": "Vejo Tua doce luz a iluminar minhas trevas\nDeixo Tua face revelar\nO que em mim, as sombras esconderam\nImagens que criei de mim\nDons que me apropriei\nFardos que carreguei\nSomente por amor a mim\nVem, ó, Luz Divina\nEu me rendo a Ti\nSe me queres nada, eu serei nada\nSe me queres tudo, eu serei tudo\nConfio cegamente em Ti\nPois Tu tens o melhor pra mim\nEu Te oferto minha vida\nOs meus desejos mais profundos\nQuero fazer Tua vontade\nPois ela é o meu céu\nVem, ó, Luz Divina\nEu me rendo a Ti\nSe me queres nada, eu serei nada\nSe me queres tudo, eu serei tudo\nConfio cegamente em Ti\nPois Tu tens o melhor pra mim\nEu Te oferto minha vida\nOs meus desejos mais profundos\nQuero fazer Tua vontade\nPois ela é o meu céu\nQuero fazer Tua vontade\nPois ela é o meu céu",
+      "chords": "[Intro] Em7 | D/F# | G | C9 | G\n[Estrofe 1] G | C9 G | C9 | G | G | C9 G | C9 | G\n[Estrofe 2] Em7 | D/F# G | C9 | G | Em7 | D G | C9 | Cm6\n[Pré-refrão] Am7 | C9 | Cm6\n[Refrão] G | G7M | Bm7 | Bm7 | C9 | C9 | Cm6 | G\n[Pós-refrão] G | G7M | Bm7 | Bm7 | C9 | C9 | Cm6 | G\n[Interlúdio] Em7 | D/F# | G | C9 | G\n[Estrofe 2]\n[Pré-refrão]\n[Refrão] G | G7M | Bm7 | Bm7 | C9 | C9 | Cm6 | G\n[Ponte] Em7 | D/F# | G | C9 | G/B | Am7 | C9 | Cm6\n[Refrão final] G | G7M | Bm7 | Bm7 | C9 | C9 | Cm6 | G\n[Final] C9 | Cm6 | G\n\n[Letra completa para acompanhamento]\nVejo Tua doce luz a iluminar minhas trevas\nDeixo Tua face revelar\nO que em mim, as sombras esconderam\nImagens que criei de mim\nDons que me apropriei\nFardos que carreguei\nSomente por amor a mim\nVem, ó, Luz Divina\nEu me rendo a Ti\nSe me queres nada, eu serei nada\nSe me queres tudo, eu serei tudo\nConfio cegamente em Ti\nPois Tu tens o melhor pra mim\nEu Te oferto minha vida\nOs meus desejos mais profundos\nQuero fazer Tua vontade\nPois ela é o meu céu\nVem, ó, Luz Divina\nEu me rendo a Ti\nSe me queres nada, eu serei nada\nSe me queres tudo, eu serei tudo\nConfio cegamente em Ti\nPois Tu tens o melhor pra mim\nEu Te oferto minha vida\nOs meus desejos mais profundos\nQuero fazer Tua vontade\nPois ela é o meu céu\nQuero fazer Tua vontade\nPois ela é o meu céu",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PARISH_PROVIDED",
+        "sourceDocument": "MISSA GLÓRIA OUTUBRO.pdf",
+        "attribution": "Letra e repertório fornecidos pela paróquia em MISSA GLÓRIA OUTUBRO.pdf. Mapa harmônico pastoral completo em G, conferido para ensaio e uso interno.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-10-12T00:00:00.000Z"
+      }
+    },
+    {
+      "externalId": "missa-gloria-outubro-2026-sou-passarinho",
+      "title": "Sou Passarinho",
+      "author": "Comunidade Católica Shalom feat. Laura Salvador e Keciane Lima",
+      "defaultKey": "C",
+      "liturgicalMoments": [
+        "Adoração"
+      ],
+      "contentMode": "INTERNAL",
+      "lyrics": "Como pode uma alma imperfeita como a minha\nAspirar, possuir nela a plenitude do amor?\nSou como um fraco passarinho\nQue apesar de sua extrema pequenez\nOusa fitar o Sol do amor\nÉ verdade que às vezes eu passarinho\nMe vejo perdida em meio a densas nuvens\nQue tentam me amedrontar\nE mesmo com todos os desvios\nMe alegro porque o Sol está sempre a brilhar\nNão só para os justos, mas para os fracos como eu\nSou passarinho querendo voar\nMas pelo tempo que quiseres\nPodes me deixar sem asas\nPermanecerei a fitar o Sol do amor\nSou passarinho e sei que um dia\nCom Tuas asas virás me buscar\nPara habitar no eterno amor\nPermanecerei a fitar o eterno amor",
+      "chords": "[Intro] C | C7M | Am7 | F7M(9) (2x)\n[Estrofe 1] C | C7M | Am7 | Am7/G | F7M(9) | F7M(9) | C/E | C | C7M | Am7 | Am7/G | F7M(9) | G4 G | C\n[Estrofe 2] Em7 | Am7 | Em7 | Am7 | F7M(9) | G4 G | Am7 | G/B | F7M(9) | C/E | Dm7 | G4 G | F9 G\n[Refrão] C | C7M | Am7 | Am7/G | F9 | F9 | C/E G | C | C7M | Am7 | Am7/G | F7M(9) | G4 G | C\n[Interlúdio] C | C7M | Am7 | F7M(9)\n[Refrão final] C | C7M | Am7 | Am7/G | F9 | F9 | C/E G | C | C7M | Am7 | Am7/G | F7M(9) | G4 G | C\n[Final] F7M(9) | G4 G | Am7 | G/B | F7M(9) | G4 G | C\n\n[Letra completa para acompanhamento]\nComo pode uma alma imperfeita como a minha\nAspirar, possuir nela a plenitude do amor?\nSou como um fraco passarinho\nQue apesar de sua extrema pequenez\nOusa fitar o Sol do amor\nÉ verdade que às vezes eu passarinho\nMe vejo perdida em meio a densas nuvens\nQue tentam me amedrontar\nE mesmo com todos os desvios\nMe alegro porque o Sol está sempre a brilhar\nNão só para os justos, mas para os fracos como eu\nSou passarinho querendo voar\nMas pelo tempo que quiseres\nPodes me deixar sem asas\nPermanecerei a fitar o Sol do amor\nSou passarinho e sei que um dia\nCom Tuas asas virás me buscar\nPara habitar no eterno amor\nPermanecerei a fitar o eterno amor",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PARISH_PROVIDED",
+        "sourceDocument": "MISSA GLÓRIA OUTUBRO.pdf",
+        "attribution": "Letra e repertório fornecidos pela paróquia em MISSA GLÓRIA OUTUBRO.pdf. Mapa harmônico pastoral completo em C, conferido para ensaio e uso interno.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-10-12T00:00:00.000Z"
+      }
+    }
+  ]
+}
