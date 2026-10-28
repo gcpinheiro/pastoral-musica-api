@@ -174,6 +174,9 @@ export class SongDto {
   @IsString()
   @MinLength(1)
   externalUrl?: string;
+  @IsOptional()
+  @IsString()
+  youtubeUrl?: string | null;
 }
 export class NewsDto {
   @IsString() title!: string;

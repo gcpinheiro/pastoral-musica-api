@@ -498,6 +498,56 @@ describe('DomainService external song sources', () => {
     })).rejects.toMatchObject({ response: { code: 'EXTERNAL_SONG_SOURCE_NOT_ALLOWED' } });
     expect(query).not.toHaveBeenCalled();
   });
+
+  it('normalizes an optional YouTube video URL before persisting it', async () => {
+    const query = jest.fn().mockResolvedValue({
+      rows: [{
+        id: 'song-id',
+        parish_id: 'parish-id',
+        title: 'Ao Ouvir Tua Voz',
+        author: 'Comunidade Católica Shalom',
+        default_key: 'D',
+        liturgical_moments: ['Aclamação'],
+        lyrics: 'Aleluia',
+        chords: 'D\nAleluia',
+        content_mode: 'INTERNAL',
+        external_url: null,
+        youtube_url: 'https://www.youtube.com/watch?v=Qc-nle3oT9o',
+        status: 'ACTIVE',
+      }],
+      rowCount: 1,
+    });
+    const service = new DomainService({ query } as unknown as DatabaseService);
+
+    const result = await service.createSong(leader, {
+      title: 'Ao Ouvir Tua Voz',
+      author: 'Comunidade Católica Shalom',
+      defaultKey: 'D',
+      liturgicalMoments: ['Aclamação'],
+      lyrics: 'Aleluia',
+      chords: 'D\nAleluia',
+      youtubeUrl: 'https://youtu.be/Qc-nle3oT9o?si=share',
+    });
+
+    expect(result.youtubeUrl).toBe('https://www.youtube.com/watch?v=Qc-nle3oT9o');
+    expect(query.mock.calls[0][1]).toContain('https://www.youtube.com/watch?v=Qc-nle3oT9o');
+  });
+
+  it('rejects an invalid YouTube host before querying the database', async () => {
+    const query = jest.fn();
+    const service = new DomainService({ query } as unknown as DatabaseService);
+
+    await expect(service.createSong(leader, {
+      title: 'Música com vídeo',
+      author: 'Autor',
+      defaultKey: 'C',
+      liturgicalMoments: ['Entrada'],
+      lyrics: 'Letra',
+      chords: 'C\nLetra',
+      youtubeUrl: 'https://youtube.com.attacker.test/watch?v=Qc-nle3oT9o',
+    })).rejects.toMatchObject({ response: { code: 'INVALID_YOUTUBE_URL' } });
+    expect(query).not.toHaveBeenCalled();
+  });
 });
 
 describe('DomainService occurrence archiving', () => {

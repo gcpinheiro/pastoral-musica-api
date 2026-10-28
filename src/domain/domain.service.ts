@@ -28,6 +28,11 @@ const ALLOWED_EXTERNAL_SONG_HOSTS = new Set([
   'www.cifraclub.com.br',
   'cifraclub.com.br',
 ]);
+const ALLOWED_YOUTUBE_HOSTS = new Set([
+  'youtube.com',
+  'www.youtube.com',
+  'youtu.be',
+]);
 
 function stableJson(value: unknown): string {
   if (Array.isArray(value)) return `[${value.map(stableJson).join(',')}]`;
@@ -127,6 +132,7 @@ export class DomainService {
       chords: row.chords,
       contentMode: row.content_mode ?? 'INTERNAL',
       externalUrl: row.external_url,
+      youtubeUrl: row.youtube_url,
       status: row.status,
       rightsStatus: row.rights_status,
       rightsType: row.rights_type,
@@ -425,9 +431,10 @@ export class DomainService {
   }
   async createSong(user: SessionUser, input: SongDto) {
     const content = this.songContent(input);
+    const youtubeUrl = this.youtubeUrl(input.youtubeUrl);
     const row = (
       await this.db.query(
-        'INSERT INTO songs(parish_id,title,author,default_key,liturgical_moments,lyrics,chords,content_mode,external_url) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9) RETURNING *',
+        'INSERT INTO songs(parish_id,title,author,default_key,liturgical_moments,lyrics,chords,content_mode,external_url,youtube_url) VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *',
         [
           this.requireParish(user),
           input.title,
@@ -438,6 +445,7 @@ export class DomainService {
           content.chords,
           content.mode,
           content.externalUrl,
+          youtubeUrl,
         ],
       )
     ).rows[0];
@@ -456,9 +464,10 @@ export class DomainService {
   }
   async updateSong(user: SessionUser, id: string, input: SongDto) {
     const content = this.songContent(input);
+    const youtubeUrl = this.youtubeUrl(input.youtubeUrl);
     const row = (
       await this.db.query(
-        'UPDATE songs SET title=$1,author=$2,default_key=$3,liturgical_moments=$4,lyrics=$5,chords=$6,content_mode=$7,external_url=$8,updated_at=now() WHERE id=$9 AND parish_id=$10 RETURNING *',
+        'UPDATE songs SET title=$1,author=$2,default_key=$3,liturgical_moments=$4,lyrics=$5,chords=$6,content_mode=$7,external_url=$8,youtube_url=$9,updated_at=now() WHERE id=$10 AND parish_id=$11 RETURNING *',
         [
           input.title,
           input.author,
@@ -468,6 +477,7 @@ export class DomainService {
           content.chords,
           content.mode,
           content.externalUrl,
+          youtubeUrl,
           id,
           this.requireParish(user),
         ],
@@ -476,6 +486,46 @@ export class DomainService {
     if (!row)
       throw new ProblemException(404, 'NOT_FOUND', 'Música não encontrada.');
     return this.song(row);
+  }
+
+  private youtubeUrl(value: string | null | undefined): string | null {
+    const normalized = value?.trim();
+    if (!normalized) return null;
+
+    let url: URL;
+    try {
+      url = new URL(normalized);
+    } catch {
+      throw new ProblemException(
+        HttpStatus.BAD_REQUEST,
+        'INVALID_YOUTUBE_URL',
+        'A URL do vídeo do YouTube é inválida.',
+      );
+    }
+
+    const host = url.hostname.toLowerCase();
+    const videoId = host === 'youtu.be'
+      ? url.pathname.split('/').filter(Boolean)[0]
+      : url.pathname === '/watch'
+        ? url.searchParams.get('v')
+        : null;
+    if (
+      url.protocol !== 'https:' ||
+      url.port ||
+      url.username ||
+      url.password ||
+      !ALLOWED_YOUTUBE_HOSTS.has(host) ||
+      !videoId ||
+      !/^[A-Za-z0-9_-]{11}$/.test(videoId)
+    ) {
+      throw new ProblemException(
+        HttpStatus.BAD_REQUEST,
+        'INVALID_YOUTUBE_URL',
+        'Informe um link HTTPS válido de um vídeo do YouTube.',
+      );
+    }
+
+    return `https://www.youtube.com/watch?v=${videoId}`;
   }
 
   private songContent(input: SongDto): {
