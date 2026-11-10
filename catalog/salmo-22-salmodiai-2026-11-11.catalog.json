@@ -1,0 +1,29 @@
+{
+  "$schema": "./songs.catalog.schema.json",
+  "catalogVersion": 1,
+  "items": [
+    {
+      "externalId": "salmo-22-salmodiai-ao-nosso-deus-2026-11-11",
+      "title": "Salmo 22 - versão Salmodiai ao nosso Deus",
+      "author": "Salmodiai ao nosso Deus",
+      "defaultKey": "A",
+      "liturgicalMoments": ["Salmo"],
+      "contentMode": "INTERNAL",
+      "youtubeUrl": "https://www.youtube.com/watch?v=EJlg6gZvZr0",
+      "lyrics": "[Refrão]\nO Senhor é o pastor que me conduz; não me falta coisa alguma.\n\n[Primeira estrofe]\nO Senhor é o pastor que me conduz;\nnão me falta coisa alguma.\nPelos prados e campinas verdejantes\nele me leva a descansar.\nPara as águas repousantes me encaminha,\ne restaura as minhas forças.\n\n[Segunda estrofe]\nEle me guia no caminho mais seguro,\npela honra do seu nome.\nMesmo que eu passe pelo vale tenebroso,\nnenhum mal eu temerei.\nEstais comigo com bastão e com cajado,\neles me dão a segurança!\n\n[Terceira estrofe]\nPreparais à minha frente uma mesa,\nbem à vista do inimigo;\ncom óleo vós ungis minha cabeça,\ne o meu cálice transborda.\n\n[Quarta estrofe]\nFelicidade e todo bem hão de seguir-me,\npor toda a minha vida;\ne, na casa do Senhor, habitarei\npelos tempos infinitos.",
+      "chords": "[Salmo responsorial — Sl 22 (23),1-3a.3b-4.5.6 (R. 1)]\n\n[Refrão]\nA9            E/G#                    F#m                 D     Bm          E  E4\nO Senhor é o pastor que me conduz; não me falta coisa alguma.\n\n[Primeira estrofe]\nF#m     E               D\nO Senhor é o pastor que me conduz;\nF#m        E                     D\nnão me falta coisa alguma.\nF#m     E                     D\nPelos prados e campinas verdejantes\nF#m      E                  D\nele me leva a descansar.\n               Bm                F#m                       E\nPara as águas repousantes me encaminha,\n            D    Bm                 E  E4\ne restaura as minhas forças.\n\n[Segunda estrofe]\nF#m        E                D\nEle me guia no caminho mais seguro,\nF#m     E                   D\npela honra do seu nome.\nF#m                     E                   D\nMesmo que eu passe pelo vale tenebroso,\nF#m          E              D\nnenhum mal eu temerei.\n                Bm                F#m                    E\nEstais comigo com bastão e com cajado,\n                 D  Bm        E  E4\neles me dão a segurança!\n\n[Terceira estrofe]\nF#m     E                     D\nPreparais à minha frente uma mesa,\nF#m    E                 D\nbem à vista do inimigo;\n         Bm           F#m                   E\ncom óleo vós ungis minha cabeça,\n                D      Bm       E  E4\ne o meu cálice transborda.\n\n[Quarta estrofe]\nF#m    E                   D\nFelicidade e todo bem hão de seguir-me,\nF#m   E                  D\npor toda a minha vida;\n         Bm           F#m              E\ne, na casa do Senhor, habitarei\n            D    Bm       E  E4\npelos tempos infinitos.",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PARISH_PROVIDED",
+        "sourceDocument": "Mensagem de Gabriel Castro em 10/11/2026",
+        "attribution": "Letra, cifra em A e vídeo de referência fornecidos diretamente pela liderança da paróquia em 10/11/2026.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-11-10T18:40:00.000Z"
+      }
+    }
+  ]
+}
