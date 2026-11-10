@@ -36,6 +36,7 @@ import {
   SetlistDto,
   UpdateSetlistItemDto,
   SetlistLyricsDto,
+  SongChordReviewDto,
   SongDto,
 } from './domain.dto';
 import { memberPhotoDataUrl, memberPhotoFromDataUrl } from './member-photo';
@@ -194,6 +195,13 @@ export class DomainController {
     @Body() b: SongDto,
   ) {
     return this.domain.updateSong(u, id, b);
+  }
+  @Roles('LEADER') @Patch('songs/:id/chord-review') setSongChordReview(
+    @CurrentUser() u: SessionUser,
+    @Param('id') id: string,
+    @Body() body: SongChordReviewDto,
+  ) {
+    return this.domain.setSongChordReview(u, id, body.reviewed);
   }
   @Get('news') listNews(@CurrentUser() u: SessionUser) {
     return this.domain.listNews(u);

@@ -1,0 +1,78 @@
+{
+  "$schema": "./songs.catalog.schema.json",
+  "catalogVersion": 1,
+  "items": [
+    {
+      "externalId": "revisao-2026-11-10-queremos-te-ver",
+      "title": "Queremos Te Ver",
+      "author": "Davidson Silva",
+      "defaultKey": "G",
+      "liturgicalMoments": ["Entrada"],
+      "contentMode": "INTERNAL",
+      "youtubeUrl": "https://www.youtube.com/watch?v=hl6Y_vUBb38",
+      "lyrics": "Senhor, é bom estar, estar contigo aqui\nReunidos em Tua casa\nUm dia é mais que mil diante do Teu altar\nTeu amor nos transformará, Jesus!\n\nQueremos Te ver\nO Teu rosto brilhará em nós\nQueremos Te ver\nContemplar o Teu olhar, Jesus!\nQueremos Te ver\nO Teu rosto brilhará em nós\nQueremos Te ver\nTransfigura-nos em Ti, Jesus\n\nSenhor, é bom estar, estar contigo aqui\nReunidos em Tua casa\nUm dia é mais que mil diante do Teu altar\nTeu amor nos transformará, Jesus!\n\nQueremos Te ver\nO Teu rosto brilhará em nós\nQueremos Te ver\nContemplar o Teu olhar, Jesus!\nQueremos Te ver\nO Teu rosto brilhará em nós\nNós, brilhará em nós, em nós\nEm nós, brilhará em nós\n\nJesus, queremos Te ver\nO Teu rosto brilhará em nós\nQueremos Te ver\nContemplar o Teu olhar, Jesus!\nQueremos Te ver\nO Teu rosto brilhará em nós\nQueremos Te ver\nTransfigura-nos em Ti, Jesus\n\nQueremos Te ver\nO Teu rosto brilhará em nós\nQueremos Te ver\nContemplar o Teu olhar, Jesus!\nQueremos Te ver\nO Teu rosto brilhará em nós\nQueremos Te ver\nTransfigura-nos em Ti, Jesus",
+      "chords": "[Intro]\nG  D/F#  Em  C\n\n[Estrofe]\nG        D       Em        C\nSenhor, é bom estar, estar contigo aqui\nG      D      Em   C\nReunidos em Tua casa\nG                D   Em           C\nUm dia é mais que mil diante do Teu altar\nF               D        G\nTeu amor nos transformará, Jesus!\n\n[Refrão]\n             D\nQueremos Te ver\nAm    C    Em   C    G\nO Teu rosto brilhará em nós\n            D\nQueremos Te ver\nAm    C  Em  D    C   G\nContemplar o Teu olhar, Jesus!\n             D\nQueremos Te ver\nAm    C    Em   C    G\nO Teu rosto brilhará em nós\n            D\nQueremos Te ver\nAm    C    Em    D     C\nTransfigura-nos em Ti, Jesus\n\n[Intro]\nG  D/F#  Em  C\n\n[Estrofe]\nG        D       Em        C\nSenhor, é bom estar, estar contigo aqui\nG      D      Em   C\nReunidos em Tua casa\nG      D           Em       C\nUm dia é mais que mil diante do Teu altar\nF               D        G4\nTeu amor nos transformará, Jesus!\n\n[Refrão]\n             D\nQueremos Te ver\nAm    C    Em   C    G\nO Teu rosto brilhará em nós\n            D\nQueremos Te ver\nAm    C  Em  D    C   G4\nContemplar o Teu olhar, Jesus!\n             D\nQueremos Te ver\nAm    C    Em\nO Teu rosto brilhará em\n   C         Em  D/F#           G\nNós, brilhará em nós, em nós\nAm      Em  D/F#            G\nEm nós, brilhará em nós\n\n[Modulação para A]\nA               E\nJesus, queremos Te ver\nBm    D   F#m   E    A\nO Teu rosto brilhará em nós\n           E\nQueremos Te ver\nBm    D   F#m  E      A\nContemplar o Teu olhar, Jesus!\n            E\nQueremos Te ver\nBm    D   F#m   E    A\nO Teu rosto brilhará em nós\n            E\nQueremos Te ver\nBm    D   F#m   E    B\nTransfigura-nos em Ti, Jesus\n\n[Modulação para B]\n            F#\nQueremos Te ver\nC#m   E   G#m  F#   B\nO Teu rosto brilhará em nós\n            F#\nQueremos Te ver\nC#m   E    G#m  F#    B\nContemplar o Teu olhar, Jesus!\n           F#\nQueremos Te ver\nC#m       G#m   F#    B\nO Teu rosto brilhará em nós\nF#\nQueremos Te ver\nC#m       G#m   F#    B\nTransfigura-nos em Ti, Jesus",
+      "rights": { "status": "APPROVED", "type": "PARISH_PROVIDED", "sourceDocument": "Queremos Te Ver - Davidson Silva - Cifra Club.pdf", "attribution": "Letra e cifra fornecidas à paróquia no PDF indicado e conferidas visualmente em 10/11/2026.", "territory": "BR", "allowsStorage": true, "allowsLyrics": true, "allowsChords": true, "allowsTransposition": true, "reviewedAt": "2026-11-10T17:00:00.000Z" }
+    },
+    {
+      "externalId": "revisao-2026-11-10-renova-o-mundo",
+      "title": "Renova o Mundo",
+      "author": "Comunidade Católica Shalom",
+      "defaultKey": "Eb",
+      "liturgicalMoments": ["Ato penitencial"],
+      "contentMode": "INTERNAL",
+      "youtubeUrl": "https://www.youtube.com/watch?v=H8JAvfoE7Nk",
+      "lyrics": "Senhor, que sois o caminho que conduz ao Pai\nTende piedade, tende piedade de nós\nKyrie! Kyrie Eleison!\nKyrie Eleison!\n\nCristo, que sois a verdade que ilumina os povos\nTende piedade, tende piedade de nós\nChriste! Christe Eleison!\nChriste Eleison!\n\nSenhor, que sois a vida que renova o mundo\nTende piedade, tende piedade de nós\nKyrie! Kyrie Eleison!\nKyrie Eleison!",
+      "chords": "[Intro]\nAb/C  Bb/D  Eb/G  Ab  Bb/D\n\nEb                      Ab7M\nSenhor, que sois o caminho que conduz ao Pai\nFm       Eb/G     Ab            Bb\nTende piedade, tende piedade de nós\n    Eb        Bb\nKyrie! Kyrie Eleison!\n    Eb/G  Ab  Bb\nKyrie Eleison!\n\n(Eb/G  Ab  Bb)\n\nEb                       Ab7M\nCristo, que sois a verdade que ilumina os povos\nFm       Eb/G  Ab            Bb\nTende piedade, tende piedade de nós\n       Eb         Bb\nChriste! Christe Eleison!\n       Eb/G   Ab  Bb\nChriste Eleison!\n\n(Eb/G  Ab  Bb)\n\nEb                       Ab7M\nSenhor, que sois a vida que renova o mundo\nFm       Eb/G  Ab            Bb\nTende piedade, tende piedade de nós\n  Ab/C        Bb/D\nKyrie! Kyrie Eleison!\n    Eb/G  Ab  Bb  G#/C  Bb/D\nKyrie Eleison!\n\n[Final]\nEb/G  Ab  Bb  Eb",
+      "rights": { "status": "APPROVED", "type": "PARISH_PROVIDED", "sourceDocument": "Renova o Mundo - Comunidade Católica Shalom - Cifra Club.pdf", "attribution": "Letra e cifra fornecidas à paróquia no PDF indicado e conferidas visualmente em 10/11/2026.", "territory": "BR", "allowsStorage": true, "allowsLyrics": true, "allowsChords": true, "allowsTransposition": true, "reviewedAt": "2026-11-10T17:00:00.000Z" }
+    },
+    {
+      "externalId": "revisao-2026-11-10-santo-amor-e-adoracao",
+      "title": "Santo - Amor e Adoração",
+      "author": "Ministério Amor e Adoração",
+      "defaultKey": "C",
+      "liturgicalMoments": ["Santo"],
+      "contentMode": "INTERNAL",
+      "youtubeUrl": "https://www.youtube.com/watch?v=IDNaLniqc_U",
+      "lyrics": "Santo, santo, santo\nSenhor Deus do universo\nO céu e a terra proclamam vossa glória\n\nSanto, santo, santo\nSenhor Deus do universo\nO céu e a terra proclamam vossa glória\n\nHosana (hosana), hosana (hosana)\nHosana nas alturas\nHosana (hosana), hosana (hosana)\nHosana nas alturas\n\nBendito o que vem em nome do Senhor\nHosana nas alturas\n\nHosana (hosana), hosana (hosana)\nHosana nas alturas\nHosana (hosana), hosana (hosana)\nHosana nas alturas",
+      "chords": "C      Em7    F\nSanto, santo, santo\nAm7            G4  G\nSenhor Deus do universo\nC         Em7      F            Am7  G\nO céu e a terra proclamam vossa glória\n\nC      Em7    F\nSanto, santo, santo\nAm7            G4  G\nSenhor Deus do universo\nC         Em7      F            Am7  G\nO céu e a terra proclamam vossa glória\n\nC      G/B    Am7    Em7\nHosana (hosana), hosana (hosana)\nF9          C/E  G4  G\nHosana nas alturas\n\nC       G/B   Am7     Em7\nHosana (hosana), hosana (hosana)\nF9           G  C\nHosana nas alturas\n\nDm7           Em7      G/B   Am7\nBendito o que vem em nome do Senhor\nF9           G  A4  A\nHosana nas alturas\n\nD       A/C#  Bm7     F#m7\nHosana (hosana), hosana (hosana)\nG9           D/F#  A4  A\nHosana nas alturas\n\nD       A/C#   Bm7   F#m7\nHosana (hosana), hosana (hosana)\nG9           A  D  G  D\nHosana nas alturas",
+      "rights": { "status": "APPROVED", "type": "PARISH_PROVIDED", "sourceDocument": "Santo - Ministério Amor e Adoração - Cifra Club.pdf", "attribution": "Letra e cifra fornecidas à paróquia no PDF indicado e conferidas visualmente em 10/11/2026.", "territory": "BR", "allowsStorage": true, "allowsLyrics": true, "allowsChords": true, "allowsTransposition": true, "reviewedAt": "2026-11-10T17:00:00.000Z" }
+    },
+    {
+      "externalId": "revisao-2026-11-10-cordeiro-shalom",
+      "title": "Cordeiro de Deus",
+      "author": "Comunidade Católica Shalom",
+      "defaultKey": "G",
+      "liturgicalMoments": ["Cordeiro"],
+      "contentMode": "INTERNAL",
+      "youtubeUrl": "https://www.youtube.com/watch?v=g1sXO2bHB9M",
+      "lyrics": "Cordeiro de Deus que tirais\nO pecado do mundo, tende piedade\nCordeiro de Deus que tirais\nO pecado do mundo, tende piedade\nCordeiro de Deus que tirais\nO pecado do mundo\n\nDai-nos a paz, dai-nos a paz\nDai-nos a vossa paz, dai-nos a paz\nDai-nos a paz, dai-nos a paz\nDai-nos a vossa paz, dai-nos a paz",
+      "chords": "[Intro]\nG  G/B  C9  D4  D\nG  G/B  C9  D4  D\n\n[Primeira parte]\n    G                G/B\nCordeiro de Deus que tirais\n            C     D4      D\nO pecado do mundo, tende piedade\n    G                G/B\nCordeiro de Deus que tirais\n            C    D4      D#°\nO pecado do mundo, tende piedade\n    Em               Bm\nCordeiro de Deus que tirais\n            Am  D7(4/9)\nO pecado do mundo\n\n[Refrão]\nD#°       G  D/F#            C/E\nDai-nos a paz, dai-nos a paz\nD        G    D/F#         C/E\nDai-nos a vossa paz, dai-nos a paz\nD        G  D/F#             C/E\nDai-nos a paz, dai-nos a paz\nD        G    D/F#         C#m7(5-)\nDai-nos a vossa paz, dai-nos a paz\n\n[Final]\nC7M  Am  G",
+      "rights": { "status": "APPROVED", "type": "PARISH_PROVIDED", "sourceDocument": "Cordeiro de Deus - Comunidade Católica Shalom - Cifra Club.pdf", "attribution": "Letra e cifra fornecidas à paróquia no PDF indicado e conferidas visualmente em 10/11/2026.", "territory": "BR", "allowsStorage": true, "allowsLyrics": true, "allowsChords": true, "allowsTransposition": true, "reviewedAt": "2026-11-10T17:00:00.000Z" }
+    },
+    {
+      "externalId": "revisao-2026-11-10-divino-coracao",
+      "title": "Divino Coração",
+      "author": "Comunidade Católica Shalom",
+      "defaultKey": "Bb",
+      "liturgicalMoments": ["Comunhão"],
+      "contentMode": "INTERNAL",
+      "youtubeUrl": "https://www.youtube.com/watch?v=6CKSVAW-O9c",
+      "lyrics": "Divino Coração, fonte inesgotável da paz\nNo Sangue e na água nós somos lavados\nSomos recriados em Ti\n\nDivino Coração, braseiro ardente de amor\nChama que queima, cura e purifica\nSomos transformados em Ti\n\nComungamos Teu Corpo e Sangue\nConfiamos no Teu amor\nEscondidos em Tuas chagas\nPara sempre queremos viver\nAdoramos Teu Corpo e Sangue\nConfiamos no Teu amor\nSacrifício, Aliança Eterna\nDo altar da cruz, vida nova jorrará\n\nDivino Coração, humanidade de Deus\nO céu se faz terra, toca nossa vida\nSomos alcançados por Ti\n\nDivino Coração, doce abaixar-se de Deus\nReveste o homem de Sua realeza\nSomos elevados por Ti",
+      "chords": "[Intro]\nEb  Bb/D  F\nGm7  Eb  F4  F\n\nBb        Dm7  Eb                 F\nDivino Coração, fonte inesgotável da paz\n    Eb        Bb  F/A       Gm7\nNo Sangue e na água nós somos lavados\nEb               F4  F\nSomos recriados em Ti\n\nBb        Dm7  Eb                 F\nDivino Coração, braseiro ardente de amor\n Eb       Bb    F/A       Gm7\nChama que queima, cura e purifica\nEb                  F4  F\nSomos transformados em Ti\n\n     Bb              F/A\nComungamos Teu Corpo e Sangue\n    Gm7         Dm7\nConfiamos no Teu amor\n     Eb           F  Gm7\nEscondidos em Tuas chagas\n      Ab            F\nPara sempre queremos viver\n   Bb               F/A\nAdoramos Teu Corpo e Sangue\n    Gm7         Dm7\nConfiamos no Teu amor\n     Eb             F  Gm7\nSacrifício, Aliança Eterna\n     Ab             Cm7  F  Eb\nDo altar da cruz, vida nova jorrará\n\n(Eb  Bb  F)\n(Gm7  Eb  F4  F)\n\nBb        Dm7  Eb           F\nDivino Coração, humanidade de Deus\n  Eb         Bb   F/A      Gm7\nO céu se faz terra, toca nossa vida\nEb                 F4  F\nSomos alcançados por Ti\n\nBb        Dm7  Eb                F\nDivino Coração, doce abaixar-se de Deus\n Eb      Bb      F/A    Gm7\nReveste o homem de Sua realeza\nEb               F4  F\nSomos elevados por Ti",
+      "rights": { "status": "APPROVED", "type": "PARISH_PROVIDED", "sourceDocument": "Divino Coração - Comunidade Católica Shalom - Cifra Club.pdf", "attribution": "Letra e cifra fornecidas à paróquia no PDF indicado e conferidas visualmente em 10/11/2026.", "territory": "BR", "allowsStorage": true, "allowsLyrics": true, "allowsChords": true, "allowsTransposition": true, "reviewedAt": "2026-11-10T17:00:00.000Z" }
+    },
+    {
+      "externalId": "revisao-2026-11-10-eternamente",
+      "title": "Eternamente",
+      "author": "Vida Reluz",
+      "defaultKey": "Bb",
+      "liturgicalMoments": ["Final"],
+      "contentMode": "INTERNAL",
+      "youtubeUrl": "https://www.youtube.com/watch?v=H6fENcw91Hg",
+      "lyrics": "Vou Te contemplar no Teu santuário para Te dizer\nComo é bom sentir\nO Teu amor, Senhor, o Teu amor, Senhor\n\nVou Te adorar em espírito e em verdade com o meu viver\nVou testemunhar\nO Teu amor, Senhor, o Teu amor, Senhor\n\nEu vivo só pra Te adorar em espírito e em verdade\nEternamente vou Te amar, Tu és Senhor digno de louvor\nEu vivo só pra Te adorar em espírito e em verdade\nEternamente vou Te amar, Tu és Senhor digno de louvor",
+      "chords": "[Intro]\nBb  F/A  Gm7  Bb/D  Eb/F\n\n   Bb7M     Eb7M               Bb7M\nVou Te contemplar no Teu santuário para Te dizer\nEb7M\nComo é bom sentir\n   Bb7M   Eb7M     Bb7M    Eb/F\nO Teu amor, Senhor, o Teu amor, Senhor\n\nBb7M        Eb7M\nVou Te adorar em espírito e em verdade com o meu viver\nEb7M\nVou testemunhar\n   Bb7M     Eb7M    Bb7M   Fm7\nO Teu amor, Senhor, o Teu amor, Senhor\n\nBb7          Eb7M  Ebm\nDm7\nEu vivo só pra Te adorar em espírito e em verdade\nG5+  G7\n             Cm7  Dm7  Eb7M  F7   Fm7\nEternamente vou Te amar, Tu és Senhor digno de\n  Bb7\nlouvor\n\n         Eb7M  Ebm\nDm7\nEu vivo só pra Te adorar em espírito e em verdade\nG5+  G7\n             Cm7  Dm7  Eb7M  F7\nEternamente vou Te amar, Tu és Senhor digno de\nBb7M  F/A  Gm7  Dm7  Eb7M\nlouvor\nEb/F",
+      "rights": { "status": "APPROVED", "type": "PARISH_PROVIDED", "sourceDocument": "Eternamente - Vida Reluz - Cifra Club.pdf", "attribution": "Letra e cifra fornecidas à paróquia no PDF indicado e conferidas visualmente em 10/11/2026. O tom foi registrado como Bb por corresponder aos acordes exibidos no documento.", "territory": "BR", "allowsStorage": true, "allowsLyrics": true, "allowsChords": true, "allowsTransposition": true, "reviewedAt": "2026-11-10T17:00:00.000Z" }
+    }
+  ]
+}

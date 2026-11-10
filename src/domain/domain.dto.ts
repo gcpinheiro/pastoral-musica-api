@@ -178,6 +178,9 @@ export class SongDto {
   @IsString()
   youtubeUrl?: string | null;
 }
+export class SongChordReviewDto {
+  @IsBoolean() reviewed!: boolean;
+}
 export class NewsDto {
   @IsString() title!: string;
   @IsString() body!: string;

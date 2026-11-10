@@ -183,6 +183,37 @@ describe('DomainService occurrence confirmations', () => {
   });
 });
 
+describe('DomainService song chord review', () => {
+  it('updates the current library chord version and audits the leader action', async () => {
+    const transactionQuery = jest
+      .fn()
+      .mockResolvedValueOnce({
+        rows: [{
+          id: 'song-id', title: 'Tua Palavra', author: 'Comunidade Católica Shalom',
+          default_key: 'D', liturgical_moments: ['Aclamação'], lyrics: 'Letra', chords: 'D Letra',
+          status: 'ACTIVE', chords_reviewed: true, chords_reviewed_at: new Date('2026-11-10T17:00:00Z'),
+        }],
+        rowCount: 1,
+      })
+      .mockResolvedValueOnce({ rows: [], rowCount: 1 });
+    const database = {
+      transaction: jest.fn((work: (client: TransactionClient) => Promise<unknown>) =>
+        work({ query: transactionQuery } as unknown as TransactionClient)),
+    } as unknown as DatabaseService;
+    const user: SessionUser = {
+      id: 'leader-id', parishId: 'parish-id', memberId: 'member-id', name: 'Líder',
+      email: 'lider@example.com', role: 'LEADER', initials: 'LI',
+    };
+
+    const result = await new DomainService(database).setSongChordReview(user, 'song-id', true);
+
+    expect(result).toMatchObject({ id: 'song-id', chordsReviewed: true });
+    expect(transactionQuery.mock.calls[0][0]).toContain('chords_reviewed=$1');
+    expect(transactionQuery.mock.calls[0][1]).toEqual([true, 'song-id', 'parish-id']);
+    expect(transactionQuery.mock.calls[1][1][2]).toBe('REVIEW_SONG_CHORDS');
+  });
+});
+
 describe('DomainService occurrence batch creation', () => {
   const leader: SessionUser = {
     id: '00000000-0000-4000-8000-000000000001',

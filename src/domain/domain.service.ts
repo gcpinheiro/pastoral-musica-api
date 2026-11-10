@@ -138,6 +138,8 @@ export class DomainService {
       rightsType: row.rights_type,
       sourceUrl: row.source_url,
       attribution: row.attribution,
+      chordsReviewed: row.chords_reviewed ?? false,
+      chordsReviewedAt: row.chords_reviewed_at,
     };
   }
 
@@ -467,7 +469,12 @@ export class DomainService {
     const youtubeUrl = this.youtubeUrl(input.youtubeUrl);
     const row = (
       await this.db.query(
-        'UPDATE songs SET title=$1,author=$2,default_key=$3,liturgical_moments=$4,lyrics=$5,chords=$6,content_mode=$7,external_url=$8,youtube_url=$9,updated_at=now() WHERE id=$10 AND parish_id=$11 RETURNING *',
+        `UPDATE songs SET title=$1,author=$2,default_key=$3,liturgical_moments=$4,lyrics=$5,chords=$6,
+          content_mode=$7,external_url=$8,youtube_url=$9,
+          chords_reviewed=CASE WHEN chords IS DISTINCT FROM $6 THEN false ELSE chords_reviewed END,
+          chords_reviewed_at=CASE WHEN chords IS DISTINCT FROM $6 THEN NULL ELSE chords_reviewed_at END,
+          updated_at=now()
+         WHERE id=$10 AND parish_id=$11 RETURNING *`,
         [
           input.title,
           input.author,
@@ -486,6 +493,37 @@ export class DomainService {
     if (!row)
       throw new ProblemException(404, 'NOT_FOUND', 'Música não encontrada.');
     return this.song(row);
+  }
+
+  async setSongChordReview(user: SessionUser, id: string, reviewed: boolean) {
+    const parish = this.requireParish(user);
+    return this.db.transaction(async (client) => {
+      const row = (
+        await client.query(
+          `UPDATE songs
+              SET chords_reviewed=$1,
+                  chords_reviewed_at=CASE WHEN $1 THEN now() ELSE NULL END,
+                  updated_at=now()
+            WHERE id=$2 AND parish_id=$3 AND status='ACTIVE'
+            RETURNING *`,
+          [reviewed, id, parish],
+        )
+      ).rows[0];
+      if (!row)
+        throw new ProblemException(404, 'NOT_FOUND', 'Música não encontrada.');
+      await client.query(
+        `INSERT INTO audit_logs(parish_id,actor_user_id,action,entity_type,entity_id,details)
+         VALUES($1,$2,$3,'SONG',$4,$5::jsonb)`,
+        [
+          parish,
+          user.id,
+          reviewed ? 'REVIEW_SONG_CHORDS' : 'REOPEN_SONG_CHORDS_REVIEW',
+          id,
+          JSON.stringify({ reviewed }),
+        ],
+      );
+      return this.song(row);
+    });
   }
 
   private youtubeUrl(value: string | null | undefined): string | null {
