@@ -1,0 +1,72 @@
+{
+  "$schema": "./songs.catalog.schema.json",
+  "catalogVersion": 1,
+  "items": [
+    {
+      "externalId": "guadalupe-2026-11-11-aleluia-jmj",
+      "title": "Aleluia - JMJ Rio 2013",
+      "author": "Ministério Alfa & Ômega / JMJ Rio 2013",
+      "defaultKey": "D",
+      "liturgicalMoments": ["Aclamação"],
+      "contentMode": "INTERNAL",
+      "lyrics": "[Refrão]\nAleluia, aleluia\nAleluia, aleluia\nAleluia, aleluia\nAleluia, aleluia\n\n[Versículo]\nJesus pregava a boa nova\nO reino anunciando\nE curava toda espécie de doenças entre o povo",
+      "chords": "[Refrão]\nD       G  A    Bm\nAleluia, aleluia\nD/F#    Em  Bm  A\nAleluia, aleluia\nD       G  A    Bm\nAleluia, aleluia\nD/F#    Em  A4  A  D\nAleluia, aleluia\n\n[Versículo]\nBm\nJesus pregava a boa nova\nF#m\nO reino anunciando\nG       Em             A  G/A  A\nE curava toda espécie de doenças entre o povo",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PARISH_PROVIDED",
+        "sourceDocument": "MISSA NOVEMBRO GUADALUPE.pdf",
+        "attribution": "Letra e cifra em D fornecidas pela paróquia no repertório da missa de 11/11/2026.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-11-11T12:00:00.000Z"
+      }
+    },
+    {
+      "externalId": "guadalupe-2026-11-11-pao-e-vinho",
+      "title": "Pão e Vinho",
+      "author": "Ministério Amor e Adoração",
+      "defaultKey": "A",
+      "liturgicalMoments": ["Ofertório"],
+      "contentMode": "INTERNAL",
+      "lyrics": "Pão e vinho Te apresentamos nesse altar\nComo sinal que Tu recolhes nossa oferta\nTudo o que somos deixamos aqui\n\nPão e vinho Te apresentamos nesse altar\nComo sinal que Tu recolhes nossa oferta\nTudo o que somos deixamos aqui\n\nÉ um milagre que se dá\nO pão e o vinho em corpo e sangue\nVão se transformar\nNão há limites para o amor\nVem transformar também minha vida\nOh Senhor, é Teu esse milagre de amor",
+      "chords": "A9       E/G#       F#m7\nPão e vinho Te apresentamos nesse altar\nC#m7      D9        C#m7\nComo sinal que Tu recolhes nossa oferta\nBm7      Bm7/A  E\nTudo o que somos deixamos aqui\n\nA9       E/G#       F#m7\nPão e vinho Te apresentamos nesse altar\nC#m7      D9        C#m7\nComo sinal que Tu recolhes nossa oferta\nBm7  E\nTudo o que somos deixamos aqui\n\n[Refrão]\nA/C#  D9       A/C#\nÉ um milagre que se dá\nD9       F°       F#m7\nO pão e o vinho em corpo e sangue\nBm  E\nVão se transformar\nA/C#  D9  A/C#\nNão há limites para o amor\nD9       F#m7\nVem transformar também minha vida\nBm7  E  A4  A9\nOh Senhor, é Teu esse milagre de amor",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PARISH_PROVIDED",
+        "sourceDocument": "MISSA NOVEMBRO GUADALUPE.pdf",
+        "attribution": "Letra e cifra em A fornecidas pela paróquia no repertório da missa de 11/11/2026.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-11-11T12:00:00.000Z"
+      }
+    },
+    {
+      "externalId": "guadalupe-2026-11-11-oracao-eucaristica",
+      "title": "Oração Eucarística — Aclamação e Amém",
+      "author": "Liturgia da Igreja",
+      "defaultKey": "Am",
+      "liturgicalMoments": ["Oração eucarística"],
+      "contentMode": "INTERNAL",
+      "lyrics": "Eis o mistério da fé!\n\nAnunciamos, Senhor, a Vossa morte\nE proclamamos a Vossa ressurreição\nVinde, Senhor Jesus!\n\nPor Cristo, com Cristo, em Cristo\nA Vós, Deus Pai, Todo-Poderoso.\nNa unidade do Espírito Santo.\nToda honra, toda glória agora e para sempre...\n\nAmém! Amém! Amém! Amém!",
+      "chords": "[Aclamação memorial]\nAm          D4\nEis o mistério da fé!\n\nG        D/F#  G/B       C  D\nAnunciamos, Senhor, a Vossa morte\nG        Bm7              C\nE proclamamos a Vossa ressurreição\nAm       D      C\nVinde, Senhor Jesus!\n\n[Doxologia e Amém]\nAm                  C\nPor Cristo, com Cristo, em Cristo\nG          D       Am\nA Vós, Deus Pai, Todo-Poderoso.\nC              G\nNa unidade do Espírito Santo.\nD        C    Am       D\nToda honra, toda glória agora e para sempre...\n\nC  D  Em  C  D  Em  Am  D  G\nAmém! Amém! Amém! Amém!",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PARISH_PROVIDED",
+        "sourceDocument": "MISSA NOVEMBRO GUADALUPE.pdf",
+        "attribution": "Respostas, letra e cifra fornecidas pela paróquia no repertório da missa de 11/11/2026.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-11-11T12:00:00.000Z"
+      }
+    }
+  ]
+}
