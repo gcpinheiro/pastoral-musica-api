@@ -1,0 +1,28 @@
+{
+  "$schema": "./songs.catalog.schema.json",
+  "catalogVersion": 1,
+  "items": [
+    {
+      "externalId": "revisao-base-2026-11-11-pao-e-vinho",
+      "title": "Pão e Vinho",
+      "author": "Ministério Amor e Adoração",
+      "defaultKey": "A",
+      "liturgicalMoments": ["Ofertório"],
+      "contentMode": "INTERNAL",
+      "lyrics": "Pão e vinho Te apresentamos nesse altar\nComo sinal que Tu recolhes nossa oferta\nTudo o que somos deixamos aqui\n\nPão e vinho Te apresentamos nesse altar\nComo sinal que Tu recolhes nossa oferta\nTudo o que somos deixamos aqui\n\nÉ um milagre que se dá\nO pão e o vinho em corpo e sangue\nVão se transformar\n\nNão há limites para o amor\nVem transformar também minha vida\nOh Senhor, é Teu esse milagre de amor\n\nPão e vinho Te apresentamos nesse altar\nComo sinal que Tu recolhes nossa oferta\nTudo o que somos deixamos aqui\n\nPão e vinho Te apresentamos nesse altar\nComo sinal que Tu recolhes nossa oferta\nTudo o que somos deixamos aqui\n\nÉ um milagre que se dá\nO pão e o vinho em corpo e sangue\nVão se transformar\n\nNão há limites para o amor\nVem transformar também minha vida\nOh Senhor, é Teu esse milagre de amor\n\nÉ Teu esse milagre de amor\nÉ Teu esse milagre de amor",
+      "chords": "[Intro]\nD9  C#m7  Bm7\n\n[Primeira Parte]\nA9           E/G#         F#m7\nPão e vinho Te apresentamos nesse altar\nC#m7        D9          C#m7\nComo sinal que Tu recolhes nossa oferta\nBm7        Bm7/A  E\nTudo o que somos deixamos aqui\n\nA9           E/G#         F#m7\nPão e vinho Te apresentamos nesse altar\nC#m7        D9          C#m7\nComo sinal que Tu recolhes nossa oferta\nBm7               E\nTudo o que somos deixamos aqui\n\n[Refrão]\nA/C#        D9         A/C#\nÉ um milagre que se dá\nD9          F°     F#m7\nO pão e o vinho em corpo e sangue\nBm       E\nVão se transformar\n\nA/C#          D9          A/C#\nNão há limites para o amor\nD9             F#m7\nVem transformar também minha vida\nBm7   E                 A4  A9\nOh Senhor, é Teu esse milagre de amor\n\n[Segunda Parte]\nD9           A            Bm7\nPão e vinho Te apresentamos nesse altar\nF#m7        G9          F#m7\nComo sinal que Tu recolhes nossa oferta\nEm7           A\nTudo o que somos deixamos aqui\n\nD9            A           Bm7\nPão e vinho Te apresentamos nesse altar\nF#m7        G9          F#m7\nComo sinal que Tu recolhes nossa oferta\nEm7           A\nTudo o que somos deixamos aqui\n\n[Refrão]\nD/F#        G9         F#m7\nÉ um milagre que se dá\nG9             Bm7\nO pão e o vinho em corpo e sangue\nEm7      A\nVão se transformar\n\nD/F#         G9          F#m7\nNão há limites para o amor\nG9            Bm7\nVem transformar também minha vida\nEm7   A                  D9  Bm7  Em7\nOh Senhor, é Teu esse milagre de amor\n\n[Final]\nA                 D9  Bm7  Em7\nÉ Teu esse milagre de amor\nA                 D9\nÉ Teu esse milagre de amor",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PARISH_PROVIDED",
+        "sourceDocument": "Pão e Vinho - Ministério Amor e Adoração - Cifra Club.pdf",
+        "attribution": "Letra e cifra fornecidas à paróquia no PDF indicado e conferidas visualmente em 11/11/2026.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-11-11T17:30:00.000Z"
+      }
+    }
+  ]
+}
