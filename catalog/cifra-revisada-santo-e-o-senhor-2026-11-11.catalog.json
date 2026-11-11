@@ -1,0 +1,29 @@
+{
+  "$schema": "./songs.catalog.schema.json",
+  "catalogVersion": 1,
+  "items": [
+    {
+      "externalId": "revisao-base-2026-11-11-santo-e-o-senhor",
+      "title": "Santo é o Senhor",
+      "author": "Comunidade Católica Shalom — Na Dança da Vida",
+      "defaultKey": "G",
+      "liturgicalMoments": ["Santo"],
+      "contentMode": "INTERNAL",
+      "youtubeUrl": "https://www.youtube.com/watch?v=YvoukHbwJnw",
+      "lyrics": "Santo, Santo, Santo é o Senhor\nSanto, Santo, Santo é o Senhor\n\nCéus e terra proclamam vossa glória\nHosana nas alturas\n\nBendito o que vem em nome do Senhor\nHosana nas alturas\n\nSanto, Santo, Santo é o Senhor\nSanto, Santo, Santo é o Senhor",
+      "chords": "[Intro]\nEm  D  C  G/B  Am  Am/G  F#m7(5-)\nB4  B\n\nEm   D   C    G    D    Em   F        C/E\nD4   D#°\nSan------to, San----to, Santo é o Senhor\nEm   D   C    G    D    Em   F        C/E\nD4   D7M\nSan------to, San----to, Santo é o Senhor\n\nAm7(9)       Bm7(9)        C\nCéus e terra proclamam vossa glória\nF#m7(5-)       B7(9)  D  F9\nHosana nas alturas\n\nAm7(9)        Bm7(9)        C\nBendito o que vem em nome do Senhor\nAm7(9)          B7  F7M\nHosana nas alturas\n\nEm   D   C    G    D    Em   F        C/E\nD4   D#°\nSan------to, San----to, Santo é o Senhor\nEm   D   C    G    D    Em   F        C/E\nD4   D7M\nSan------to, San----to, Santo é o Senhor",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PARISH_PROVIDED",
+        "sourceDocument": "Santo É o Senhor (CD Na Dança da Vida) - Comunidade Católica Shalom - Cifra Club.pdf",
+        "attribution": "Letra e cifra fornecidas à paróquia no PDF indicado e conferidas visualmente em 11/11/2026.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-11-11T18:30:00.000Z"
+      }
+    }
+  ]
+}
