@@ -1,0 +1,29 @@
+{
+  "$schema": "./songs.catalog.schema.json",
+  "catalogVersion": 1,
+  "items": [
+    {
+      "externalId": "todo-teu-ministerio-missionario-shalom-2026-11-13",
+      "title": "Todo Teu",
+      "author": "Ministério Missionário Shalom",
+      "defaultKey": "D",
+      "liturgicalMoments": ["Final"],
+      "contentMode": "INTERNAL",
+      "youtubeUrl": "https://www.youtube.com/watch?v=Ip9MqhxetYk",
+      "lyrics": "Em cada passo, em cada prece\nNo menor gesto lá estarás\nNo meu silêncio, no meu falar\nMãe, vem comigo sempre estar\nNas minhas dores e alegrias\nTodo momento, lá estarás\nNo pensamento, no meu olhar\nMãe vem comigo sempre estar\n\nSou todo teu, oh Mãe\nSou todo teu, Maria\nSou todo teu\nGuarda no céu o meu lugar\nGuarda no céu o meu lugar\n\nTu serás, oh Mãe, minha rainha\nE o teu Filho, o meu Rei\nEssa vida não será mais minha\nUm livre escravo, teu, serei\n\nTu serás, oh Mãe, minha rainha\nE o teu Filho, o meu Rei\nEssa vida não será mais minha\nUm livre escravo, teu, serei\n\nSou todo teu, oh Mãe\nSou todo teu, Maria\nSou todo teu\nGuarda no céu o meu lugar\n\nSou todo teu, oh Mãe\nSou todo teu, Maria\nSou todo teu, minha mãe",
+      "chords": "[Intro]\nD9  A9  Bm  G\nD9  A9  Bm  G\n\nD9                    A9\nEm cada passo, em cada prece\nBm                 G\nNo menor gesto lá estarás\nD9                      A9\nNo meu silêncio, no meu falar\nBm                    G\nMãe, vem comigo sempre estar\nD9                 A9\nNas minhas dores e alegrias\nBm                   G\nTodo momento, lá estarás\nD9                    A9\nNo pensamento, no meu olhar\nBm                    G\nMãe vem comigo sempre estar\n\nD9       A9\nSou todo teu, oh Mãe\nD/F#        G\nSou todo teu, Maria\nBm\nSou todo teu\nA9                 G\nGuarda no céu o meu lugar (2x)\n\nEm                    G\nTu serás, oh Mãe, minha rainha\nD/F#                A9\nE o teu Filho, o meu Rei\nEm                    G\nEssa vida não será mais minha\nD/F#                 A\nUm livre escravo, teu, serei\n\nEm                    G\nTu serás, oh Mãe, minha rainha\nD/F#                A9\nE o teu Filho, o meu Rei\nEm                    G\nEssa vida não será mais minha\nBm                    A\nUm livre escravo, teu, serei\n\n[Solo]\nEm  G  Bm  A9\nEm  G  Bm  D/F#  G\n\nE        B\nSou todo teu, oh Mãe\nE/G#       A\nSou todo teu, Maria\nC#m\nSou todo teu\nB                  A    B\nGuarda no céu o meu lugar\n\nE        B\nSou todo teu, oh Mãe\nE/G#       A\nSou todo teu, Maria\nC#m  B          E\nSou todo teu, minha mãe",
+      "rights": {
+        "status": "APPROVED",
+        "type": "PARISH_PROVIDED",
+        "sourceDocument": "Todo Teu - Ministério Missionário Shalom - Cifra Club.pdf",
+        "attribution": "Letra e cifra fornecidas à paróquia no PDF indicado e conferidas visualmente em 13/11/2026.",
+        "territory": "BR",
+        "allowsStorage": true,
+        "allowsLyrics": true,
+        "allowsChords": true,
+        "allowsTransposition": true,
+        "reviewedAt": "2026-11-13T15:00:00.000Z"
+      }
+    }
+  ]
+}
